@@ -1,0 +1,26 @@
+Package: lsed
+Title: Prevalence-Corrected Evaluation of Species-Distribution Predictions
+Version: 0.0.0.9000
+Authors@R:
+    person("Reed", "Benkendorf",
+           email = "reedbenkendorf2021@u.northwestern.edu",
+           role = c("aut", "cre"))
+Description: Helper functions for evaluating species-distribution model
+    predictions at a target landscape prevalence. Provides case weights that
+    re-price an evaluation sample to a target prevalence, the
+    prevalence-invariant ROC-AUC, average-precision and decision-curve
+    net-benefit summaries computed both exactly from point-level predictions
+    and from an equal-variance binormal ROC, and Cox calibration of held-out
+    predictions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = FALSE)
+Imports:
+    stats,
+    utils
+Suggests:
+    ambient,
+    dplyr,
+    ggplot2,
+    sf
+Config/roxygen2/version: 8.0.0
