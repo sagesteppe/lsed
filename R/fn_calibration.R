@@ -27,11 +27,19 @@ clamp <- function(p, eps = 1e-6) {
 #' @export
 cox_calibration <- function(truth, prob) {
   lp <- qlogis(clamp(prob))
-  fit_slope <- tryCatch(glm(truth ~ lp, family = binomial), error = function(e) NULL)
-  fit_intc  <- tryCatch(glm(truth ~ 1, offset = lp, family = binomial), error = function(e) NULL)
+  fit_slope <- tryCatch(
+    glm(truth ~ lp, family = binomial),
+    error = function(e) NULL
+  )
+  fit_intc <- tryCatch(
+    glm(truth ~ 1, offset = lp, family = binomial),
+    error = function(e) NULL
+  )
   ok <- function(f) !is.null(f) && f$converged && all(abs(coef(f)) < 15)
-  c(cox_intercept = if (ok(fit_intc)) unname(coef(fit_intc)[1]) else NA_real_,
-    cox_slope     = if (ok(fit_slope)) unname(coef(fit_slope)[2]) else NA_real_)
+  c(
+    cox_intercept = if (ok(fit_intc)) unname(coef(fit_intc)[1]) else NA_real_,
+    cox_slope = if (ok(fit_slope)) unname(coef(fit_slope)[2]) else NA_real_
+  )
 }
 
 #' Recalibrate predicted probabilities to a target prevalence (logit shift)

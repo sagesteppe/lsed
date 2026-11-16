@@ -20,10 +20,14 @@
 nb_exact <- function(truth, prob, pi, pt) {
   w <- reweight(truth, pi)
   n <- sum(w)
-  vapply(pt, function(t) {
-    pp <- prob >= t
-    sum(w[pp & truth == 1]) / n - sum(w[pp & truth == 0]) / n * (t / (1 - t))
-  }, numeric(1))
+  vapply(
+    pt,
+    function(t) {
+      pp <- prob >= t
+      sum(w[pp & truth == 1]) / n - sum(w[pp & truth == 0]) / n * (t / (1 - t))
+    },
+    numeric(1)
+  )
 }
 
 #' Best-achievable net benefit from an equal-variance binormal ROC
@@ -41,11 +45,15 @@ nb_exact <- function(truth, prob, pi, pt) {
 #' @return Numeric vector of net benefit, one per element of \code{pt}.
 #' @export
 nb_binormal <- function(mu, pi, pt) {
-  vapply(pt, function(t) {
-    m  <- ((1 - pi) / pi) * (t / (1 - t))   # target ROC slope for this threshold
-    cc <- (log(m) + mu^2 / 2) / mu          # score cutoff giving that slope
-    pi * pnorm(mu - cc) - (1 - pi) * pnorm(-cc) * (t / (1 - t))
-  }, numeric(1))
+  vapply(
+    pt,
+    function(t) {
+      m <- ((1 - pi) / pi) * (t / (1 - t)) # target ROC slope for this threshold
+      cc <- (log(m) + mu^2 / 2) / mu # score cutoff giving that slope
+      pi * pnorm(mu - cc) - (1 - pi) * pnorm(-cc) * (t / (1 - t))
+    },
+    numeric(1)
+  )
 }
 
 #' Net benefit of the treat-all (survey-everything) reference strategy

@@ -10,8 +10,10 @@
 #' @return Scalar ROC-AUC, or \code{NA_real_} if a class is absent.
 #' @export
 roc_auc <- function(truth, prob) {
-  if (length(unique(truth)) < 2) return(NA_real_)
-  r  <- rank(prob)
+  if (length(unique(truth)) < 2) {
+    return(NA_real_)
+  }
+  r <- rank(prob)
   n1 <- sum(truth == 1)
   n0 <- sum(truth == 0)
   (sum(r[truth == 1]) - n1 * (n1 + 1) / 2) / (n1 * n0)

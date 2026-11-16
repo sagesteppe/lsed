@@ -16,15 +16,17 @@
 ap_pointwise <- function(truth, prob, pi) {
   n1 <- sum(truth == 1)
   n0 <- sum(truth == 0)
-  if (n1 == 0 || n0 == 0) return(NA_real_)
+  if (n1 == 0 || n0 == 0) {
+    return(NA_real_)
+  }
   w <- reweight(truth, pi)
   o <- order(prob, decreasing = TRUE)
   truth <- truth[o]
   w <- w[o]
   tpw <- cumsum(w * (truth == 1))
   fpw <- cumsum(w * (truth == 0))
-  recall <- tpw / pi                    # total presence weight = pi
-  prec   <- tpw / (tpw + fpw)
+  recall <- tpw / pi # total presence weight = pi
+  prec <- tpw / (tpw + fpw)
   sum(c(recall[1], diff(recall)) * prec)
 }
 
@@ -44,12 +46,12 @@ ap_pointwise <- function(truth, prob, pi) {
 #' @seealso \code{\link{ap_pointwise}}, \code{\link{ap_scalar_to_prev}}.
 #' @export
 ap_binormal <- function(mu, pi, grid = 4000) {
-  f   <- seq(1e-6, 1 - 1e-6, length.out = grid)  # FPR ascending -> recall ascending
-  tpr <- pnorm(qnorm(f) + mu)                     # recall (invariant with prevalence)
+  f <- seq(1e-6, 1 - 1e-6, length.out = grid) # FPR ascending -> recall ascending
+  tpr <- pnorm(qnorm(f) + mu) # recall (invariant with prevalence)
   prec <- (pi * tpr) / (pi * tpr + (1 - pi) * f)
   r <- c(0, tpr)
   p <- c(1, prec)
-  sum(diff(r) * (head(p, -1) + tail(p, -1)) / 2)  # trapezoid AP
+  sum(diff(r) * (head(p, -1) + tail(p, -1)) / 2) # trapezoid AP
 }
 
 #' Correct a scalar PR-AUC from its design prevalence to a target prevalence
@@ -68,10 +70,15 @@ ap_binormal <- function(mu, pi, grid = 4000) {
 #'   \code{mu}, and the \code{implied_roc_auc} = \code{pnorm(mu / sqrt(2))}.
 #' @export
 ap_scalar_to_prev <- function(pr_auc, pi0, pi_target, grid = 20000) {
-  mu <- uniroot(function(m) ap_binormal(m, pi0, grid = grid) - pr_auc, c(1e-3, 8))$root
-  list(ap_target = ap_binormal(mu, pi_target, grid = grid),
-       mu = mu,
-       implied_roc_auc = pnorm(mu / sqrt(2)))
+  mu <- uniroot(
+    function(m) ap_binormal(m, pi0, grid = grid) - pr_auc,
+    c(1e-3, 8)
+  )$root
+  list(
+    ap_target = ap_binormal(mu, pi_target, grid = grid),
+    mu = mu,
+    implied_roc_auc = pnorm(mu / sqrt(2))
+  )
 }
 
 #' Exact precision-recall curve at a target prevalence
@@ -111,7 +118,7 @@ pr_curve_exact <- function(truth, prob, pi) {
 #' @export
 pr_curve_binormal <- function(mu, pi, grid = 400) {
   r <- seq(1e-3, 1 - 1e-3, length.out = grid)
-  fpr <- pnorm(qnorm(r) - mu)              # invert TPR = pnorm(qnorm(FPR) + mu)
+  fpr <- pnorm(qnorm(r) - mu) # invert TPR = pnorm(qnorm(FPR) + mu)
   o <- pi / (1 - pi)
   data.frame(recall = r, precision = (o * r) / (o * r + fpr))
 }
