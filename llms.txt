@@ -20,7 +20,7 @@ can be installed using `remotes` or `devtools` (or `pak` etc.) like so:
 ``` r
 
 install.packages('devtools')
-devtools::install_github('sagesteppe/eSTZwritR')
+devtools::install_github('sagesteppe/lsed')
 ```
 
 ## Functions
