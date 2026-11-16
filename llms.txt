@@ -1,19 +1,29 @@
 # lsed
 
-Prevalence-corrected evaluation of species-distribution model
-predictions — the metric helpers behind the decision-curve manuscript.
+[![lsed package hexagonal
+logo](reference/figures/logo.png)](https://sagesteppe.github.io/lsed/)
 
-## Install
+A software package (R, and Python) for determining the benefit of using
+a statistical model in landscape decision making. Currently using minor
+extensions of decision curve analysis (dca), geared towards species
+distribution models.
+
+## Overview
+
+boop boop.
+
+## Installation
+
+lsed is available only on github, with plans for submission to CRAN. It
+can be installed using `remotes` or `devtools` (or `pak` etc.) like so:
 
 ``` r
 
-# from the package root
-devtools::install(".")
-# or
-# R CMD INSTALL .
+install.packages('devtools')
+devtools::install_github('sagesteppe/eSTZwritR')
 ```
 
-## What’s here
+## Functions
 
 | Function | Purpose |
 |----|----|
@@ -24,8 +34,28 @@ devtools::install(".")
 | [`nb_exact()`](https://sagesteppe.github.io/lsed/reference/nb_exact.md), [`nb_binormal()`](https://sagesteppe.github.io/lsed/reference/nb_binormal.md), [`nb_treat_all()`](https://sagesteppe.github.io/lsed/reference/nb_treat_all.md) | Decision-curve net benefit (per-point, best-achievable, treat-all) |
 | [`cox_calibration()`](https://sagesteppe.github.io/lsed/reference/cox_calibration.md), [`recalibrate_to_prevalence()`](https://sagesteppe.github.io/lsed/reference/recalibrate_to_prevalence.md), [`clamp()`](https://sagesteppe.github.io/lsed/reference/clamp.md) | Calibration helpers |
 
-`data-raw/logo.R` regenerates the hex sticker (`man/figures/logo.png`);
-it is a development script and is not installed with the package.
+## Citation
+
+Benkendorf, R.C. 2024. lsed
+
+A bibtex entry for latex users is:
+
+@Misc{benkendorf2026lsed,  
+title = {lsed},  
+author = {Benkendorf R.C.},  
+year = {2026},  
+url = {<https://github.com/sagesteppe/lsed>},  
+\##doi = {10.5281/zenodo.14641975} }
+
+Or use R to display citations:
+
+``` r
+
+citation('eSTZwritR')
+```
+
+For complete citation information, see the [citation
+page](https://sagesteppe.github.io/lsed/authors.html#citation).
 
 # Package index
 
