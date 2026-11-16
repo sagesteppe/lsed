@@ -51,7 +51,7 @@ Or use R to display citations:
 
 ``` r
 
-citation('eSTZwritR')
+citation('lsed')
 ```
 
 For complete citation information, see the [citation
