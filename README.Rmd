@@ -12,7 +12,7 @@ description: "WORDS"
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sagesteppe.github.io/lsed/">
 <meta property="og:title" content="lsed; decision support tools for landscape ecologists">
-<meta property="og:description" content="R package providing automated tools for botanical collectors to gather political, geographic, and taxonomic data for herbarium specimens">
+<meta property="og:description" content="R package for determining the benefit of using a statistical model in landscape decision making, using extensions of decision curve analysis (DCA) geared towards species distribution models.">
 <meta property="og:image" content="https://sagesteppe.github.io/lsed/man/figures/social-preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -25,13 +25,8 @@ description: "WORDS"
 <meta name="twitter:image" content="https://sagesteppe.github.io/lsed/man/figures/social-preview.png">
 
 <!-- SEO Meta Tags -->
-<meta name="description" content="R package providing automated tools for botanical collectors to gather political, geographic, and taxonomic data for herbarium specimens">
-
-
-
-<!-- SEO Meta Tags -->
-<meta name="description" content="A software package (R, and Python) for determining the benefit of using a statistical model in landscape decision making. 
-Currently using minor extensions of decision curve analysis (dca), geared towards species distribution models. 
+<meta name="description" content="A software package (R, and Python) for determining the benefit of using a statistical model in landscape decision making.
+Currently using minor extensions of decision curve analysis (dca), geared towards species distribution models.
 ">
 
 # lsed  
@@ -41,7 +36,6 @@ Currently using minor extensions of decision curve analysis (dca), geared toward
 
 ```{r, echo = FALSE, results='asis'}
 cat(
-    badger::badge_cran_checks("badger"), '\n',
     badger::badge_github_actions('sagesteppe/lsed'), '\n',
     badger::badge_codefactor('sagesteppe/lsed'), "\n",
 	badger::badge_repostatus("Active"), "\n",
@@ -64,7 +58,7 @@ It can be installed using `remotes` or `devtools` (or `pak` etc.) like so:
 
 ```r
 install.packages('devtools')
-devtools::install_github('sagesteppe/eSTZwritR')
+devtools::install_github('sagesteppe/lsed')
 ```
 
 ## Functions

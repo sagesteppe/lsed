@@ -133,6 +133,14 @@ letters_df <- data.frame(
   y = ys[start_row + (nrow_bm - lit[, "row"])]  # flip: bitmap row 1 = top
 )
 
+# clip the noise cells to the inner hex (buffered out by half a cell, so tiles
+# fully cover it right up to the inner edge; the half-cell overflow lands in the
+# border ring and is hidden by the cream frame). Cells outside are dropped, so
+# everything beyond the hex is left blank -> transparent in the saved PNG.
+clip_to     <- st_buffer(hex_inner, dx / 2)
+canvas_pts  <- st_as_sf(as.data.frame(canvas), coords = c("x", "y"), remove = FALSE)
+canvas      <- canvas[lengths(st_intersects(canvas_pts, clip_to)) > 0, ]
+
 # -----------------------------------------------------------------------------
 # 4. DCA-like net-benefit curves ----------------------------------------------
 # -----------------------------------------------------------------------------
@@ -181,21 +189,21 @@ for (k in 1:6) {
 pyramids <- st_sf(id = seq_along(tris), geometry = st_sfc(tris))
 
 # -----------------------------------------------------------------------------
-# 5. mask frame (everything outside the inner hex) -----------------------------
+# 5. mask frame (the border ring: outer hex minus inner hex) -------------------
 # -----------------------------------------------------------------------------
 
-frame <- st_difference(
-  st_as_sfc(st_bbox(st_buffer(hex, 1))),
-  st_geometry(hex_inner)
-) |> st_sf()
+# Only the ring between the outer and inner hex is painted. Nothing is drawn
+# beyond the outer edge, so the sticker's corners stay transparent.
+frame <- st_sf(geometry = st_difference(st_geometry(hex), st_geometry(hex_inner)))
 
 # -----------------------------------------------------------------------------
 # 6. plot ----------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
 logo <- ggplot() +
-  # ambient noise fill
-  geom_raster(data = canvas, aes(x, y, fill = fill), show.legend = FALSE) +
+  # ambient noise fill (geom_tile, since the grid is now clipped to the hex)
+  geom_tile(data = canvas, aes(x, y, fill = fill),
+            width = dx, height = dy, show.legend = FALSE) +
   scale_fill_gradientn(colours = pal) +
   # DCA-ish curves
   geom_line(
@@ -220,8 +228,14 @@ logo <- ggplot() +
   geom_sf(data = pyramids, fill = NA, colour = 'grey60', linewidth = 0.3) +
   geom_sf(data = hex_inner_outln, colour = border_col, linewidth = 1.2) +
   geom_sf(data = hex_outline,     colour = border_col, linewidth = 2.5) +
-  coord_sf(expand = FALSE) +
-  theme_void()
+  # hug the hex extent; a hair of padding keeps the outer stroke from clipping
+  coord_sf(
+    xlim = c(bb[["xmin"]] - 0.12, bb[["xmax"]] + 0.12),
+    ylim = c(bb[["ymin"]] - 0.12, bb[["ymax"]] + 0.12),
+    expand = FALSE
+  ) +
+  theme_void() +
+  theme(plot.margin = margin(0, 0, 0, 0))
 
 logo
 # -----------------------------------------------------------------------------
@@ -234,5 +248,9 @@ ggsave(
   plot = logo, width = 5, height = 5 * (sqrt(3) / 2),
   dpi = 300, bg = 'transparent'
 )
+
+# crop the transparent border so the file hugs the hexagon's extent
+system2('convert', c('man/figures/logo.png', '-trim', '+repage',
+                     'man/figures/logo.png'))
 
 ## done
