@@ -2,7 +2,7 @@ pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2026-11-16T00:08Z
+last_built: 2026-11-16T00:10Z
 urls:
   reference: https://sagesteppe.github.io/lsed/reference
   article: https://sagesteppe.github.io/lsed/articles
