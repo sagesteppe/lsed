@@ -45,6 +45,18 @@ install.packages('devtools')
 devtools::install_github('sagesteppe/eSTZwritR')
 ```
 
+## Functions
+
+| Function | Purpose |
+|---|---|
+| `reweight()` | Case weights that re-price an evaluation sample to a target prevalence |
+| `roc_auc()` | Prevalence-invariant ROC-AUC via the rank (Mann-Whitney) identity |
+| `ap_pointwise()`, `pr_curve_exact()` | Exact average precision / PR curve at a target prevalence |
+| `ap_binormal()`, `pr_curve_binormal()`, `ap_scalar_to_prev()` | Equal-variance binormal (summary-metric) route |
+| `nb_exact()`, `nb_binormal()`, `nb_treat_all()` | Decision-curve net benefit (per-point, best-achievable, treat-all) |
+| `cox_calibration()`, `recalibrate_to_prevalence()`, `clamp()` | Calibration helpers |
+
+
 ## Citation
 
 Benkendorf, R.C. 2024. lsed
