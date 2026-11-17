@@ -37,8 +37,12 @@ not optimism, and applies no overfit correction.}
 \item{stratified}{Resample within outcome classes (default \code{TRUE}) or
 over all observations (\code{FALSE}).}
 
-\item{cores}{Number of worker processes. Defaults to three quarters of the
-detected cores (at least one), capped at \code{B}.}
+\item{cores}{Number of worker processes, capped at \code{B}. Defaults to
+\code{getOption("mc.cores", 1L)}, i.e. serial unless you opt in. Parallel
+replicates use \code{\link[parallel]{mclapply}}, which forks on Unix-alikes
+only; on Windows, and in core-limited environments such as \code{R CMD
+check} and vignette knitting, execution falls back to serial (or at most two
+cores) regardless of this argument.}
 }
 \value{
 A data frame with one row per \code{pt}: the threshold \code{pt}, the

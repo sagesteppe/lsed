@@ -30,6 +30,39 @@ ap_pointwise <- function(truth, prob, pi) {
   sum(c(recall[1], diff(recall)) * prec)
 }
 
+#' Reported precision-recall AUC (average precision) at the sample prevalence
+#'
+#' Average precision computed at the evaluation sample's own prevalence -- the
+#' ordinary (unweighted) PR-AUC a model reports from its test set, and the
+#' precision-side sibling of the prevalence-invariant \code{\link{roc_auc}}. It is
+#' exactly \code{\link{ap_pointwise}} evaluated at \code{pi = mean(truth == 1)}
+#' (where the prevalence weights become uniform); use \code{\link{ap_pointwise}}
+#' directly to re-price average precision to a different target prevalence.
+#'
+#' @param truth Outcomes coded 1 (presence) / 0 (absence).
+#' @param prob Predicted probabilities or scores, same length as \code{truth}.
+#'
+#' @return Scalar average precision at the sample prevalence, or \code{NA_real_}
+#'   if a class is absent.
+#' @note Unlike \code{\link{roc_auc}}, average precision is not inflated by easy
+#'   absences, which is why it is the recommended anchor for curve
+#'   reconstruction. This function is still a per-sample \emph{diagnostic}: to
+#'   rebuild a prevalence-corrected decision curve, pass the reported value --
+#'   together with the prevalence it was measured at -- to
+#'   \code{\link{ap_scalar_to_prev}} or \code{\link{nb_binormal_band}}.
+#' @seealso \code{\link{roc_auc}} (the discrimination diagnostic),
+#'   \code{\link{ap_pointwise}} (re-price to a target prevalence),
+#'   \code{\link{ap_scalar_to_prev}}, \code{\link{nb_binormal_band}}.
+#' @export
+pr_auc <- function(truth, prob) {
+  n1 <- sum(truth == 1)
+  n0 <- sum(truth == 0)
+  if (n1 == 0 || n0 == 0) {
+    return(NA_real_)
+  }
+  ap_pointwise(truth, prob, pi = n1 / (n1 + n0))
+}
+
 #' Average precision of an equal-variance binormal ROC at a prevalence
 #'
 #' Average precision implied by an equal-variance binormal ROC with separation

@@ -19,3 +19,16 @@ Area under the ROC curve computed from the rank-sum of the positive scores,
 equivalent to the probability that a random presence outscores a random
 absence. Prevalence-invariant, so no case weighting is needed.
 }
+\note{
+ROC-AUC is a discrimination \emph{diagnostic} -- the probability a random
+  presence outscores a random absence -- not a decision-curve reconstruction
+  anchor. On species-distribution models it is easily inflated by easy,
+  far-from-suitable absences the model rejects for free, so a curve rebuilt from
+  it can oversell and disappoint on ground-truthing. To reconstruct a
+  prevalence-corrected decision curve, anchor on a PR-AUC (\code{\link{pr_auc}})
+  and pass it to \code{\link{ap_scalar_to_prev}} or \code{\link{nb_binormal_band}}.
+}
+\seealso{
+\code{\link{pr_auc}} (the precision diagnostic),
+  \code{\link{ap_scalar_to_prev}}, \code{\link{nb_binormal_band}}.
+}

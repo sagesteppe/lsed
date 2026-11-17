@@ -9,10 +9,14 @@ reference:
   contents:
   - reweight
 
-- title: Discrimination
-  desc: Prevalence-invariant ranking performance.
+- title: Reported diagnostics
+  desc: >
+    The two per-sample summary scores a model reports. ROC-AUC is
+    prevalence-invariant but inflated by easy absences; PR-AUC is the recommended
+    anchor for curve reconstruction.
   contents:
   - roc_auc
+  - pr_auc
 
 - title: Average precision & PR curves
   desc: >

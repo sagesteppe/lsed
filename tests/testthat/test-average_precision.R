@@ -69,3 +69,29 @@ test_that("pr_curve_binormal returns a grid-length curve of valid precisions", {
   expect_true(all(cv$precision > 0 & cv$precision < 1))
   expect_true(all(cv$recall > 0 & cv$recall < 1))
 })
+
+test_that("pr_auc equals ap_pointwise at the sample's own prevalence", {
+  set.seed(40)
+  truth <- rbinom(200, 1, 0.3)
+  prob  <- plogis(-0.8 + 1.5 * truth + rnorm(200))
+  expect_equal(pr_auc(truth, prob),
+               ap_pointwise(truth, prob, pi = mean(truth == 1)))
+})
+
+test_that("pr_auc hits 1 for a perfect ranking and NA without both classes", {
+  truth <- c(0, 0, 0, 1, 1)
+  prob  <- c(1, 2, 3, 4, 5)                 # the two presences score highest
+  expect_equal(pr_auc(truth, prob), 1)
+  expect_true(is.na(pr_auc(rep(1, 5), runif(5))))
+  expect_true(is.na(pr_auc(rep(0, 5), runif(5))))
+})
+
+test_that("pr_auc is bounded in [0, 1] and at least the prevalence baseline", {
+  set.seed(41)
+  truth <- rbinom(300, 1, 0.25)
+  prob  <- plogis(-1 + 2 * truth + rnorm(300))
+  ap <- pr_auc(truth, prob)
+  expect_true(ap >= 0 && ap <= 1)
+  # a useful ranker beats the no-skill baseline (= sample prevalence)
+  expect_true(ap >= mean(truth == 1))
+})
