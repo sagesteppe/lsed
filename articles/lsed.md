@@ -65,9 +65,14 @@ n_tr <- 500; rad <- 0.22
 sx <- pmin(pmax(0.5 + rnorm(n_tr, 0, rad), 0), 1)
 sy <- pmin(pmax(0.5 + rnorm(n_tr, 0, rad), 0), 1)
 tr_cells <- cellFromXY(env, cbind(sx, sy))
-train <- as.data.frame(L[tr_cells, 1:K]); names(train) <- vars
-train$pa <- factor(ifelse(pres[tr_cells] == 1, "pres", "abs"),
-                   levels = c("abs", "pres")) # caret wants a factor outcome
+
+train <- as.data.frame(L[tr_cells, 1:K])
+names(train) <- vars
+
+train$pa <- factor(
+  ifelse(pres[tr_cells] == 1, "pres", "abs"),
+  levels = c("abs", "pres")
+  ) # caret wants a factor outcome
 
 round(pi_land, 3)
 #> [1] 0.149
@@ -119,9 +124,11 @@ tr_pts <- st_as_sf(
   crs = "EPSG:3035"
   )
 
+# spatial folds: create spatial CV folds // these used for
+# obtaining the AOA
 folds  <- knndm(tpoints = tr_pts, modeldomain = env, k = 5)
 
-m <- train(
+m <- train( ### fit a model using caret
   x = train[vars], y = train$pa,
   method = "glm", family = "binomial",
   trControl = trainControl(
@@ -133,7 +140,12 @@ m <- train(
     )
   )
 
-prob <- predict(m, eval, type = "prob")[, "pres"] # held-out predictions
+## predict the model onto the held out test data
+## giving us the prredicted probalities to go along 
+## with the known preseence/ absences.
+## note that caret produces a two column prediction (pres, abs)
+# we only need the 'pres' column to score it. 
+prob <- predict(m, eval, type = "prob")[, "pres"] 
 
 # AOA from CAST, referenced on the TRAINING PRESENCES only (not pseudo-absences)
 pres_rows <- train$pa == "pres"
@@ -142,7 +154,7 @@ aoa_r  <- aoa(
   train = train[pres_rows, vars], 
   verbose = FALSE
   )
-di     <- terra::extract(aoa_r$DI, xy[ev_cells, ])[, 1]
+di <- terra::extract(aoa_r$DI, xy[ev_cells, ])[, 1]
 in_aoa <- di <= aoa_r$parameters$threshold # keep interpolation points only
 ```
 
@@ -160,15 +172,13 @@ pi0   <- mean(truth) # in-AOA (design) prevalence
 
 ## The reported metrics
 
-These are the scalars a user will find in most papers. Here we have them
-scoped to just within the AOA, whereas most users will only have them
+This is the kind of scalar a user will find in most papers. Here it is
+scoped to just within the AOA, whereas most users will only have it
 across the landscape.
 
 ``` r
 
-roc_auc(truth, pred) # prevalence-invariant
-#> [1] 0.9108728
-ap_pointwise(truth, pred, pi0) # PR-AUC at the design prevalence
+pr_auc(truth, pred) # PR-AUC at the sample (design) prevalence
 #> [1] 0.9151644
 ```
 
@@ -186,10 +196,10 @@ turns an assumed spread in the PR-AUC into a plausibility band.
 
 ``` r
 
-pr_auc <- ap_pointwise(truth, pred, pi0)
-pt     <- seq(0.001, 0.25, by = 0.002) # threshold probabilities
+reported <- pr_auc(truth, pred)        # the reported scalar, at its design prevalence
+pt       <- seq(0.001, 0.25, by = 0.002) # threshold probabilities
 
-rec <- ap_scalar_to_prev(pr_auc, pi0 = pi0, pi_target = pi_land)
+rec <- ap_scalar_to_prev(reported, pi0 = pi0, pi_target = pi_land)
 rec[c("mu", "implied_roc_auc", "ap_target")]
 #> $mu
 #> [1] 1.893501
@@ -201,7 +211,7 @@ rec[c("mu", "implied_roc_auc", "ap_target")]
 #> [1] 0.7037962
 
 nb_sum   <- nb_binormal(rec$mu, pi_land, pt)
-band_sum <- nb_binormal_band(pr_auc, pi_land, pt, spread = 0.04, pi0 = pi0)
+band_sum <- nb_binormal_band(reported, pi_land, pt, spread = 0.04, pi0 = pi0)
 ```
 
 ## Route 2 — per-point: the decision curve from the raw data

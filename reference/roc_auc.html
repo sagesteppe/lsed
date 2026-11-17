@@ -63,6 +63,21 @@ absence. Prevalence-invariant, so no case weighting is needed.</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Scalar ROC-AUC, or <code>NA_real_</code> if a class is absent.</p>
     </div>
+    <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p>ROC-AUC is a discrimination <em>diagnostic</em> – the probability a random
+  presence outscores a random absence – not a decision-curve reconstruction
+  anchor. On species-distribution models it is easily inflated by easy,
+  far-from-suitable absences the model rejects for free, so a curve rebuilt from
+  it can oversell and disappoint on ground-truthing. To reconstruct a
+  prevalence-corrected decision curve, anchor on a PR-AUC (<code><a href="pr_auc.html">pr_auc</a></code>)
+  and pass it to <code><a href="ap_scalar_to_prev.html">ap_scalar_to_prev</a></code> or <code><a href="nb_binormal_band.html">nb_binormal_band</a></code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="pr_auc.html">pr_auc</a></code> (the precision diagnostic),
+  <code><a href="ap_scalar_to_prev.html">ap_scalar_to_prev</a></code>, <code><a href="nb_binormal_band.html">nb_binormal_band</a></code>.</p></div>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

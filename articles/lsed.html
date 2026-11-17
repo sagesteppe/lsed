@@ -117,9 +117,14 @@ ones plus two noise).</p>
 <span><span class="va">sx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0.5</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n_tr</span>, <span class="fl">0</span>, <span class="va">rad</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">sy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0.5</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n_tr</span>, <span class="fl">0</span>, <span class="va">rad</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">tr_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/xyCellFrom.html" class="external-link">cellFromXY</a></span><span class="op">(</span><span class="va">env</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">sx</span>, <span class="va">sy</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">L</span><span class="op">[</span><span class="va">tr_cells</span>, <span class="fl">1</span><span class="op">:</span><span class="va">K</span><span class="op">]</span><span class="op">)</span>; <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">vars</span></span>
-<span><span class="va">train</span><span class="op">$</span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">pres</span><span class="op">[</span><span class="va">tr_cells</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="st">"pres"</span>, <span class="st">"abs"</span><span class="op">)</span>,</span>
-<span>                   levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"abs"</span>, <span class="st">"pres"</span><span class="op">)</span><span class="op">)</span> <span class="co"># caret wants a factor outcome</span></span>
+<span></span>
+<span><span class="va">train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">L</span><span class="op">[</span><span class="va">tr_cells</span>, <span class="fl">1</span><span class="op">:</span><span class="va">K</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">vars</span></span>
+<span></span>
+<span><span class="va">train</span><span class="op">$</span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">pres</span><span class="op">[</span><span class="va">tr_cells</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="st">"pres"</span>, <span class="st">"abs"</span><span class="op">)</span>,</span>
+<span>  levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"abs"</span>, <span class="st">"pres"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="co"># caret wants a factor outcome</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pi_land</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.149</span></span></code></pre></div>
@@ -164,9 +169,11 @@ actually hard.</p>
 <span>  crs <span class="op">=</span> <span class="st">"EPSG:3035"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
+<span><span class="co"># spatial folds: create spatial CV folds // these used for</span></span>
+<span><span class="co"># obtaining the AOA</span></span>
 <span><span class="va">folds</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://hannameyer.github.io/CAST/reference/knndm.html" class="external-link">knndm</a></span><span class="op">(</span>tpoints <span class="op">=</span> <span class="va">tr_pts</span>, modeldomain <span class="op">=</span> <span class="va">env</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/train.html" class="external-link">train</a></span><span class="op">(</span></span>
+<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/train.html" class="external-link">train</a></span><span class="op">(</span> <span class="co">### fit a model using caret</span></span>
 <span>  x <span class="op">=</span> <span class="va">train</span><span class="op">[</span><span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train</span><span class="op">$</span><span class="va">pa</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"glm"</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,</span>
 <span>  trControl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/trainControl.html" class="external-link">trainControl</a></span><span class="op">(</span></span>
@@ -178,7 +185,12 @@ actually hard.</p>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">eval</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span><span class="op">[</span>, <span class="st">"pres"</span><span class="op">]</span> <span class="co"># held-out predictions</span></span>
+<span><span class="co">## predict the model onto the held out test data</span></span>
+<span><span class="co">## giving us the prredicted probalities to go along </span></span>
+<span><span class="co">## with the known preseence/ absences.</span></span>
+<span><span class="co">## note that caret produces a two column prediction (pres, abs)</span></span>
+<span><span class="co"># we only need the 'pres' column to score it. </span></span>
+<span><span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">eval</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span><span class="op">[</span>, <span class="st">"pres"</span><span class="op">]</span> </span>
 <span></span>
 <span><span class="co"># AOA from CAST, referenced on the TRAINING PRESENCES only (not pseudo-absences)</span></span>
 <span><span class="va">pres_rows</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">$</span><span class="va">pa</span> <span class="op">==</span> <span class="st">"pres"</span></span>
@@ -187,7 +199,7 @@ actually hard.</p>
 <span>  train <span class="op">=</span> <span class="va">train</span><span class="op">[</span><span class="va">pres_rows</span>, <span class="va">vars</span><span class="op">]</span>, </span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="va">di</span>     <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">aoa_r</span><span class="op">$</span><span class="va">DI</span>, <span class="va">xy</span><span class="op">[</span><span class="va">ev_cells</span>, <span class="op">]</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">di</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">aoa_r</span><span class="op">$</span><span class="va">DI</span>, <span class="va">xy</span><span class="op">[</span><span class="va">ev_cells</span>, <span class="op">]</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">in_aoa</span> <span class="op">&lt;-</span> <span class="va">di</span> <span class="op">&lt;=</span> <span class="va">aoa_r</span><span class="op">$</span><span class="va">parameters</span><span class="op">$</span><span class="va">threshold</span> <span class="co"># keep interpolation points only</span></span></code></pre></div>
 <p>Scoring <strong>inside the area of applicability</strong> keeps the
 comparison honest. The model is judged in how it performs while
@@ -201,13 +213,11 @@ detecting new occurrences in, and has the training data to model.</p>
 <div class="section level2">
 <h2 id="the-reported-metrics">The reported metrics<a class="anchor" aria-label="anchor" href="#the-reported-metrics"></a>
 </h2>
-<p>These are the scalars a user will find in most papers. Here we have
-them scoped to just within the AOA, whereas most users will only have
-them across the landscape.</p>
+<p>This is the kind of scalar a user will find in most papers. Here it
+is scoped to just within the AOA, whereas most users will only have it
+across the landscape.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/roc_auc.html">roc_auc</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred</span><span class="op">)</span> <span class="co"># prevalence-invariant</span></span>
-<span><span class="co">#&gt; [1] 0.9108728</span></span>
-<span><span class="fu"><a href="../reference/ap_pointwise.html">ap_pointwise</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred</span>, <span class="va">pi0</span><span class="op">)</span> <span class="co"># PR-AUC at the design prevalence</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/pr_auc.html">pr_auc</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred</span><span class="op">)</span> <span class="co"># PR-AUC at the sample (design) prevalence</span></span>
 <span><span class="co">#&gt; [1] 0.9151644</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -221,10 +231,10 @@ best-achievable net benefit off that ROC, and
 <code><a href="../reference/nb_binormal_band.html">nb_binormal_band()</a></code> turns an assumed spread in the PR-AUC
 into a plausibility band.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pr_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ap_pointwise.html">ap_pointwise</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred</span>, <span class="va">pi0</span><span class="op">)</span></span>
-<span><span class="va">pt</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.25</span>, by <span class="op">=</span> <span class="fl">0.002</span><span class="op">)</span> <span class="co"># threshold probabilities</span></span>
+<code class="sourceCode R"><span><span class="va">reported</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_auc.html">pr_auc</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred</span><span class="op">)</span>        <span class="co"># the reported scalar, at its design prevalence</span></span>
+<span><span class="va">pt</span>       <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.25</span>, by <span class="op">=</span> <span class="fl">0.002</span><span class="op">)</span> <span class="co"># threshold probabilities</span></span>
 <span></span>
-<span><span class="va">rec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ap_scalar_to_prev.html">ap_scalar_to_prev</a></span><span class="op">(</span><span class="va">pr_auc</span>, pi0 <span class="op">=</span> <span class="va">pi0</span>, pi_target <span class="op">=</span> <span class="va">pi_land</span><span class="op">)</span></span>
+<span><span class="va">rec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ap_scalar_to_prev.html">ap_scalar_to_prev</a></span><span class="op">(</span><span class="va">reported</span>, pi0 <span class="op">=</span> <span class="va">pi0</span>, pi_target <span class="op">=</span> <span class="va">pi_land</span><span class="op">)</span></span>
 <span><span class="va">rec</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"implied_roc_auc"</span>, <span class="st">"ap_target"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; $mu</span></span>
 <span><span class="co">#&gt; [1] 1.893501</span></span>
@@ -236,7 +246,7 @@ into a plausibility band.</p>
 <span><span class="co">#&gt; [1] 0.7037962</span></span>
 <span></span>
 <span><span class="va">nb_sum</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nb_binormal.html">nb_binormal</a></span><span class="op">(</span><span class="va">rec</span><span class="op">$</span><span class="va">mu</span>, <span class="va">pi_land</span>, <span class="va">pt</span><span class="op">)</span></span>
-<span><span class="va">band_sum</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nb_binormal_band.html">nb_binormal_band</a></span><span class="op">(</span><span class="va">pr_auc</span>, <span class="va">pi_land</span>, <span class="va">pt</span>, spread <span class="op">=</span> <span class="fl">0.04</span>, pi0 <span class="op">=</span> <span class="va">pi0</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">band_sum</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nb_binormal_band.html">nb_binormal_band</a></span><span class="op">(</span><span class="va">reported</span>, <span class="va">pi_land</span>, <span class="va">pt</span>, spread <span class="op">=</span> <span class="fl">0.04</span>, pi0 <span class="op">=</span> <span class="va">pi0</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="route-2-per-point-the-decision-curve-from-the-raw-data">Route 2 — per-point: the decision curve from the raw data<a class="anchor" aria-label="anchor" href="#route-2-per-point-the-decision-curve-from-the-raw-data"></a>

@@ -47,9 +47,9 @@
         </dt>
         <dd>Prevalence case weights</dd>
       </dl></div><div class="section level2">
-      <h2 id="discrimination">Discrimination<a class="anchor" aria-label="anchor" href="#discrimination"></a></h2>
+      <h2 id="reported-diagnostics">Reported diagnostics<a class="anchor" aria-label="anchor" href="#reported-diagnostics"></a></h2>
 
-      <div class="section-desc"><p>Prevalence-invariant ranking performance.</p></div>
+      <div class="section-desc"><p>The two per-sample summary scores a model reports. ROC-AUC is prevalence-invariant but inflated by easy absences; PR-AUC is the recommended anchor for curve reconstruction.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -62,6 +62,13 @@
 
         </dt>
         <dd>ROC-AUC via the rank (Mann-Whitney) identity</dd>
+
+        <dt>
+
+          <code><a href="pr_auc.html">pr_auc()</a></code>
+
+        </dt>
+        <dd>Reported precision-recall AUC (average precision) at the sample prevalence</dd>
       </dl></div><div class="section level2">
       <h2 id="average-precision-pr-curves">Average precision &amp; PR curves<a class="anchor" aria-label="anchor" href="#average-precision-pr-curves"></a></h2>
 

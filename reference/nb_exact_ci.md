@@ -68,8 +68,13 @@ nb_exact_ci(
 
 - cores:
 
-  Number of worker processes. Defaults to three quarters of the detected
-  cores (at least one), capped at `B`.
+  Number of worker processes, capped at `B`. Defaults to
+  `getOption("mc.cores", 1L)`, i.e. serial unless you opt in. Parallel
+  replicates use [`mclapply`](https://rdrr.io/r/parallel/mclapply.html),
+  which forks on Unix-alikes only; on Windows, and in core-limited
+  environments such as `R CMD check` and vignette knitting, execution
+  falls back to serial (or at most two cores) regardless of this
+  argument.
 
 ## Value
 

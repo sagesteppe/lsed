@@ -113,8 +113,12 @@ over all observations (<code>FALSE</code>).</p></dd>
 
 
 <dt id="arg-cores">cores<a class="anchor" aria-label="anchor" href="#arg-cores"></a></dt>
-<dd><p>Number of worker processes. Defaults to three quarters of the
-detected cores (at least one), capped at <code>B</code>.</p></dd>
+<dd><p>Number of worker processes, capped at <code>B</code>. Defaults to
+<code>getOption("mc.cores", 1L)</code>, i.e. serial unless you opt in. Parallel
+replicates use <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">mclapply</a></code>, which forks on Unix-alikes
+only; on Windows, and in core-limited environments such as <code>R CMD
+check</code> and vignette knitting, execution falls back to serial (or at most two
+cores) regardless of this argument.</p></dd>
 
 </dl></div>
     <div class="section level2">

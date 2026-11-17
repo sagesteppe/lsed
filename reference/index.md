@@ -7,12 +7,17 @@ Re-price an evaluation sample to a target landscape prevalence.
 - [`reweight()`](https://sagesteppe.github.io/lsed/reference/reweight.md)
   : Prevalence case weights
 
-## Discrimination
+## Reported diagnostics
 
-Prevalence-invariant ranking performance.
+The two per-sample summary scores a model reports. ROC-AUC is
+prevalence-invariant but inflated by easy absences; PR-AUC is the
+recommended anchor for curve reconstruction.
 
 - [`roc_auc()`](https://sagesteppe.github.io/lsed/reference/roc_auc.md)
   : ROC-AUC via the rank (Mann-Whitney) identity
+- [`pr_auc()`](https://sagesteppe.github.io/lsed/reference/pr_auc.md) :
+  Reported precision-recall AUC (average precision) at the sample
+  prevalence
 
 ## Average precision & PR curves
 
