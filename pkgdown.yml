@@ -3,7 +3,7 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   lsed: lsed.html
-last_built: 2026-11-17T03:10Z
+last_built: 2026-11-17T03:57Z
 urls:
   reference: https://sagesteppe.github.io/lsed/reference
   article: https://sagesteppe.github.io/lsed/articles

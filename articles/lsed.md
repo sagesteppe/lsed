@@ -11,11 +11,12 @@ decision curve:
 2.  an exact **per-point** route, if you have the held-out test set from
     the model.
 
-This quickstart fits one real model — a `caret` GLM with an
-area-of-applicability mask from `CAST`, and uses both routes. The toy
-landscape follows the virtual-species convention of Grimmett et
-al. (2021): a field of spatially autocorrelated predictors and a rare
-species whose true niche depends on only a few of them.
+This quickstart fits one real model — a `caret` GLM cross-validated on
+spatial folds, with an area-of-applicability mask, both from `CAST` —
+and uses both routes. The toy landscape follows the virtual-species
+convention of Grimmett et al. (2021): a field of spatially
+autocorrelated predictors and a rare species whose true niche depends on
+only a few of them.
 
 ``` r
 
@@ -23,6 +24,7 @@ library(lsed)
 library(terra)
 library(CAST)
 library(caret)
+library(sf)
 library(ggplot2)
 set.seed(1)
 ```
@@ -37,7 +39,8 @@ noise).
 ``` r
 
 nx <- ny <- 80; P <- 12; K <- 5
-r0 <- rast(nrows = ny, ncols = nx, xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+r0 <- rast(nrows = ny, ncols = nx, xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+           crs = "EPSG:3035")                       # projected, so folds use planar distance
 xy <- xyFromCell(r0, 1:ncell(r0))
 
 smooth_field <- function(x, y, nh = 4, mf = 1.6) {   # one autocorrelated layer
@@ -87,19 +90,59 @@ round(mean(y), 3) # enriched design prevalence
 #> [1] 0.25
 ```
 
-## Fit a GLM using Caret and its area of applicability
+## Fit a GLM with spatial cross-validation, and its area of applicability
+
+Because the survey is one spatial cluster, random cross-validation folds
+would leak neighbours between train and test and flatter the model.
+[`CAST::knndm()`](https://hannameyer.github.io/CAST/reference/knndm.html)
+instead builds folds whose train-to-test distances match the
+train-to-prediction distances across the landscape, so the resampling
+reflects the real extrapolation the model faces, and we pass those folds
+to [`caret::train()`](https://rdrr.io/pkg/caret/man/train.html).
+
+The area of applicability is then built from the **training presences
+only** — pseudo-absences, scattered across environments the taxon never
+occupies, would conflate the dissimilarity index. The mask therefore
+keeps the evaluation points whose environments resemble occupied
+habitat, the ones where distinguishing presence from absence is actually
+hard.
 
 ``` r
 
-m <- train(x = train[vars], y = train$pa,
-           method = "glm", family = "binomial",
-           trControl = trainControl(method = "none", classProbs = TRUE))
+# spatial folds: train-to-test distances matched to the prediction geography
+tr_pts <- st_as_sf(
+  data.frame(
+    x = xy[tr_cells, 1], 
+    y = xy[tr_cells, 2]
+    ),
+  coords = c("x", "y"), 
+  crs = "EPSG:3035"
+  )
+
+folds  <- knndm(tpoints = tr_pts, modeldomain = env, k = 5)
+
+m <- train(
+  x = train[vars], y = train$pa,
+  method = "glm", family = "binomial",
+  trControl = trainControl(
+    method = "cv",
+    index = folds$indx_train,
+    indexOut = folds$indx_test,
+    savePredictions = "final", 
+    classProbs = TRUE
+    )
+  )
 
 prob <- predict(m, eval, type = "prob")[, "pres"] # held-out predictions
 
-# AOA from CAST, weighted by the fitted model's variable importance
-aoa_r <- aoa(newdata = env[[vars]], model = m, verbose = FALSE)
-di    <- terra::extract(aoa_r$DI, xy[ev_cells, ])[, 1]
+# AOA from CAST, referenced on the TRAINING PRESENCES only (not pseudo-absences)
+pres_rows <- train$pa == "pres"
+aoa_r  <- aoa(
+  newdata = env[[vars]], 
+  train = train[pres_rows, vars], 
+  verbose = FALSE
+  )
+di     <- terra::extract(aoa_r$DI, xy[ev_cells, ])[, 1]
 in_aoa <- di <= aoa_r$parameters$threshold # keep interpolation points only
 ```
 
@@ -124,9 +167,9 @@ across the landscape.
 ``` r
 
 roc_auc(truth, pred) # prevalence-invariant
-#> [1] 0.9423054
+#> [1] 0.9108728
 ap_pointwise(truth, pred, pi0) # PR-AUC at the design prevalence
-#> [1] 0.8761836
+#> [1] 0.9151644
 ```
 
 ## Route 1 — summary: from one reported number to a decision curve
@@ -149,13 +192,13 @@ pt     <- seq(0.001, 0.25, by = 0.002) # threshold probabilities
 rec <- ap_scalar_to_prev(pr_auc, pi0 = pi0, pi_target = pi_land)
 rec[c("mu", "implied_roc_auc", "ap_target")]
 #> $mu
-#> [1] 2.242677
+#> [1] 1.893501
 #> 
 #> $implied_roc_auc
-#> [1] 0.9436091
+#> [1] 0.9096996
 #> 
 #> $ap_target
-#> [1] 0.801286
+#> [1] 0.7037962
 
 nb_sum   <- nb_binormal(rec$mu, pi_land, pt)
 band_sum <- nb_binormal_band(pr_auc, pi_land, pt, spread = 0.04, pi0 = pi0)
@@ -180,12 +223,12 @@ the survey-everything reference.
 
 cox_calibration(truth, pred) # intercept, slope
 #> cox_intercept     cox_slope 
-#>     0.4558527     1.0647456
+#>     0.4613659     1.1509441
 
 pred_rc <- recalibrate_to_prevalence(pred, pi0, pi_land)
 
 nb_pt <- nb_exact(truth, pred_rc, pi_land, pt)
-ci_pt <- nb_exact_ci(truth, pred_rc, pi_land, pt, B = 499, level = 0.8)
+ci_pt <- nb_exact_ci(truth, pred_rc, pi_land, pt, B = 99, level = 0.8)
 nb_all <- nb_treat_all(pi_land, pt) # treat-none is identically 0
 ```
 
