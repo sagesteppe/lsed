@@ -69,6 +69,54 @@ test_that("nb_exact_ci two-sided brackets the point estimate and widens", {
   expect_true(all((ci95$upper - ci95$lower) >= (ci80$upper - ci80$lower) - 1e-9))
 })
 
+test_that("nb_exact_ci point estimate and columns match nb_exact exactly", {
+  set.seed(11)
+  truth <- rbinom(200, 1, 0.3)
+  prob  <- plogis(-0.8 + 1.5 * truth + rnorm(200))
+  pt <- c(0.02, 0.05, 0.1, 0.2)
+  ci <- nb_exact_ci(truth, prob, 0.05, pt, B = 199, cores = 1)
+  expect_equal(ci$pt, pt)
+  expect_equal(ci$nb, nb_exact(truth, prob, 0.05, pt))   # central is the plug-in estimate
+  expect_named(ci, c("pt", "nb", "lower"))
+})
+
+test_that("nb_exact_ci is reproducible given a fixed seed", {
+  truth <- rbinom(300, 1, 0.3); prob <- plogis(-0.8 + 1.5 * truth + rnorm(300))
+  pt <- c(0.05, 0.1, 0.2)
+  set.seed(99); a <- nb_exact_ci(truth, prob, 0.05, pt, B = 299, cores = 1)
+  set.seed(99); b <- nb_exact_ci(truth, prob, 0.05, pt, B = 299, cores = 1)
+  expect_identical(a, b)
+})
+
+test_that("nb_exact_ci unstratified path runs and brackets the estimate", {
+  set.seed(7)
+  truth <- rbinom(400, 1, 0.3); prob <- plogis(-0.8 + 1.5 * truth + rnorm(400))
+  pt <- c(0.05, 0.1, 0.2)
+  ci <- nb_exact_ci(truth, prob, 0.05, pt, B = 299, side = "both",
+                    stratified = FALSE, cores = 1)
+  expect_equal(ci$nb, nb_exact(truth, prob, 0.05, pt))
+  expect_true(all(ci$lower <= ci$nb + 1e-9))
+  expect_true(all(ci$upper >= ci$nb - 1e-9))
+})
+
+test_that("nb_exact_ci band collapses onto the estimate when every unit is flagged", {
+  # prob = 1 >= every pt < 1, so every stratified resample reproduces treat-all
+  # exactly (TPR = FPR = 1 regardless of which indices are drawn): band has zero width.
+  truth <- c(1, 0, 0, 1, 0, 0, 0, 1, 0, 0)
+  pt <- c(0.02, 0.1, 0.25)
+  set.seed(3)
+  ci <- nb_exact_ci(truth, rep(1, length(truth)), 0.08, pt, B = 199,
+                    side = "both", cores = 1)
+  expect_equal(ci$lower, ci$nb)
+  expect_equal(ci$upper, ci$nb)
+  expect_equal(ci$nb, nb_treat_all(0.08, pt))
+})
+
+test_that("nb_exact_ci rejects an unknown side", {
+  truth <- c(1, 0, 1, 0); prob <- c(0.9, 0.1, 0.8, 0.2)
+  expect_error(nb_exact_ci(truth, prob, 0.1, 0.1, B = 9, side = "upper", cores = 1))
+})
+
 test_that("nb_binormal_band brackets the central curve, lower-only by default", {
   pi0 <- 0.1; pi <- 0.05
   pt <- c(0.02, 0.05, 0.1, 0.2)
@@ -93,6 +141,44 @@ test_that("nb_binormal_band inverts PR-AUC through ap_binormal at pi0", {
   # central mu recovers the generating separation and prices NB at the target pi
   expect_equal(attr(b, "mu")[["central"]], 1.2, tolerance = 1e-2)
   expect_equal(b$nb, nb_binormal(attr(b, "mu")[["central"]], pi, pt))
+})
+
+test_that("nb_binormal_band pi0 defaults to pi and its mu matches ap_scalar_to_prev", {
+  pi0 <- 0.1; pi <- 0.03
+  pt <- c(0.02, 0.05, 0.1)
+  pr <- ap_binormal(mu = 1.4, pi0, grid = 3000)
+  # omitting pi0 prices the PR-AUC at the target prevalence itself
+  b_def <- nb_binormal_band(pr, pi, pt, spread = 0.02)
+  b_pi  <- nb_binormal_band(pr, pi, pt, spread = 0.02, pi0 = pi)
+  expect_equal(b_def, b_pi)
+  # central mu is exactly the ap_scalar_to_prev reconstruction at pi0
+  b <- nb_binormal_band(pr, pi, pt, spread = 0.02, pi0 = pi0)
+  expect_equal(attr(b, "mu")[["central"]],
+               ap_scalar_to_prev(pr, pi0, pi, grid = 3000)$mu, tolerance = 1e-6)
+})
+
+test_that("nb_binormal_band edges equal nb_binormal at the fitted mu", {
+  pi0 <- 0.08; pi <- 0.04
+  pt <- c(0.03, 0.07, 0.15)
+  pr <- ap_binormal(mu = 1.6, pi0, grid = 3000)
+  b <- nb_binormal_band(pr, pi, pt, spread = 0.025, pi0 = pi0, side = "both")
+  mu <- attr(b, "mu")
+  expect_equal(b$lower, nb_binormal(mu[["lower"]], pi, pt))
+  expect_equal(b$upper, nb_binormal(mu[["upper"]], pi, pt))
+  expect_equal(b$nb,    nb_binormal(mu[["central"]], pi, pt))
+})
+
+test_that("nb_binormal_band carries only central+lower mu when one-sided", {
+  b <- nb_binormal_band(0.8, pi = 0.05, pt = c(0.05, 0.1), spread = 0.03,
+                        pi0 = 0.1)
+  expect_named(attr(b, "mu"), c("central", "lower"))
+  expect_false("upper" %in% names(attr(b, "mu")))
+})
+
+test_that("nb_binormal_band accepts a scalar pt and rejects an unknown side", {
+  b <- nb_binormal_band(0.8, pi = 0.05, pt = 0.1, spread = 0.03, pi0 = 0.1)
+  expect_equal(nrow(b), 1L)
+  expect_error(nb_binormal_band(0.8, 0.05, 0.1, spread = 0.03, side = "upper"))
 })
 
 test_that("the best-achievable curve dominates treat-all", {
