@@ -38,8 +38,13 @@ Decision-curve net benefit and its reference strategies.
 
 - [`nb_exact()`](https://sagesteppe.github.io/lsed/reference/nb_exact.md)
   : Net benefit of thresholded predictions at a target prevalence
+- [`nb_exact_ci()`](https://sagesteppe.github.io/lsed/reference/nb_exact_ci.md)
+  : Bootstrap confidence band for the exact net-benefit curve
 - [`nb_binormal()`](https://sagesteppe.github.io/lsed/reference/nb_binormal.md)
   : Best-achievable net benefit from an equal-variance binormal ROC
+- [`nb_binormal_band()`](https://sagesteppe.github.io/lsed/reference/nb_binormal_band.md)
+  : Plausibility band for a binormal net-benefit curve from PR-AUC
+  uncertainty
 - [`nb_treat_all()`](https://sagesteppe.github.io/lsed/reference/nb_treat_all.md)
   : Net benefit of the treat-all (survey-everything) reference strategy
 
