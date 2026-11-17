@@ -64,8 +64,12 @@ nb_exact <- function(truth, prob, pi, pt) {
 #'   \code{"both"} for a two-sided interval.
 #' @param stratified Resample within outcome classes (default \code{TRUE}) or
 #'   over all observations (\code{FALSE}).
-#' @param cores Number of worker processes. Defaults to three quarters of the
-#'   detected cores (at least one), capped at \code{B}.
+#' @param cores Number of worker processes, capped at \code{B}. Defaults to
+#'   \code{getOption("mc.cores", 1L)}, i.e. serial unless you opt in. Parallel
+#'   replicates use \code{\link[parallel]{mclapply}}, which forks on Unix-alikes
+#'   only; on Windows, and in core-limited environments such as \code{R CMD
+#'   check} and vignette knitting, execution falls back to serial (or at most two
+#'   cores) regardless of this argument.
 #'
 #' @return A data frame with one row per \code{pt}: the threshold \code{pt}, the
 #'   point estimate \code{nb}, and \code{lower} (plus \code{upper} when
@@ -93,13 +97,19 @@ nb_exact_ci <- function(truth, prob, pi, pt, B = 999, level = 0.8,
     nb_exact(truth[idx], prob[idx], pi, pt)
   }
 
-  if (is.null(cores)) {
-    nc <- parallel::detectCores()
-    cores <- if (is.na(nc)) 1L else max(1L, floor(nc * 3 / 4))
-  }
-  cores <- as.integer(min(cores, B))
+  if (is.null(cores)) cores <- getOption("mc.cores", 1L)
+  cores <- as.integer(max(1L, min(cores, B)))
+  # mclapply cannot fork on Windows; restricted environments (R CMD check,
+  # vignette knitting) cap usable cores via _R_CHECK_LIMIT_CORES_.
+  if (.Platform$OS.type == "windows") cores <- 1L
+  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+  if (nzchar(chk) && chk != "false") cores <- min(cores, 2L)
 
-  reps <- parallel::mclapply(seq_len(B), one_boot, mc.cores = cores)
+  reps <- if (cores > 1L) {
+    parallel::mclapply(seq_len(B), one_boot, mc.cores = cores)
+  } else {
+    lapply(seq_len(B), one_boot)
+  }
   boot <- do.call(rbind, reps)
 
   a <- 1 - level
