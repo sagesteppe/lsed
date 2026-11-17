@@ -29,7 +29,9 @@ reference:
   desc: Decision-curve net benefit and its reference strategies.
   contents:
   - nb_exact
+  - nb_exact_ci
   - nb_binormal
+  - nb_binormal_band
   - nb_treat_all
 
 - title: Calibration
