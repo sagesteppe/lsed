@@ -119,3 +119,9 @@ Assess and shift the calibration of held-out predictions.
 - [`clamp()`](https://sagesteppe.github.io/lsed/reference/clamp.md) :
   Clamp probabilities away from 0 and 1
 
+# Articles
+
+### All vignettes
+
+- [Prevalence-corrected evaluation in two
+  routes](https://sagesteppe.github.io/lsed/articles/lsed.md):
