@@ -19,6 +19,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = FALSE)
 Imports:
+    parallel,
     stats,
     utils
 Suggests:

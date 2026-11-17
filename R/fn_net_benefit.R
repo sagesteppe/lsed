@@ -30,6 +30,93 @@ nb_exact <- function(truth, prob, pi, pt) {
   )
 }
 
+#' Bootstrap confidence band for the exact net-benefit curve
+#'
+#' Percentile bootstrap confidence limits for \code{\link{nb_exact}}, following
+#' the extensions of Vickers et al. (2008). Resampling is \emph{stratified by
+#' outcome} by default: presences and absences are resampled with replacement
+#' separately so \eqn{n_1} and \eqn{n_0} -- and therefore the prevalence case
+#' weights (\code{\link{reweight}}) -- stay fixed. This keeps the interval
+#' consistent with the prevalence-invariant estimand, propagating only the
+#' sampling noise in the within-class positive rates rather than in the sample's
+#' own prevalence.
+#'
+#' Only a \emph{lower} band is returned by default. In decision-curve analysis
+#' the operative question is whether the model is at least as good as the best
+#' default strategy (treat-all or treat-none), so the decision-relevant
+#' uncertainty is the downside; an upper limit changes no decision. Use
+#' \code{side = "both"} for a two-sided interval.
+#'
+#' Bootstrap replicates are evaluated with \code{\link[parallel]{mclapply}},
+#' which forks on Unix-alikes and falls back to serial execution on Windows. For
+#' reproducible parallel runs set \code{RNGkind("L'Ecuyer-CMRG")} and a seed
+#' before calling.
+#'
+#' @param truth Outcomes coded 1 (presence) / 0 (absence).
+#' @param prob Predicted probabilities, same length as \code{truth}. These are
+#'   assumed honest (held-out or cross-validated); the band quantifies precision,
+#'   not optimism, and applies no overfit correction.
+#' @param pi Target landscape prevalence in (0, 1).
+#' @param pt Numeric vector of threshold probabilities.
+#' @param B Number of bootstrap replicates. Default 999.
+#' @param level Confidence level. Default 0.8.
+#' @param side \code{"lower"} (default) for a one-sided lower band, or
+#'   \code{"both"} for a two-sided interval.
+#' @param stratified Resample within outcome classes (default \code{TRUE}) or
+#'   over all observations (\code{FALSE}).
+#' @param cores Number of worker processes. Defaults to three quarters of the
+#'   detected cores (at least one), capped at \code{B}.
+#'
+#' @return A data frame with one row per \code{pt}: the threshold \code{pt}, the
+#'   point estimate \code{nb}, and \code{lower} (plus \code{upper} when
+#'   \code{side = "both"}).
+#' @references Vickers AJ, Cronin AM, Elkin EB, Gonen M (2008). Extensions to
+#'   decision curve analysis, a novel method for evaluating diagnostic tests,
+#'   prediction models and molecular markers. \emph{BMC Med Inform Decis Mak}
+#'   8:53.
+#' @seealso \code{\link{nb_exact}}
+#' @export
+nb_exact_ci <- function(truth, prob, pi, pt, B = 999, level = 0.8,
+                        side = c("lower", "both"), stratified = TRUE,
+                        cores = NULL) {
+  side <- match.arg(side)
+  est <- nb_exact(truth, prob, pi, pt)
+  i1 <- which(truth == 1)
+  i0 <- which(truth == 0)
+
+  one_boot <- function(b) {
+    idx <- if (stratified) {
+      c(sample(i1, replace = TRUE), sample(i0, replace = TRUE))
+    } else {
+      sample(length(truth), replace = TRUE)
+    }
+    nb_exact(truth[idx], prob[idx], pi, pt)
+  }
+
+  if (is.null(cores)) {
+    nc <- parallel::detectCores()
+    cores <- if (is.na(nc)) 1L else max(1L, floor(nc * 3 / 4))
+  }
+  cores <- as.integer(min(cores, B))
+
+  reps <- parallel::mclapply(seq_len(B), one_boot, mc.cores = cores)
+  boot <- do.call(rbind, reps)
+
+  a <- 1 - level
+  lo <- if (side == "lower") a else a / 2
+  out <- data.frame(
+    pt = pt,
+    nb = est,
+    lower = apply(boot, 2, stats::quantile, probs = lo, na.rm = TRUE,
+                  names = FALSE)
+  )
+  if (side == "both") {
+    out$upper <- apply(boot, 2, stats::quantile, probs = 1 - a / 2,
+                       na.rm = TRUE, names = FALSE)
+  }
+  out
+}
+
 #' Best-achievable net benefit from an equal-variance binormal ROC
 #'
 #' Net benefit read off an equal-variance binormal ROC (separation \code{mu}) at
@@ -54,6 +141,77 @@ nb_binormal <- function(mu, pi, pt) {
     },
     numeric(1)
   )
+}
+
+#' Plausibility band for a binormal net-benefit curve from PR-AUC uncertainty
+#'
+#' The summary route (\code{\link{nb_binormal}}) anchors an entire decision curve
+#' to a single reported PR-AUC, almost always a point estimate with no stated
+#' uncertainty. This propagates a plausible \emph{spread} in that PR-AUC into a band
+#' on the net-benefit curve, extending \code{\link{ap_scalar_to_prev}} from a point
+#' reconstruction to an interval one.
+#'
+#' The perturbation is anchored on the PR-AUC scale, not on \code{mu} directly: a
+#' fixed shift in \code{mu} has no stable meaning across taxa or prevalences,
+#' whereas a spread in PR-AUC is what replicate train/test partitions actually show.
+#' The reported PR-AUC and its \code{spread}-perturbed endpoints are each converted
+#' to a binormal separation by inverting \code{\link{ap_binormal}} at the evaluation
+#' prevalence \code{pi0}, then read off \code{\link{nb_binormal}} at the target
+#' prevalence. Because \code{nb_binormal} is monotone increasing in \code{mu}, the
+#' PR-AUC endpoints map straight to the band edges.
+#'
+#' This is a \emph{plausibility} band (a sensitivity analysis over an assumed
+#' PR-AUC spread), not a confidence interval: with only a reported scalar there is
+#' no sampling distribution. Calibrate \code{spread} from replicate models when you
+#' have them; see \code{\link{nb_exact_ci}} for the model-free sampling band when
+#' raw predictions are available.
+#'
+#' Only a \emph{lower} band is returned by default, matching
+#' \code{\link{nb_exact_ci}}: in decision-curve analysis the decision-relevant
+#' uncertainty is the downside -- whether the model could be worse than a default
+#' strategy. Use \code{side = "both"} for upper and lower edges.
+#'
+#' @param pr_auc Reported PR-AUC (average precision) at the evaluation prevalence,
+#'   a single value.
+#' @param pi Target landscape prevalence in (0, 1).
+#' @param pt Numeric vector of threshold probabilities.
+#' @param spread Half-width of the plausible PR-AUC range, in PR-AUC units
+#'   (e.g. \code{0.04} for +/- 0.04). Calibrate from replicate-model spread.
+#' @param side \code{"lower"} (default) for a one-sided lower band, or
+#'   \code{"both"} for lower and upper edges.
+#' @param pi0 Evaluation prevalence the PR-AUC was measured at. Defaults to
+#'   \code{pi}.
+#' @param grid Integration grid passed to \code{\link{ap_binormal}} when inverting
+#'   the PR-AUC.
+#'
+#' @return A data frame with one row per \code{pt}: \code{pt}, the central curve
+#'   \code{nb}, and \code{lower} (plus \code{upper} when \code{side = "both"}).
+#'   The fitted separations are attached as attribute \code{"mu"} (named
+#'   \code{central}, \code{lower}, and \code{upper} when two-sided).
+#' @seealso \code{\link{nb_binormal}}, \code{\link{nb_exact_ci}},
+#'   \code{\link{ap_scalar_to_prev}}
+#' @export
+nb_binormal_band <- function(pr_auc, pi, pt, spread,
+                             side = c("lower", "both"),
+                             pi0 = pi, grid = 3000) {
+  side <- match.arg(side)
+  to_mu <- function(val) {
+    val <- min(max(val, 1e-4), 1 - 1e-4)
+    stats::uniroot(function(m) ap_binormal(m, pi0, grid = grid) - val,
+                   c(1e-3, 8))$root
+  }
+  mu <- c(central = to_mu(pr_auc), lower = to_mu(pr_auc - spread))
+  out <- data.frame(
+    pt    = pt,
+    nb    = nb_binormal(mu[["central"]], pi, pt),
+    lower = nb_binormal(mu[["lower"]], pi, pt)
+  )
+  if (side == "both") {
+    mu <- c(mu, upper = to_mu(pr_auc + spread))
+    out$upper <- nb_binormal(mu[["upper"]], pi, pt)
+  }
+  attr(out, "mu") <- mu
+  out
 }
 
 #' Net benefit of the treat-all (survey-everything) reference strategy

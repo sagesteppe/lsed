@@ -12,12 +12,21 @@ prevalence-invariant ROC-AUC, average-precision and net-benefit summaries
 (both the exact point-level route and the equal-variance binormal route),
 and Cox calibration of held-out predictions.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://sagesteppe.github.io/lsed/}
+  \item \url{https://github.com/sagesteppe/lsed}
+  \item Report bugs at \url{https://github.com/sagesteppe/lsed/issues}
+}
+
+}
 \author{
-\strong{Maintainer}: Reed Benkendorf \email{reedbenkendorf2021@u.northwestern.edu}
+\strong{Maintainer}: Reed Benkendorf \email{reedbenkendorf2021@u.northwestern.edu} (\href{https://orcid.org/0000-0001-9178-3087}{ORCID})
 
 Authors:
 \itemize{
-  \item Reed Benkendorf \email{reedbenkendorf2021@u.northwestern.edu}
+  \item Reed Benkendorf \email{reedbenkendorf2021@u.northwestern.edu} (\href{https://orcid.org/0000-0001-9178-3087}{ORCID})
 }
 
 }
