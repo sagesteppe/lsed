@@ -63,84 +63,99 @@ prevalence of the test set. The package provides two routes to a
 decision curve:</p>
 <ol style="list-style-type: decimal">
 <li>a <strong>summary</strong> route, when all you have is a single
-reported number such as a PR-AUC and the prevalence it was measured at,
-as would be available in the literature.</li>
+reported number such as a PR-AUC and the prevalence it was measured
+at.</li>
 <li>an exact <strong>per-point</strong> route, if you have the held-out
 test set from the model.</li>
 </ol>
-<p>This quickstart fits one real model — a <code>caret</code> GLM
-cross-validated on spatial folds, with an area-of-applicability mask,
-both from <code>CAST</code> — and uses both routes. The toy landscape
-follows the virtual-species convention of Grimmett et al. (2021): a
-field of spatially autocorrelated predictors and a rare species whose
-true niche depends on only a few of them.</p>
+<p>This quickstart fits one model, a GLM using <code>caret</code> with
+cross-validated spatial folds, with an area-of-applicability mask, both
+from <code>CAST</code>. It then uses this model to fit DCA using both
+methods 1 &amp; 2. The toy landscape follows the virtual-species
+convention of Grimmett et al. (2021).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sagesteppe.github.io/lsed/">lsed</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HannaMeyer/CAST" class="external-link">CAST</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/topepo/caret" class="external-link">caret</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span> <span class="co">## raster surfaces</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HannaMeyer/CAST" class="external-link">CAST</a></span><span class="op">)</span> <span class="co">## spatial CV / AOA</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/topepo/caret" class="external-link">caret</a></span><span class="op">)</span> <span class="co">## modelling</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span> <span class="co">## vector geometries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span> <span class="co">## plotting</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co">## reproducibility</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="a-virtual-species-and-a-clustered-survey">A virtual species and a clustered survey<a class="anchor" aria-label="anchor" href="#a-virtual-species-and-a-clustered-survey"></a>
 </h2>
-<p>Twelve autocorrelated predictor layers; the species responds to only
+<p>Five autocorrelated predictor layers; the species responds to only
 the first three. We draw a single clustered survey as the training data,
 and we fit the model on <code>K = 5</code> covariates (the three real
 ones plus two noise).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nx</span> <span class="op">&lt;-</span> <span class="va">ny</span> <span class="op">&lt;-</span> <span class="fl">80</span>; <span class="va">P</span> <span class="op">&lt;-</span> <span class="fl">12</span>; <span class="va">K</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
-<span><span class="va">r0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>nrows <span class="op">=</span> <span class="va">ny</span>, ncols <span class="op">=</span> <span class="va">nx</span>, xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">1</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>           crs <span class="op">=</span> <span class="st">"EPSG:3035"</span><span class="op">)</span>                       <span class="co"># projected, so folds use planar distance</span></span>
-<span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/xyCellFrom.html" class="external-link">xyFromCell</a></span><span class="op">(</span><span class="va">r0</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncell</a></span><span class="op">(</span><span class="va">r0</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">smooth_field</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">nh</span> <span class="op">=</span> <span class="fl">4</span>, <span class="va">mf</span> <span class="op">=</span> <span class="fl">1.6</span><span class="op">)</span> <span class="op">{</span>   <span class="co"># one autocorrelated layer</span></span>
-<span>  <span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">k</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nh</span><span class="op">)</span></span>
-<span>    <span class="va">v</span> <span class="op">&lt;-</span> <span class="va">v</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="va">mf</span>, <span class="va">mf</span><span class="op">)</span> <span class="op">*</span> <span class="va">x</span> <span class="op">+</span></span>
-<span>                                      <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="va">mf</span>, <span class="va">mf</span><span class="op">)</span> <span class="op">*</span> <span class="va">y</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="va">L</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">P</span>, <span class="kw">function</span><span class="op">(</span><span class="va">j</span><span class="op">)</span> <span class="fu">smooth_field</span><span class="op">(</span><span class="va">xy</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">xy</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">env</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">r0</span>, nlyr <span class="op">=</span> <span class="va">P</span><span class="op">)</span>; <span class="fu"><a href="https://rspatial.github.io/terra/reference/values.html" class="external-link">values</a></span><span class="op">(</span><span class="va">env</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">L</span>; <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">env</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"v%02d"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">P</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># true niche: depends on v01-v03 only</span></span>
-<span><span class="va">pres</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">L</span><span class="op">)</span>, <span class="fl">1</span>,</span>
-<span>                  <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html" class="external-link">plogis</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3.0</span> <span class="op">+</span> <span class="fl">1.8</span> <span class="op">*</span> <span class="va">L</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="fl">1.4</span> <span class="op">*</span> <span class="va">L</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1.0</span> <span class="op">*</span> <span class="va">L</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span></span>
-<span>                         <span class="op">-</span> <span class="fl">0.7</span> <span class="op">*</span> <span class="va">L</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">L</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">pi_land</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pres</span><span class="op">)</span> <span class="co"># TRUE landscape prevalence</span></span>
-<span><span class="va">vars</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">env</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">K</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># one clustered survey -&gt; training data</span></span>
-<span><span class="va">n_tr</span> <span class="op">&lt;-</span> <span class="fl">500</span>; <span class="va">rad</span> <span class="op">&lt;-</span> <span class="fl">0.22</span></span>
-<span><span class="va">sx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0.5</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n_tr</span>, <span class="fl">0</span>, <span class="va">rad</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">sy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0.5</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n_tr</span>, <span class="fl">0</span>, <span class="va">rad</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">tr_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/xyCellFrom.html" class="external-link">cellFromXY</a></span><span class="op">(</span><span class="va">env</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">sx</span>, <span class="va">sy</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">L</span><span class="op">[</span><span class="va">tr_cells</span>, <span class="fl">1</span><span class="op">:</span><span class="va">K</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">vars</span></span>
-<span></span>
-<span><span class="va">train</span><span class="op">$</span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">pres</span><span class="op">[</span><span class="va">tr_cells</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="st">"pres"</span>, <span class="st">"abs"</span><span class="op">)</span>,</span>
-<span>  levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"abs"</span>, <span class="st">"pres"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="co"># caret wants a factor outcome</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pi_land</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.149</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>nx <span class="ot">&lt;-</span> ny <span class="ot">&lt;-</span> <span class="dv">80</span>; P <span class="ot">&lt;-</span> <span class="dv">12</span>; K <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># create sample raster template</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>r0 <span class="ot">&lt;-</span> <span class="fu">rast</span>( </span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="at">nrows =</span> ny, <span class="at">ncols =</span> nx, </span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="dv">1</span>, </span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> <span class="dv">1</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="co"># projected CRS, so CV can use planar distance</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="at">crs =</span> <span class="st">"EPSG:3035"</span> </span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  ) </span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>xy <span class="ot">&lt;-</span> <span class="fu">xyFromCell</span>(r0, <span class="dv">1</span><span class="sc">:</span><span class="fu">ncell</span>(r0))</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="do">## make up some predictors. </span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>smooth_field <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, <span class="at">nh =</span> <span class="dv">4</span>, <span class="at">mf =</span> <span class="fl">1.6</span>) {</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(x))</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nh)</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>    v <span class="ot">&lt;-</span> v <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>) <span class="sc">*</span> <span class="fu">sin</span>(</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>      <span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> (<span class="fu">runif</span>(<span class="dv">1</span>, <span class="sc">-</span>mf, mf) <span class="sc">*</span> x <span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>        <span class="fu">runif</span>(<span class="dv">1</span>, <span class="sc">-</span>mf, mf) <span class="sc">*</span> y) <span class="sc">+</span> </span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>        <span class="fu">runif</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">2</span> <span class="sc">*</span> pi)</span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>      )</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>  <span class="fu">as.numeric</span>(<span class="fu">scale</span>(v))</span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>}</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>P, <span class="cf">function</span>(j) <span class="fu">smooth_field</span>(xy[, <span class="dv">1</span>], xy[, <span class="dv">2</span>]))</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co"># create raster surface. </span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>env <span class="ot">&lt;-</span> <span class="fu">rast</span>(r0, <span class="at">nlyr =</span> P)</span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="fu">values</span>(env) <span class="ot">&lt;-</span> L</span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="fu">names</span>(env) <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"v%02d"</span>, <span class="dv">1</span><span class="sc">:</span>P)</span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co"># true niche: depends on v01-v03 only</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>pres    <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">nrow</span>(L), <span class="dv">1</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>                  <span class="fu">plogis</span>(<span class="sc">-</span><span class="fl">3.0</span> <span class="sc">+</span> <span class="fl">1.8</span> <span class="sc">*</span> L[, <span class="dv">1</span>] <span class="sc">-</span> <span class="fl">1.4</span> <span class="sc">*</span> L[, <span class="dv">2</span>] <span class="sc">+</span> <span class="fl">1.0</span> <span class="sc">*</span> L[, <span class="dv">3</span>]</span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>                         <span class="sc">-</span> <span class="fl">0.7</span> <span class="sc">*</span> L[, <span class="dv">1</span>] <span class="sc">*</span> L[, <span class="dv">2</span>]))</span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co"># TRUE landscape prevalence</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a>pi_land <span class="ot">&lt;-</span> <span class="fu">mean</span>(pres) </span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a>vars    <span class="ot">&lt;-</span> <span class="fu">names</span>(env)[<span class="dv">1</span><span class="sc">:</span>K]</span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co"># sample data from a simulated clustered survey</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#  to make training data</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a>n_tr <span class="ot">&lt;-</span> <span class="dv">500</span>; rad <span class="ot">&lt;-</span> <span class="fl">0.22</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a>sx <span class="ot">&lt;-</span> <span class="fu">pmin</span>(<span class="fu">pmax</span>(<span class="fl">0.5</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n_tr, <span class="dv">0</span>, rad), <span class="dv">0</span>), <span class="dv">1</span>)</span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a>sy <span class="ot">&lt;-</span> <span class="fu">pmin</span>(<span class="fu">pmax</span>(<span class="fl">0.5</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n_tr, <span class="dv">0</span>, rad), <span class="dv">0</span>), <span class="dv">1</span>)</span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a>tr_cells <span class="ot">&lt;-</span> <span class="fu">cellFromXY</span>(env, <span class="fu">cbind</span>(sx, sy))</span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(L[tr_cells, <span class="dv">1</span><span class="sc">:</span>K])</span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="fu">names</span>(train) <span class="ot">&lt;-</span> vars</span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a>train<span class="sc">$</span>pa <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>  <span class="fu">ifelse</span>(pres[tr_cells] <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"pres"</span>, <span class="st">"abs"</span>),</span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"abs"</span>, <span class="st">"pres"</span>)</span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a>  ) <span class="co"># caret needs the outcome as a factor</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="fu">round</span>(pi_land, <span class="dv">3</span>)</span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">0.149</span></span></code></pre></div>
 <p>The held-out evaluation set is built the way pseudo-absence test sets
 usually are: <strong>enriched</strong>, here every held-out presence
 plus three times as many absences. Its prevalence (~0.25) is far above
 the landscape’s, one gap <code>lsed</code> corrects for.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pool</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncell</a></span><span class="op">(</span><span class="va">env</span><span class="op">)</span>, <span class="va">tr_cells</span><span class="op">)</span></span>
-<span><span class="va">pp</span>   <span class="op">&lt;-</span> <span class="va">pool</span><span class="op">[</span><span class="va">pres</span><span class="op">[</span><span class="va">pool</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span></span>
-<span><span class="va">pa</span>   <span class="op">&lt;-</span> <span class="va">pool</span><span class="op">[</span><span class="va">pres</span><span class="op">[</span><span class="va">pool</span><span class="op">]</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span></span>
-<span><span class="va">ev_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pp</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">pa</span>, <span class="fl">3</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># ~1:3 presence:absence</span></span>
-<span><span class="va">eval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">L</span><span class="op">[</span><span class="va">ev_cells</span>, <span class="fl">1</span><span class="op">:</span><span class="va">K</span><span class="op">]</span><span class="op">)</span>; <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">eval</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">vars</span></span>
-<span><span class="va">y</span>    <span class="op">&lt;-</span> <span class="va">pres</span><span class="op">[</span><span class="va">ev_cells</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span> <span class="co"># enriched design prevalence</span></span>
-<span><span class="co">#&gt; [1] 0.25</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>pool <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncell</span>(env), tr_cells)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>pp   <span class="ot">&lt;-</span> pool[pres[pool] <span class="sc">==</span> <span class="dv">1</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>pa   <span class="ot">&lt;-</span> pool[pres[pool] <span class="sc">==</span> <span class="dv">0</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>ev_cells <span class="ot">&lt;-</span> <span class="fu">c</span>(pp, <span class="fu">sample</span>(pa, <span class="dv">3</span> <span class="sc">*</span> <span class="fu">length</span>(pp))) <span class="co"># ~1:3 presence:absence</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>eval <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(L[ev_cells, <span class="dv">1</span><span class="sc">:</span>K]); <span class="fu">names</span>(eval) <span class="ot">&lt;-</span> vars</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>y    <span class="ot">&lt;-</span> pres[ev_cells]</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(y), <span class="dv">3</span>) <span class="co"># enriched design prevalence</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">0.25</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="fit-a-glm-with-spatial-cross-validation-and-its-area-of-applicability">Fit a GLM with spatial cross-validation, and its area of
@@ -153,11 +168,11 @@ train-to-test distances match the train-to-prediction distances across
 the landscape, so the resampling reflects the real extrapolation the
 model faces, and we pass those folds to <code><a href="https://rdrr.io/pkg/caret/man/train.html" class="external-link">caret::train()</a></code>.</p>
 <p>The area of applicability is then built from the <strong>training
-presences only</strong> — pseudo-absences, scattered across environments
-the taxon never occupies, would conflate the dissimilarity index. The
-mask therefore keeps the evaluation points whose environments resemble
-occupied habitat, the ones where distinguishing presence from absence is
-actually hard.</p>
+presences only</strong>. As pseudo-absences, scattered across
+environments the taxon never occupies, would conflate the dissimilarity
+index. The mask is used to keep the evaluation points whose environments
+resemble occupied habitat, the ones where distinguishing presence from
+absence is actually hard.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># spatial folds: train-to-test distances matched to the prediction geography</span></span>
 <span><span class="va">tr_pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span></span>
@@ -173,7 +188,8 @@ actually hard.</p>
 <span><span class="co"># obtaining the AOA</span></span>
 <span><span class="va">folds</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://hannameyer.github.io/CAST/reference/knndm.html" class="external-link">knndm</a></span><span class="op">(</span>tpoints <span class="op">=</span> <span class="va">tr_pts</span>, modeldomain <span class="op">=</span> <span class="va">env</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/train.html" class="external-link">train</a></span><span class="op">(</span> <span class="co">### fit a model using caret</span></span>
+<span><span class="co">## fit a model using caret</span></span>
+<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/train.html" class="external-link">train</a></span><span class="op">(</span> </span>
 <span>  x <span class="op">=</span> <span class="va">train</span><span class="op">[</span><span class="va">vars</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">train</span><span class="op">$</span><span class="va">pa</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"glm"</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,</span>
 <span>  trControl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/trainControl.html" class="external-link">trainControl</a></span><span class="op">(</span></span>
@@ -192,7 +208,7 @@ actually hard.</p>
 <span><span class="co"># we only need the 'pres' column to score it. </span></span>
 <span><span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">eval</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span><span class="op">[</span>, <span class="st">"pres"</span><span class="op">]</span> </span>
 <span></span>
-<span><span class="co"># AOA from CAST, referenced on the TRAINING PRESENCES only (not pseudo-absences)</span></span>
+<span><span class="co"># AOA from CAST, referenced on the TRAINING PRESENCES only</span></span>
 <span><span class="va">pres_rows</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">$</span><span class="va">pa</span> <span class="op">==</span> <span class="st">"pres"</span></span>
 <span><span class="va">aoa_r</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://hannameyer.github.io/CAST/reference/aoa.html" class="external-link">aoa</a></span><span class="op">(</span></span>
 <span>  newdata <span class="op">=</span> <span class="va">env</span><span class="op">[[</span><span class="va">vars</span><span class="op">]</span><span class="op">]</span>, </span>
@@ -204,7 +220,8 @@ actually hard.</p>
 <p>Scoring <strong>inside the area of applicability</strong> keeps the
 comparison honest. The model is judged in how it performs while
 interpolating in the portions of the landscape a user cares about
-detecting new occurrences in, and has the training data to model.</p>
+detecting new occurrences in, <em>and</em> has the training data to
+model.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">truth</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">[</span><span class="va">in_aoa</span><span class="op">]</span></span>
 <span><span class="va">pred</span>  <span class="op">&lt;-</span> <span class="va">prob</span><span class="op">[</span><span class="va">in_aoa</span><span class="op">]</span></span>
@@ -215,43 +232,45 @@ detecting new occurrences in, and has the training data to model.</p>
 </h2>
 <p>This is the kind of scalar a user will find in most papers. Here it
 is scoped to just within the AOA, whereas most users will only have it
-across the landscape.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/pr_auc.html">pr_auc</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred</span><span class="op">)</span> <span class="co"># PR-AUC at the sample (design) prevalence</span></span>
-<span><span class="co">#&gt; [1] 0.9151644</span></span></code></pre></div>
+across the landscape. The package supports both options.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">pr_auc</span>(truth, pred) <span class="co"># PR-AUC at the sample (design) prevalence</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">0.9151644</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="route-1-summary-from-one-reported-number-to-a-decision-curve">Route 1 — summary: from one reported number to a decision curve<a class="anchor" aria-label="anchor" href="#route-1-summary-from-one-reported-number-to-a-decision-curve"></a>
+<h2 id="route-1-summary-from-one-reported-number-to-a-decision-curve">Route 1 “summary”: from one reported number to a decision curve<a class="anchor" aria-label="anchor" href="#route-1-summary-from-one-reported-number-to-a-decision-curve"></a>
 </h2>
-<p>Suppose all you carried away was that PR-AUC and the prevalence it
-was measured at. <code><a href="../reference/ap_scalar_to_prev.html">ap_scalar_to_prev()</a></code> recovers the
-equal-variance binormal ROC that reproduces it, then re-prices precision
-to the landscape prevalence; <code><a href="../reference/nb_binormal.html">nb_binormal()</a></code> reads the
-best-achievable net benefit off that ROC, and
-<code><a href="../reference/nb_binormal_band.html">nb_binormal_band()</a></code> turns an assumed spread in the PR-AUC
-into a plausibility band.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">reported</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_auc.html">pr_auc</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred</span><span class="op">)</span>        <span class="co"># the reported scalar, at its design prevalence</span></span>
-<span><span class="va">pt</span>       <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.25</span>, by <span class="op">=</span> <span class="fl">0.002</span><span class="op">)</span> <span class="co"># threshold probabilities</span></span>
-<span></span>
-<span><span class="va">rec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ap_scalar_to_prev.html">ap_scalar_to_prev</a></span><span class="op">(</span><span class="va">reported</span>, pi0 <span class="op">=</span> <span class="va">pi0</span>, pi_target <span class="op">=</span> <span class="va">pi_land</span><span class="op">)</span></span>
-<span><span class="va">rec</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"implied_roc_auc"</span>, <span class="st">"ap_target"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; $mu</span></span>
-<span><span class="co">#&gt; [1] 1.893501</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $implied_roc_auc</span></span>
-<span><span class="co">#&gt; [1] 0.9096996</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $ap_target</span></span>
-<span><span class="co">#&gt; [1] 0.7037962</span></span>
-<span></span>
-<span><span class="va">nb_sum</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nb_binormal.html">nb_binormal</a></span><span class="op">(</span><span class="va">rec</span><span class="op">$</span><span class="va">mu</span>, <span class="va">pi_land</span>, <span class="va">pt</span><span class="op">)</span></span>
-<span><span class="va">band_sum</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nb_binormal_band.html">nb_binormal_band</a></span><span class="op">(</span><span class="va">reported</span>, <span class="va">pi_land</span>, <span class="va">pt</span>, spread <span class="op">=</span> <span class="fl">0.04</span>, pi0 <span class="op">=</span> <span class="va">pi0</span><span class="op">)</span></span></code></pre></div>
+<p>Most users will probably only have a reported PR-AUC and the
+prevalence it was measured at (this will probably be hidden in the
+methods; or at worst shared code). <code><a href="../reference/ap_scalar_to_prev.html">ap_scalar_to_prev()</a></code>
+recovers the equal-variance binormal ROC that reproduces it, then
+re-prices precision to the landscape prevalence;
+<code><a href="../reference/nb_binormal.html">nb_binormal()</a></code> reads the best-achievable net benefit off
+that ROC, and <code><a href="../reference/nb_binormal_band.html">nb_binormal_band()</a></code> turns an assumed spread in
+the PR-AUC into a plausibility band.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>reported <span class="ot">&lt;-</span> <span class="fu">pr_auc</span>(truth, pred) <span class="co"># the reported scalar, at its design prevalence</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>pt <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.001</span>, <span class="fl">0.25</span>, <span class="at">by =</span> <span class="fl">0.002</span>) <span class="co"># threshold probabilities</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>rec <span class="ot">&lt;-</span> <span class="fu">ap_scalar_to_prev</span>(reported, <span class="at">pi0 =</span> pi0, <span class="at">pi_target =</span> pi_land)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>rec[<span class="fu">c</span>(<span class="st">"mu"</span>, <span class="st">"implied_roc_auc"</span>, <span class="st">"ap_target"</span>)]</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="sc">$</span>mu</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">1.893501</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="sc">$</span>implied_roc_auc</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">0.9096996</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="sc">$</span>ap_target</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">0.7037962</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>nb_sum <span class="ot">&lt;-</span> <span class="fu">nb_binormal</span>(rec<span class="sc">$</span>mu, pi_land, pt)</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co"># plausibility band: map an assumed +/- 0.04 spread in the reported PR-AUC</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co"># through to the curve (one-sided lower, the decision-relevant edge).</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>band_sum <span class="ot">&lt;-</span> <span class="fu">nb_binormal_band</span>(reported, pi_land, pt, <span class="at">spread =</span> <span class="fl">0.04</span>, <span class="at">pi0 =</span> pi0)</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="route-2-per-point-the-decision-curve-from-the-raw-data">Route 2 — per-point: the decision curve from the raw data<a class="anchor" aria-label="anchor" href="#route-2-per-point-the-decision-curve-from-the-raw-data"></a>
+<h2 id="route-2-per-point-decision-curve-from-raw-data">Route 2 “per-point”: decision curve from raw data<a class="anchor" aria-label="anchor" href="#route-2-per-point-decision-curve-from-raw-data"></a>
 </h2>
-<p>With the predictions in hand we can calculate the decision-curve
+<p>With the model object itself we can calculate the decision-curve
 analysis directly. First check calibration; because the predictions were
 produced on the enriched sample, we shift them to the landscape
 prevalence with <code><a href="../reference/recalibrate_to_prevalence.html">recalibrate_to_prevalence()</a></code> before
@@ -259,28 +278,33 @@ thresholding. <code><a href="../reference/nb_exact.html">nb_exact()</a></code> i
 surveying every unit above each threshold, <code><a href="../reference/nb_exact_ci.html">nb_exact_ci()</a></code>
 its bootstrap band, and <code><a href="../reference/nb_treat_all.html">nb_treat_all()</a></code> the
 survey-everything reference.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/cox_calibration.html">cox_calibration</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred</span><span class="op">)</span> <span class="co"># intercept, slope</span></span>
-<span><span class="co">#&gt; cox_intercept     cox_slope </span></span>
-<span><span class="co">#&gt;     0.4613659     1.1509441</span></span>
-<span></span>
-<span><span class="va">pred_rc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/recalibrate_to_prevalence.html">recalibrate_to_prevalence</a></span><span class="op">(</span><span class="va">pred</span>, <span class="va">pi0</span>, <span class="va">pi_land</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">nb_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nb_exact.html">nb_exact</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred_rc</span>, <span class="va">pi_land</span>, <span class="va">pt</span><span class="op">)</span></span>
-<span><span class="va">ci_pt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nb_exact_ci.html">nb_exact_ci</a></span><span class="op">(</span><span class="va">truth</span>, <span class="va">pred_rc</span>, <span class="va">pi_land</span>, <span class="va">pt</span>, B <span class="op">=</span> <span class="fl">99</span>, level <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
-<span><span class="va">nb_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nb_treat_all.html">nb_treat_all</a></span><span class="op">(</span><span class="va">pi_land</span>, <span class="va">pt</span><span class="op">)</span> <span class="co"># treat-none is identically 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">cox_calibration</span>(truth, pred) <span class="co"># intercept, slope</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>cox_intercept     cox_slope </span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="fl">0.4613659</span>     <span class="fl">1.1509441</span> </span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>pred_rc <span class="ot">&lt;-</span> <span class="fu">recalibrate_to_prevalence</span>(pred, pi0, pi_land)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>nb_pt <span class="ot">&lt;-</span> <span class="fu">nb_exact</span>(truth, pred_rc, pi_land, pt)</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co"># bootstrap band: one-sided lower 80% (the decision-relevant downside).</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co"># RNGkind + seed make the parallel resampling reproducible.</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="fu">RNGkind</span>(<span class="st">"L'Ecuyer-CMRG"</span>); <span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>ci_pt <span class="ot">&lt;-</span> <span class="fu">nb_exact_ci</span>(truth, pred_rc, pi_land, pt,</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>                     <span class="at">B =</span> <span class="dv">999</span>, <span class="at">level =</span> <span class="fl">0.8</span>, <span class="at">cores =</span> <span class="dv">2</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>nb_all <span class="ot">&lt;-</span> <span class="fu">nb_treat_all</span>(pi_land, pt) <span class="co"># treat-none is identically 0</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="the-two-routes-agree">The two routes agree<a class="anchor" aria-label="anchor" href="#the-two-routes-agree"></a>
+<h2 id="dca-curves">DCA Curves<a class="anchor" aria-label="anchor" href="#dca-curves"></a>
 </h2>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    pt <span class="op">=</span> <span class="va">pt</span>, nb <span class="op">=</span> <span class="va">nb_pt</span>,  lo <span class="op">=</span> <span class="va">ci_pt</span><span class="op">$</span><span class="va">lower</span>,   </span>
-<span>    strat <span class="op">=</span> <span class="st">"SDM — per-point (raw data)"</span><span class="op">)</span>,</span>
+<span>    pt <span class="op">=</span> <span class="va">pt</span>, nb <span class="op">=</span> <span class="va">nb_pt</span>,  lo <span class="op">=</span> <span class="va">ci_pt</span><span class="op">$</span><span class="va">lower</span>,</span>
+<span>    strat <span class="op">=</span> <span class="st">"SDM per-point (raw data)"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    pt <span class="op">=</span> <span class="va">pt</span>, nb <span class="op">=</span> <span class="va">nb_sum</span>, lo <span class="op">=</span> <span class="va">band_sum</span><span class="op">$</span><span class="va">lower</span>, </span>
-<span>    strat <span class="op">=</span> <span class="st">"SDM — summary (reported PR-AUC)"</span><span class="op">)</span>,</span>
+<span>    pt <span class="op">=</span> <span class="va">pt</span>, nb <span class="op">=</span> <span class="va">nb_sum</span>, lo <span class="op">=</span> <span class="va">band_sum</span><span class="op">$</span><span class="va">lower</span>,</span>
+<span>    strat <span class="op">=</span> <span class="st">"SDM summary (reported PR-AUC)"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    pt <span class="op">=</span> <span class="va">pt</span>, nb <span class="op">=</span> <span class="va">nb_all</span>, lo <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>    strat <span class="op">=</span> <span class="st">"Survey all"</span><span class="op">)</span>,</span>
@@ -308,10 +332,11 @@ survey-everything reference.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="lsed_files/figure-html/figure-1.png" class="r-plt" alt="Decision curve for the fitted SDM at the landscape prevalence, by both routes, with the survey-all / survey-none references. Bands are the bootstrap (per-point) and PR-AUC plausibility (summary) lower limits." width="900"><p class="caption">
+<img src="lsed_files/figure-html/figure-1.png" class="r-plt" alt="Decision curve for the fitted SDM at the landscape prevalence, by both routes, with the survey-all / survey-none references. The shaded bands are the one-sided lower limits: the 80% bootstrap band (per-point) and the +/- 0.04 PR-AUC plausibility band (summary)." width="900"><p class="caption">
 Decision curve for the fitted SDM at the landscape prevalence, by both
-routes, with the survey-all / survey-none references. Bands are the
-bootstrap (per-point) and PR-AUC plausibility (summary) lower limits.
+routes, with the survey-all / survey-none references. The shaded bands
+are the one-sided lower limits: the 80% bootstrap band (per-point) and
+the +/- 0.04 PR-AUC plausibility band (summary).
 </p>
 </div>
 <p>The curves nearly coincide, and both stay clear of surveying
@@ -325,6 +350,31 @@ makes no distributional assumptions and carries a model-free bootstrap
 band. When all you have is a reported PR-AUC, the summary route recovers
 a defensible curve from that single number. Either way the evaluation is
 anchored to the landscape prevalence, not the test set’s.</p>
+</div>
+<div class="section level2">
+<h2 id="what-the-bands-mean">What the bands mean<a class="anchor" aria-label="anchor" href="#what-the-bands-mean"></a>
+</h2>
+<p>The two shaded bands answer different questions, and the package
+keeps them distinct.</p>
+<p>The <strong>per-point band</strong> (<code><a href="../reference/nb_exact_ci.html">nb_exact_ci()</a></code>) is a
+genuine sampling interval. It bootstraps the held-out points, resampling
+presences and absences <em>separately</em> so the class counts, and
+therefore the prevalence weights, stay fixed and only the within-class
+positive rates vary. It is the uncertainty in what <em>these</em>
+predictions deliver from a finite test set.</p>
+<p>The <strong>summary band</strong> (<code><a href="../reference/nb_binormal_band.html">nb_binormal_band()</a></code>)
+is not a sampling interval: a single reported PR-AUC has no sampling
+distribution attached to it. It is a <em>plausibility</em> band, a
+sensitivity analysis that maps an assumed spread in the reported PR-AUC
+(here ± 0.04) through the reconstruction and onto the curve. Calibrate
+that spread from the scatter of replicate train/test splits when you
+have them.</p>
+<p>Both bands default to a one-sided <strong>lower</strong> edge, which
+is what we draw here, because in a decision curve the operative question
+is the downside: could the model be worse than simply surveying
+everything, or nothing? An upper limit (available via
+<code>side = "both"</code>) changes no decision, so the lower edge is
+the one worth showing.</p>
 <hr>
 <p><em>Grimmett, L., Whitsed, R., &amp; Horta, A. (2021). Presence-only
 species distribution models are sensitive to sample prevalence:
