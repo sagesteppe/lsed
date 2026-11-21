@@ -27,3 +27,4 @@ connected-component and region-adjacency graphs (\code{\link{rook_edges}} suppli
 the raster edge list; the greedy band-priority merge in \code{\link{snap_pieces}}
 is the one graph step with no library primitive.
 }
+\keyword{internal}

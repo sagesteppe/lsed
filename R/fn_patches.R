@@ -22,6 +22,7 @@
 
 # Square metres per US survey acre -- the one area constant the pipeline uses, so
 # acre<->m^2<->cell conversions all read from here rather than a scattered literal.
+#' @keywords internal
 M2_PER_ACRE <- 4046.856
 
 # ---------------------------------------------------------------------------
