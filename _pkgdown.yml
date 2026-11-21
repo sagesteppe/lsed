@@ -44,3 +44,11 @@ reference:
   - cox_calibration
   - recalibrate_to_prevalence
   - clamp
+
+- title: Survey-unit delineation
+  desc: >
+    Turn a predicted suitability surface into mapped survey units end to end
+    (watershed patches, subdivided and attributed). The low-level stages are
+    internal; this is the single entry point.
+  contents:
+  - survey_units
