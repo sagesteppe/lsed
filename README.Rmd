@@ -71,7 +71,7 @@ remotes::install_github('sagesteppe/lsed')
 | `ap_binormal()`, `pr_curve_binormal()`, `ap_scalar_to_prev()` | Equal-variance binormal (summary-metric) route |
 | `nb_exact()`, `nb_binormal()`, `nb_treat_all()` | Decision-curve net benefit (per-point, best-achievable, treat-all) |
 | `cox_calibration()`, `recalibrate_to_prevalence()`, `clamp()` | Calibration helpers |
-
+| `survey_units()` | Convert a continuous raster into survey units |
 
 ## Citation
 

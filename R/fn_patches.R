@@ -1,9 +1,5 @@
 #' Patch and subpatch delineation for survey-unit mapping
 #'
-#' The delineation pipeline behind the manuscript's survey units, factored out of
-#' \code{Analyses.qmd} so the stages are reusable and testable. The flow is
-#' \strong{watershed -> patches -> snap/merge -> contour (band) -> k-means cap}:
-#'
 #' \enumerate{
 #'   \item \code{\link{delineate_patches}} binarises the probability surface at a
 #'     suitability threshold and runs a marker-controlled watershed (via
@@ -21,13 +17,8 @@
 #' \pkg{terra} + \pkg{whitebox} for the raster/watershed work, \pkg{igraph} for the
 #' connected-component and region-adjacency graphs (\code{\link{rook_edges}} supplies
 #' the raster edge list; the greedy band-priority merge in \code{\link{snap_pieces}}
-#' is the one graph step with no library primitive, so it stays hand-rolled).
-#' These surfaces are \strong{raw / not Platt-corrected}; the taxon is a ridge/talus
-#' endemic, so linear high-suitability filaments are real habitat and are never
-#' smoothed.
+#' is the one graph step with no library primitive.
 #'
-#' @name patches
-NULL
 
 # Square metres per US survey acre -- the one area constant the pipeline uses, so
 # acre<->m^2<->cell conversions all read from here rather than a scattered literal.
