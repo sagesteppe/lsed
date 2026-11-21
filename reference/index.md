@@ -64,3 +64,12 @@ Assess and shift the calibration of held-out predictions.
   shift)
 - [`clamp()`](https://sagesteppe.github.io/lsed/reference/clamp.md) :
   Clamp probabilities away from 0 and 1
+
+## Survey-unit delineation
+
+Turn a predicted suitability surface into mapped survey units end to end
+(watershed patches, subdivided and attributed). The low-level stages are
+internal; this is the single entry point.
+
+- [`survey_units()`](https://sagesteppe.github.io/lsed/reference/survey_units.md)
+  : Delineate survey units end to end

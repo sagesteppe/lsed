@@ -55,7 +55,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>A software package (R, and Python) for determining the benefit of using a statistical model in landscape decision making. Currently using minor extensions of decision curve analysis (dca), geared towards species distribution models.</p>
+<p>A software package (R and Python) for determining the benefit of using a statistical model in landscape decision making. Currently using minor extensions of decision curve analysis (DCA), geared towards species distribution models.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -64,18 +64,18 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>lsed is available only on github, with plans for submission to CRAN. It can be installed using <code>remotes</code> or <code>devtools</code> (or <code>pak</code> etc.) like so:</p>
+<p>lsed is available only on github, with plans for submission to CRAN. It can be installed using <code>remotes</code> or <code>devtools</code> (or <code>pak</code> etc.):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'devtools'</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'sagesteppe/lsed'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'remotes'</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'sagesteppe/lsed'</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
 </h2>
 <table class="table">
 <colgroup>
-<col width="50%">
-<col width="50%">
+<col width="46%">
+<col width="53%">
 </colgroup>
 <thead><tr>
 <th>Function</th>
@@ -114,20 +114,23 @@
 </td>
 <td>Calibration helpers</td>
 </tr>
+<tr>
+<td><code><a href="reference/survey_units.html">survey_units()</a></code></td>
+<td>Convert a continuous raster into survey units</td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>Benkendorf, R.C. 2024. lsed</p>
+<p>Benkendorf, R.C. 2026. lsed</p>
 <p>A bibtex entry for latex users is:</p>
 <p>@Misc{benkendorf2026lsed,<br>
 title = {lsed},<br>
 author = {Benkendorf R.C.},<br>
 year = {2026},<br>
-url = {<a href="https://github.com/sagesteppe/lsed" class="external-link uri">https://github.com/sagesteppe/lsed</a>},<br>
-##doi = {10.5281/zenodo.14641975} }</p>
+url = {<a href="https://github.com/sagesteppe/lsed" class="external-link uri">https://github.com/sagesteppe/lsed</a>} }</p>
 <p>Or use R to display citations:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">'lsed'</span><span class="op">)</span></span></code></pre></div>
