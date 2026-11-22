@@ -65,3 +65,27 @@ reference:
   - complementarity
   - contract_network
   - osm_speeds
+
+- title: RankIndex — distance terms (Dg, Dr, A)
+  desc: >
+    Isotropic, terra-native distance surfaces: straight-line distance from known
+    populations (Dg), least-cost resistance distance (Dr) over a friction surface,
+    and Tobler walking cost for accessibility.
+  contents:
+  - cost
+  - geo_distance
+  - cost_distance
+  - build_resistance
+  - tobler_friction
+  - cluster_region_extents
+
+- title: RankIndex — survey intensity (S)
+  desc: >
+    The survey-effort "bias surface" as a gridless Gaussian field of target-group
+    occurrences, with inverse-frequency species weighting corrected for domain
+    clipping; inverted it gives survey sparsity, where undocumented populations may hide.
+  contents:
+  - survey
+  - survey_surface
+  - survey_weights
+  - guess_record_type
