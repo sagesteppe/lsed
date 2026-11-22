@@ -13,16 +13,23 @@
 <url><loc>https://sagesteppe.github.io/lsed/reference/ap_scalar_to_prev.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/band_subpatches.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/build_network.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/build_resistance.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/cache_rast.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/cap_subpatches.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/clamp.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/cluster_region_extents.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/comp_labels.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/complementarity.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/contract_network.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/cost.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/cost_distance.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/cox_calibration.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/crop_to_cells.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/delineate_patches.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/drop_slivers.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/eval_survey.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/geo_distance.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/guess_record_type.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/index.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/kcap.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/labels_to_raster.html</loc></url>
@@ -48,7 +55,13 @@
 <url><loc>https://sagesteppe.github.io/lsed/reference/rook_edges.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/snap_pieces.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/stitch_units.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/survey.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/survey_field.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/survey_raster.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/survey_surface.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/survey_units.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/survey_weights.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/tobler_friction.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/unit_prob.html</loc></url>
 </urlset>
 

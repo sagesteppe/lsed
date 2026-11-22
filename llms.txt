@@ -162,6 +162,48 @@ assembled nearby.
 
   Default per-`highway` travel speeds (km/h)
 
+## RankIndex — distance terms (Dg, Dr, A)
+
+Isotropic, terra-native distance surfaces: straight-line distance from
+known populations (Dg), least-cost resistance distance (Dr) over a
+friction surface, and Tobler walking cost for accessibility.
+
+- [`cost`](https://sagesteppe.github.io/lsed/reference/cost.md) :
+  Dispersal and accessibility terms (Dg, Dr, A) by isotropic cost
+  distance
+- [`geo_distance()`](https://sagesteppe.github.io/lsed/reference/geo_distance.md)
+  : Geographic distance from known populations (Dg)
+- [`cost_distance()`](https://sagesteppe.github.io/lsed/reference/cost_distance.md)
+  : Resistance / accessibility distance by isotropic cost distance (Dr,
+  A)
+- [`build_resistance()`](https://sagesteppe.github.io/lsed/reference/build_resistance.md)
+  : Build an isotropic resistance (friction) surface
+- [`tobler_friction()`](https://sagesteppe.github.io/lsed/reference/tobler_friction.md)
+  : Tobler walking-cost friction for accessibility (A)
+- [`cluster_region_extents()`](https://sagesteppe.github.io/lsed/reference/cluster_region_extents.md)
+  : Cluster sources into buffered, cell-capped regions for tiled cost
+  distance
+
+## RankIndex — survey intensity (S)
+
+The survey-effort “bias surface” as a gridless Gaussian field of
+target-group occurrences, with inverse-frequency species weighting
+corrected for domain clipping; inverted it gives survey sparsity, where
+undocumented populations may hide.
+
+- [`survey`](https://sagesteppe.github.io/lsed/reference/survey.md) :
+
+  Survey-intensity surface (the `S` term) as a continuous Gaussian field
+
+- [`survey_surface()`](https://sagesteppe.github.io/lsed/reference/survey_surface.md)
+  : Build the survey-intensity surface in one call
+
+- [`survey_weights()`](https://sagesteppe.github.io/lsed/reference/survey_weights.md)
+  : Inverse-frequency species weights, corrected for domain clipping
+
+- [`guess_record_type()`](https://sagesteppe.github.io/lsed/reference/guess_record_type.md)
+  : Guess record type from a dataset / origin column
+
 # Articles
 
 ### All vignettes

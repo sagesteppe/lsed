@@ -254,6 +254,94 @@
 
         </dt>
         <dd>Default per-<code>highway</code> travel speeds (km/h)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="rankindex-distance-terms-dg-dr-a-">RankIndex — distance terms (Dg, Dr, A)<a class="anchor" aria-label="anchor" href="#rankindex-distance-terms-dg-dr-a-"></a></h2>
+
+      <div class="section-desc"><p>Isotropic, terra-native distance surfaces: straight-line distance from known populations (Dg), least-cost resistance distance (Dr) over a friction surface, and Tobler walking cost for accessibility.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="cost.html">cost</a></code>
+
+        </dt>
+        <dd>Dispersal and accessibility terms (Dg, Dr, A) by isotropic cost distance</dd>
+
+        <dt>
+
+          <code><a href="geo_distance.html">geo_distance()</a></code>
+
+        </dt>
+        <dd>Geographic distance from known populations (Dg)</dd>
+
+        <dt>
+
+          <code><a href="cost_distance.html">cost_distance()</a></code>
+
+        </dt>
+        <dd>Resistance / accessibility distance by isotropic cost distance (Dr, A)</dd>
+
+        <dt>
+
+          <code><a href="build_resistance.html">build_resistance()</a></code>
+
+        </dt>
+        <dd>Build an isotropic resistance (friction) surface</dd>
+
+        <dt>
+
+          <code><a href="tobler_friction.html">tobler_friction()</a></code>
+
+        </dt>
+        <dd>Tobler walking-cost friction for accessibility (A)</dd>
+
+        <dt>
+
+          <code><a href="cluster_region_extents.html">cluster_region_extents()</a></code>
+
+        </dt>
+        <dd>Cluster sources into buffered, cell-capped regions for tiled cost distance</dd>
+      </dl></div><div class="section level2">
+      <h2 id="rankindex-survey-intensity-s-">RankIndex — survey intensity (S)<a class="anchor" aria-label="anchor" href="#rankindex-survey-intensity-s-"></a></h2>
+
+      <div class="section-desc"><p>The survey-effort “bias surface” as a gridless Gaussian field of target-group occurrences, with inverse-frequency species weighting corrected for domain clipping; inverted it gives survey sparsity, where undocumented populations may hide.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="survey.html">survey</a></code>
+
+        </dt>
+        <dd>Survey-intensity surface (the <code>S</code> term) as a continuous Gaussian field</dd>
+
+        <dt>
+
+          <code><a href="survey_surface.html">survey_surface()</a></code>
+
+        </dt>
+        <dd>Build the survey-intensity surface in one call</dd>
+
+        <dt>
+
+          <code><a href="survey_weights.html">survey_weights()</a></code>
+
+        </dt>
+        <dd>Inverse-frequency species weights, corrected for domain clipping</dd>
+
+        <dt>
+
+          <code><a href="guess_record_type.html">guess_record_type()</a></code>
+
+        </dt>
+        <dd>Guess record type from a dataset / origin column</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
