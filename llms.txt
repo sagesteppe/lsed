@@ -133,6 +133,35 @@ internal; this is the single entry point.
 - [`survey_units()`](https://sagesteppe.github.io/lsed/reference/survey_units.md)
   : Delineate survey units end to end
 
+## Patch ranking (RankIndex)
+
+Prioritise candidate patches by combining rescaled terms. The network
+engine routes travel on roads/trails to score accessibility (A) and, on
+the same graph, complementarity (C) — whether a day’s work can be
+assembled nearby.
+
+- [`rank_index()`](https://sagesteppe.github.io/lsed/reference/rank_index.md)
+  : Combine the RankIndex terms into a priority score
+
+- [`network`](https://sagesteppe.github.io/lsed/reference/network.md) :
+  Accessibility (A) and complementarity (C) on a road/trail network
+  graph
+
+- [`accessibility()`](https://sagesteppe.github.io/lsed/reference/accessibility.md)
+  : Accessibility of patches over the network (A)
+
+- [`complementarity()`](https://sagesteppe.github.io/lsed/reference/complementarity.md)
+  : Complementarity of patches: can a day's work be assembled nearby?
+  (C)
+
+- [`contract_network()`](https://sagesteppe.github.io/lsed/reference/contract_network.md)
+  : Contract an OSM network to junction-to-junction edges
+
+- [`osm_speeds`](https://sagesteppe.github.io/lsed/reference/osm_speeds.md)
+  :
+
+  Default per-`highway` travel speeds (km/h)
+
 # Articles
 
 ### All vignettes
