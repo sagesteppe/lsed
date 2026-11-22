@@ -52,3 +52,16 @@ reference:
     internal; this is the single entry point.
   contents:
   - survey_units
+
+- title: Patch ranking (RankIndex)
+  desc: >
+    Prioritise candidate patches by combining rescaled terms. The network engine
+    routes travel on roads/trails to score accessibility (A) and, on the same
+    graph, complementarity (C) — whether a day's work can be assembled nearby.
+  contents:
+  - rank_index
+  - network
+  - accessibility
+  - complementarity
+  - contract_network
+  - osm_speeds

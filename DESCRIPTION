@@ -30,11 +30,14 @@ Suggests:
     ggplot2,
     igraph,
     knitr,
+    nabor,
     rmarkdown,
     scales,
     sf,
+    sfnetworks,
     terra,
     testthat (>= 3.0.0),
+    tidygraph,
     whitebox,
     withr
 VignetteBuilder: knitr
