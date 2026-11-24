@@ -103,7 +103,7 @@ Where you will, hopefully, happily see you only *need* to run two of them.
 
 Benkendorf, R.C. 2026. lsed
 
-A bibtex entry for LaTeX users is [here](authors.html#citation).
+A BibTeX entry for LaTeX users is [here](authors.html#citation).
 
 Or use R to display citations:
 
