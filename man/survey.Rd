@@ -4,8 +4,8 @@
 \alias{survey}
 \title{Survey-intensity surface (the \code{S} term) as a continuous Gaussian field}
 \description{
-Builds the manuscript's \strong{survey intensity} term \code{S} — the
-\dQuote{bias surface} — from target-group occurrence records (a GBIF pull of
+Builds the manuscript's \strong{survey intensity} term \code{S} - the
+\dQuote{bias surface} - from target-group occurrence records (a GBIF pull of
 co-occurring taxa), as a continuous field of the landscape rather than a grid.
 The estimator is a weighted sum of isotropic Gaussian kernels, one per record:
 }
@@ -49,5 +49,5 @@ where nobody has looked.
 \pkg{terra} for the raster view and \pkg{sf} for the p95-box/domain overlap. The
 kernel is truncated at \code{trunc}\eqn{\,\sigma} (tails below \eqn{e^{-8}} at
 \code{trunc = 4}) and evaluated with a tiled bounding-box prefilter, so no
-kd-tree dependency and no \eqn{k}-neighbour cap — the sum is exact to the tail.
+kd-tree dependency and no \eqn{k}-neighbour cap - the sum is exact to the tail.
 }

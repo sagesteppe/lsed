@@ -92,3 +92,58 @@ test_that(".lonlat_bbox handles terra raster/vector/extent inputs", {
   # extent carries no CRS -> straight through (xmin,ymin,xmax,ymax)
   expect_equal(lsed:::.lonlat_bbox(terra::ext(1, 2, 3, 4))$box, c(1, 3, 2, 4))
 })
+
+# --- argument guards that fire BEFORE any network call (always run) -----------
+
+test_that("gbif_request stops on missing credentials before contacting GBIF", {
+  skip_if_not_installed("rgbif")
+  expect_error(gbif_request(c(0, 0, 1, 1), user = "", pwd = "", email = ""), "account")
+})
+
+test_that("gbif_records (download path) also requires credentials up front", {
+  skip_if_not_installed("rgbif")
+  # reaches .lonlat_bbox + WKT + out_crs, then errors at the gbif_request credential gate
+  expect_error(gbif_records(c(0, 0, 1, 1), user = "", pwd = "", email = ""), "account")
+})
+
+test_that("osm_access rejects an empty highway set before fetching", {
+  expect_error(osm_access(c(0, 0, 1, 1), roads = character(0), trails = character(0)),
+               "nothing to fetch")
+})
+
+# --- live API calls --------------------------------------------------------
+# These actually hit GBIF / Overpass, so they never run in an automated check:
+# they skip on CRAN, skip when the host is unreachable, and (because a public API
+# can be slow, rate-limited or flaky even when reachable) treat any request error
+# as a skip rather than a failure. Run them deliberately with a live network.
+
+test_that("gbif_records(count_only) returns a count from GBIF [live]", {
+  skip_on_cran()
+  skip_if_not_installed("rgbif")
+  skip_if_offline("api.gbif.org")
+  n <- tryCatch(
+    gbif_records(c(-105.30, 40.00, -105.20, 40.10), count_only = TRUE,
+                 taxon_key = 7707728, year_from = 2000),
+    error = function(e) skip(paste("GBIF unavailable:", conditionMessage(e))))
+  expect_length(n, 1L)
+  expect_true(is.numeric(n) && !is.na(n) && n >= 0)
+})
+
+test_that("osm_access pulls a small highway network from Overpass [live]", {
+  skip_on_cran()
+  skip_if_not_installed("sf")
+  skip_if_not_installed("httr2")
+  skip_if_not_installed("jsonlite")
+  skip_if_offline("overpass-api.de")
+  dir <- withr::local_tempdir()
+  net <- tryCatch(
+    suppressWarnings(
+      osm_access(c(-105.2785, 40.0105, -105.2775, 40.0115),  # ~100 m box, single tile
+                 roads = "residential", trails = character(0), # one class -> tiny response
+                 path = file.path(dir, "osm.gpkg"), tiles = 1L,
+                 timeout = 25, max_tries = 1L)),               # fail fast -> skip, no retries
+    error = function(e) skip(paste("Overpass unavailable:", conditionMessage(e))))
+  expect_s3_class(net, "sf")
+  expect_true(all(c("osm_id", "highway", "class") %in% names(net)))
+  expect_false(is.null(attr(net, "timestamp")))   # OSM base time carried through
+})

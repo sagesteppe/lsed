@@ -2,7 +2,7 @@
 % Please edit documentation in R/fn_download.R
 \name{gbif_retrieve}
 \alias{gbif_retrieve}
-\title{Retrieve a requested GBIF download — stage 2 of 2}
+\title{Retrieve a requested GBIF download - stage 2 of 2}
 \usage{
 gbif_retrieve(key, path = NULL, download_dir = NULL, crs = NULL, poll = 30)
 }

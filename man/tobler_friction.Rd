@@ -15,6 +15,6 @@ a \code{SpatRaster} of relative travel cost (higher = slower going).
 \description{
 An isotropic friction from Tobler's hiking function: walking speed
 \eqn{W = 6\,e^{-3.5\,|S + 0.05|}} km/h on slope \eqn{S} (rise/run), so cost per
-unit distance is \eqn{1/W}. Symmetric (uses \eqn{|S|}) — appropriate for access,
+unit distance is \eqn{1/W}. Symmetric (uses \eqn{|S|}) - appropriate for access,
 which is a round trip. Feed to \code{\link{cost_distance}} from roads/trails.
 }

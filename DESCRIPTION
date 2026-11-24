@@ -24,7 +24,6 @@ Imports:
     httr2,
     igraph,
     jsonlite,
-    nabor,
     parallel,
     rgbif,
     sf,

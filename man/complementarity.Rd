@@ -24,12 +24,12 @@ to \code{areas}.}
 \item{areas}{numeric patch areas (acres), one per \code{patch_nodes} in order.}
 
 \item{target_area}{a day's worth of patch area to assemble, in acres (default
-\code{50}; loose — the saturation scale, not a hard quota).}
+\code{50}; loose - the saturation scale, not a hard quota).}
 
 \item{cap_q}{upper quantile (on \eqn{(0, 1]}) at which the raw assembly cost is
 clamped before rescaling (default \code{0.95}). The isolation cost has a long right
-tail — a lone fragment can range far, and unreachable patches are \code{Inf} — so a
-single outlier otherwise stretches the min–max rescale and flattens the gradient
+tail - a lone fragment can range far, and unreachable patches are \code{Inf} - so a
+single outlier otherwise stretches the min-max rescale and flattens the gradient
 among the patches that actually differ. Costs above the \code{cap_q} quantile of the
 \emph{finite} costs (and every \code{Inf}) are set to that quantile: all such patches
 count as equally, maximally isolated. The cap is applied to \code{assemble_hr}
@@ -58,7 +58,7 @@ network (cheapest travel first) accumulating neighbouring patch \emph{acreage} u
 a \code{target_area} day's worth is gathered; the travel cost that bundle required
 is the isolation measure. A dense cluster assembles the target cheaply; a lone
 fragment must range far (or cannot gather it at all). The score is flipped so
-well-connected patches are high and isolated ones are penalised — no day-length
+well-connected patches are high and isolated ones are penalised - no day-length
 assumption, just the area target.
 }
 \details{

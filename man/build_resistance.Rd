@@ -47,7 +47,7 @@ an integer \code{SpatRaster} of movement cost (minimum 1).
 }
 \description{
 Lifted from \pkg{safeHavens} \code{buildResistanceSurface()} (terra-only). Sums
-weighted, optional layers — water features, terrain ruggedness, habitat and any
-extras — into a per-cell cost of movement, clamped to a floor of 1 and stored as
+weighted, optional layers - water features, terrain ruggedness, habitat and any
+extras - into a per-cell cost of movement, clamped to a floor of 1 and stored as
 integer. Feed the result to \code{\link{cost_distance}} for \strong{Dr}.
 }

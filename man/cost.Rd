@@ -11,12 +11,12 @@ in memory.
 }
 \details{
 \itemize{
-  \item \strong{Dg} — geographic distance from a known population:
+  \item \strong{Dg} - geographic distance from a known population:
     \code{\link{geo_distance}} (straight-line \code{\link[terra]{distance}} to the
     nearest source).
-  \item \strong{Dr} — resistance distance: \code{\link{build_resistance}} friction
-    → \code{\link{cost_distance}} from occupied populations.
-  \item \strong{A} — accessibility: \code{\link{tobler_friction}} (walking cost) →
+  \item \strong{Dr} - resistance distance: \code{\link{build_resistance}} friction
+    -> \code{\link{cost_distance}} from occupied populations.
+  \item \strong{A} - accessibility: \code{\link{tobler_friction}} (walking cost) ->
     \code{\link{cost_distance}} from the road/trail network.
 }
 
@@ -27,5 +27,5 @@ All three return a surface rescaled to \eqn{[0, 1]}; because the index rewards
 \code{build_resistance()} is lifted from \pkg{safeHavens}
 (\code{buildResistanceSurface}); the tiling (\code{\link{cluster_region_extents}},
 mosaic-by-min) is lifted from the \code{Ecoloradense} cost-distance script. Both
-are terra/sf only — the lift adds no dependency beyond \pkg{terra}, \pkg{sf}.
+are terra/sf only - the lift adds no dependency beyond \pkg{terra}, \pkg{sf}.
 }

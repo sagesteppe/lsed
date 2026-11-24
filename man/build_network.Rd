@@ -21,22 +21,22 @@ column ("road"/"trail"); \code{\link{osm_access}} output fits directly.}
 \code{highway} tag not listed in \code{speeds}.}
 
 \item{snap}{tight grid (metres) that segment endpoints snap to when forming nodes
-(default 1) — within-class noding, so parallel switchbacks/lanes are not fused.}
+(default 1) - within-class noding, so parallel switchbacks/lanes are not fused.}
 
 \item{connect}{liberal tolerance (metres, default 50) for bridging a \strong{stub
-end} of one class to the nearest node of the \emph{other} class — i.e. closing
+end} of one class to the nearest node of the \emph{other} class - i.e. closing
 trailhead gaps where a trail dead-ends near a road (or a road near a trail)
 without a shared OSM node. Set \code{0} to disable. Only degree-1 ends are
 bridged, so it never fuses same-class features.}
 
 \item{speeds}{named per-\code{highway} speed lookup in km/h (default
 \code{\link{osm_speeds}}); each contracted edge is single-\code{highway}, so one
-speed applies. Edge weight is \code{length / speed} — change \code{speeds} and
+speed applies. Edge weight is \code{length / speed} - change \code{speeds} and
 rebuild (cheap) to re-time without re-pulling or re-contracting.}
 }
 \value{
 a list: \code{graph} (an undirected \pkg{igraph} with edge \code{weight} in
-  hours and \code{class} — road/trail/connect, vertex coords \code{x}/\code{y}) and
+  hours and \code{class} - road/trail/connect, vertex coords \code{x}/\code{y}) and
   \code{nodes} (data.frame of node \code{name}, \code{x}, \code{y}).
 }
 \description{

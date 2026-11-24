@@ -29,3 +29,17 @@ test_that("rank_index accepts a single named list and rejects bad weights", {
   expect_error(rank_index(Dg = c(0, 1), weights = c(Zz = 2)), "not supplied")
   expect_error(rank_index(c(0, 1)), "named")
 })
+
+test_that("rank_index rejects terms of unequal length", {
+  expect_error(rank_index(Dg = c(1, 2), A = c(1, 2, 3)), "same length")
+})
+
+test_that("rank_index handles a single patch (length-1 terms)", {
+  # the one-row reshape: terms are scalars, so M starts as a vector and is matrixified;
+  # rescale of a single value is neutral (0), index 0, the sole patch ranks 1
+  out <- rank_index(Dg = 0.5, A = 0.2)
+  expect_equal(nrow(out), 1L)
+  expect_true(all(c("Dg", "A", "index", "rank") %in% names(out)))
+  expect_equal(out$index, 0)
+  expect_equal(out$rank, 1L)
+})

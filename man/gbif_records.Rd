@@ -38,7 +38,7 @@ lacking the field.}
 
 \item{crs}{output CRS (default lon/lat).}
 
-\item{count_only}{if \code{TRUE}, return just the filtered record count — a cheap
+\item{count_only}{if \code{TRUE}, return just the filtered record count - a cheap
 request, no account, no download.}
 
 \item{path}{GeoPackage to write the records to (\code{NULL} ->
@@ -63,7 +63,7 @@ with \code{count_only}, an integer. Otherwise an \pkg{sf} of \code{POINT}s
 \description{
 Pulls occurrences inside a bounding box from GBIF as \pkg{sf} points, ready to feed
 \code{\link{survey_surface}} as the target-group records for \strong{S}. The pull
-uses GBIF's server-side \strong{bulk download} (\code{rgbif::occ_download}) — one
+uses GBIF's server-side \strong{bulk download} (\code{rgbif::occ_download}) - one
 prepared job rather than thousands of fragile paged requests, and the route GBIF
 asks heavy users to take. \code{count_only = TRUE} first (no account needed) to see
 the filtered total before committing.
@@ -78,7 +78,7 @@ is minted under your account and citable by its DOI.
 iNaturalist observations. \code{year_from} and \code{coord_uncertainty_max} trim to
 records fit to mark \emph{where a careful collection happened}. The uncertainty
 filter also drops records with \emph{no} uncertainty recorded, which is most of them
-— so it defaults to \code{NA} (off); set e.g. \code{100} only if you want to keep
+- so it defaults to \code{NA} (off); set e.g. \code{100} only if you want to keep
 solely well-located records.
 }
 \seealso{

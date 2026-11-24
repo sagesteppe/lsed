@@ -14,7 +14,7 @@ instead.}
 \item{weights}{optional named numeric of per-term multipliers; names must match the
 supplied terms, partial is fine (unlisted terms get \code{1}).}
 
-\item{rescale}{min–max each term to \eqn{[0,1]} first (default \code{TRUE}).}
+\item{rescale}{min-max each term to \eqn{[0,1]} first (default \code{TRUE}).}
 }
 \value{
 a data.frame with one column per (rescaled) term, an \code{index} column
@@ -29,7 +29,7 @@ data.frame of the rescaled components plus the combined \code{index} and its
 }
 \details{
 \itemize{
-  \item \strong{Rescaled.} Every input is min–max rescaled to \eqn{[0,1]} so terms
+  \item \strong{Rescaled.} Every input is min-max rescaled to \eqn{[0,1]} so terms
     on different native scales are comparable before combining. (The term functions
     already emit \eqn{[0,1]} and are oriented high = higher priority; this only
     guarantees it.) Set \code{rescale = FALSE} to trust the inputs as-is.
@@ -37,7 +37,7 @@ data.frame of the rescaled components plus the combined \code{index} and its
     default to \code{1} (all equal). The index is the \strong{weighted mean} over
     the terms present for a patch, so it stays in \eqn{[0,1]} and is comparable
     however many terms are included.
-  \item \strong{Skippable.} Only the terms you pass are used — drop \code{S} (or any
+  \item \strong{Skippable.} Only the terms you pass are used - drop \code{S} (or any
     other) simply by not supplying it.
   \item \strong{NA-safe.} A patch missing one term is scored on its remaining terms
     (the weighted mean renormalises per row); a patch missing \emph{every} term is

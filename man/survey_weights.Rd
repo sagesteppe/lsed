@@ -24,8 +24,8 @@ domain's planar CRS (metres).}
 (\eqn{\varphi_j \equiv 1}).}
 
 \item{min_records}{minimum records a species needs to be included (default
-\code{5}). Taxa below the floor are dropped entirely — too few collections to
-carry a reliable range box or effort signal — not merely down-weighted.}
+\code{5}). Taxa below the floor are dropped entirely - too few collections to
+carry a reliable range box or effort signal - not merely down-weighted.}
 
 \item{p}{inner mass kept by the robust bounding box, as a central probability
 (default \code{0.95}); the box spans the \code{(1-p)/2} and \code{1-(1-p)/2}

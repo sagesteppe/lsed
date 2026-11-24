@@ -11,18 +11,18 @@ contract_network(lines, require_equal = "highway")
 column, e.g. from \code{\link{osm_access}}.}
 
 \item{require_equal}{edge attribute that must match for two edges to be smoothed
-together (default \code{"highway"} — never merge across road classes).}
+together (default \code{"highway"} - never merge across road classes).}
 }
 \value{
 the contracted \pkg{sf} lines (one feature per junction-to-junction run),
-  \code{highway}/\code{class} preserved — write this to disk and feed it to
+  \code{highway}/\code{class} preserved - write this to disk and feed it to
   \code{\link{accessibility}}.
 }
 \description{
 Collapses the raw OSM lines (every way vertex is a potential node, ~30x more than
 needed) into one edge per junction-to-junction run, so the downstream graph is tiny
 and every distance query is fast. Uses \pkg{sfnetworks}: subdivide at interior
-junctions, then \code{to_spatial_smooth} drops degree-2 nodes — but only within a
+junctions, then \code{to_spatial_smooth} drops degree-2 nodes - but only within a
 single \code{require_equal} class, so motorway/primary/secondary/path boundaries
 survive (and can carry different speeds later). Distance-preserving: a smoothed
 edge's length is the sum of the run it replaces.

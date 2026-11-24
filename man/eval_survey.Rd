@@ -21,10 +21,10 @@ taxa (recovers a single additive layer, or any partial sum).}
 numeric vector of \eqn{S} values, length \code{nrow(xy)}.
 }
 \description{
-Computes \eqn{S(x)} at any set of query points — the whole point of keeping the
+Computes \eqn{S(x)} at any set of query points - the whole point of keeping the
 model gridless. Records are indexed into a \code{trunc}\eqn{\sigma} bucket grid, and
 each query is summed only against records in its own and the eight neighbouring
 buckets, so cost is local (\eqn{\propto} records within support) regardless of how
-widely the queries are scattered — not the query count times the record count.
+widely the queries are scattered - not the query count times the record count.
 }
 \keyword{internal}

@@ -63,7 +63,7 @@ specimens 1.5x over observations).}
 \item{rescale, q}{bring the view onto \eqn{[0, 1]} (defaults \code{"quantile"},
 \code{0.95}); see \code{\link{survey_raster}}.}
 
-\item{invert}{if \code{TRUE}, return survey \emph{sparsity} \eqn{1 - \tilde S} — the
+\item{invert}{if \code{TRUE}, return survey \emph{sparsity} \eqn{1 - \tilde S} - the
 form the \code{RankIndex} consumes (well-surveyed ground scores low). Default
 \code{FALSE} returns the intensity surface \eqn{S} itself.}
 
@@ -72,6 +72,9 @@ form the \code{RankIndex} consumes (well-surveyed ground scores low). Default
 
 \item{filename}{optional output path; \code{...} passes to
 \code{terra::writeRaster}.}
+
+\item{...}{further arguments passed to \code{terra::writeRaster} (via
+\code{\link{survey_raster}}), e.g. \code{overwrite} or \code{gdal}.}
 }
 \value{
 a single-layer \code{SpatRaster} of \eqn{S} (or \eqn{1 - \tilde S} when

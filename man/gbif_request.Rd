@@ -2,7 +2,7 @@
 % Please edit documentation in R/fn_download.R
 \name{gbif_request}
 \alias{gbif_request}
-\title{Request a GBIF download (non-blocking) — stage 1 of 2}
+\title{Request a GBIF download (non-blocking) - stage 1 of 2}
 \usage{
 gbif_request(
   bbox,

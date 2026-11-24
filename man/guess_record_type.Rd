@@ -18,7 +18,7 @@ guess_record_type(
 
 \item{plot_patterns}{case-insensitive regular expressions marking plot programmes.
 The defaults cover FIA, AIM, VegBank, NEON, the Carolina Vegetation Survey, NPS
-I&M, and generic plot/relevé/quadrat/inventory wording; override or extend as
+I&M, and generic plot/releve/quadrat/inventory wording; override or extend as
 needed.}
 
 \item{plot_label, other_label}{labels returned for matches and non-matches
@@ -30,9 +30,9 @@ a character vector the length of \code{origin}, suitable to pass as
   \code{record_type}.
 }
 \description{
-Flags records that come from structured \strong{vegetation-plot} programmes —
+Flags records that come from structured \strong{vegetation-plot} programmes -
 where every species present is catalogued, so the record stands for a complete
-local survey — by pattern-matching a free-text dataset, institution or origin
+local survey - by pattern-matching a free-text dataset, institution or origin
 field. A convenience for when the user has not labelled \code{record_type} by hand;
 always eyeball the result, since origin strings are inconsistent.
 }

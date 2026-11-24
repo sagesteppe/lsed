@@ -28,7 +28,7 @@ accessibility(
 \item{dem}{optional elevation \code{SpatRaster} (same CRS) for the Tobler hop slope;
 without it the hop uses \code{offtrail_speed} on the flat.}
 
-\item{origins}{trip start as \pkg{sf} point(s) — typically the \strong{field
+\item{origins}{trip start as \pkg{sf} point(s) - typically the \strong{field
 office}, snapped free to the nearest road, after which road driving accrues time
 (often the dominant cost). \code{NULL} (default) treats every road node as a
 zero-cost origin ("distance from the road network", ignoring the drive).}

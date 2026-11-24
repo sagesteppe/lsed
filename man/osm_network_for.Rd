@@ -40,7 +40,7 @@ see \code{\link{cluster_patches}}).}
 boxes (\code{trails} only there).}
 
 \item{connect_roads}{the (major) road classes for the \emph{connective} envelope
-layer that links the origin to the clusters — default the through-routes
+layer that links the origin to the clusters - default the through-routes
 \code{motorway/trunk/primary/secondary/tertiary}. Residential/service/track are
 left out here: they are local bloat and already come from the cluster pulls.}
 
@@ -56,7 +56,7 @@ left out here: they are local bloat and already come from the cluster pulls.}
 habitat block is not one enormous Overpass query (default \code{20}).}
 
 \item{contract}{simplify the merged network to junction-to-junction edges before
-writing (default \code{TRUE}; \code{\link{contract_network}}) — the on-disk file is
+writing (default \code{TRUE}; \code{\link{contract_network}}) - the on-disk file is
 then the contracted version, ~30x fewer graph nodes.}
 
 \item{...}{passed to \code{\link{osm_access}} (e.g. \code{endpoint}, \code{contact},

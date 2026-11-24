@@ -25,7 +25,7 @@ survey_raster(
 \code{template} is a \code{SpatRaster}).}
 
 \item{rescale}{one of \code{"quantile"} (divide by the \code{q} quantile, clamped
-to 1; the default — \code{"max"} is hostage to a single survey hotspot, which
+to 1; the default - \code{"max"} is hostage to a single survey hotspot, which
 flattens all other structure), \code{"max"} (divide by the max) or \code{"none"},
 to bring the view onto \eqn{[0, 1]}.}
 
@@ -46,7 +46,7 @@ a single-layer \code{SpatRaster}.
 }
 \description{
 Evaluates \eqn{S(x)} at the cell centres of a template, tile by tile. This is a
-\emph{view} of the continuous model at a chosen resolution, not the model itself —
+\emph{view} of the continuous model at a chosen resolution, not the model itself -
 call it again at a different resolution for a different view.
 }
 \keyword{internal}

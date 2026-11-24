@@ -31,7 +31,7 @@ which one record counts ground as surveyed (default \code{100}).}
 
 \item{record_type}{optional per-record label splitting the two detection
 processes. Records whose label is in \code{plot_types} are treated as
-\strong{vegetation plots} — a complete floristic inventory at one spot (FIA, AIM,
+\strong{vegetation plots} - a complete floristic inventory at one spot (FIA, AIM,
 VegBank, ...), so absence there is strong evidence. Plot records are
 \emph{deduplicated by coordinate} (the many species-rows of one plot are a single
 survey event, not many) and each surviving plot point carries \code{plot_weight};
@@ -43,14 +43,14 @@ from a dataset/origin column.}
 \code{"Plot"}, matched case-insensitively).}
 
 \item{plot_weight}{per-record weight for a deduplicated plot point (default
-\code{1} — the ceiling of the opportunistic weights, which sit in \eqn{(0, 1]};
+\code{1} - the ceiling of the opportunistic weights, which sit in \eqn{(0, 1]};
 raise it to let plots dominate further).}
 
 \item{basis}{optional per-record \code{basisOfRecord} labels (as from
 \code{\link{gbif_records}}); used to up-weight deliberate collections.}
 
 \item{basis_weights}{named multipliers applied per opportunistic record by its
-\code{basis} (default \code{c(PRESERVED_SPECIMEN = 1.5)} — a herbarium specimen
+\code{basis} (default \code{c(PRESERVED_SPECIMEN = 1.5)} - a herbarium specimen
 marks survey effort ~50\% more strongly than an iNaturalist photo). Any basis not
 named here is neutral (1); the \eqn{n_j \ge 5} floor keeps even a boosted
 opportunistic weight below the plot ceiling.}
@@ -62,7 +62,7 @@ Applied to the opportunistic records only.}
 
 \item{domain, min_records, p, damp}{passed to \code{\link{survey_weights}} when
 \code{weights} is \code{NULL}. Records of any species absent from the weight set
-— below the floor, or omitted by the caller — are dropped from the field.}
+- below the floor, or omitted by the caller - are dropped from the field.}
 
 \item{trunc}{kernel support in units of \eqn{\sigma} (default \code{4}).}
 }

@@ -59,3 +59,57 @@ test_that("rank_calculate adds the S term when records are supplied", {
   expect_true("S" %in% names(res))
   expect_equal(nrow(res), 4)
 })
+
+# a road + diagonal trail reaching the patches, with a field-office origin at (0, 0)
+make_network <- function() {
+  list(
+    network = sf::st_sf(
+      class = c("road", "trail"), highway = c("primary", "path"),
+      geometry = sf::st_sfc(
+        sf::st_linestring(rbind(c(0, 0), c(1000, 0))),
+        sf::st_linestring(rbind(c(0, 0), c(900, 900))), crs = crs)),
+    origin = sf::st_sf(geometry = sf::st_sfc(sf::st_point(c(0, 0)), crs = crs)))
+}
+
+test_that("rank_calculate adds A and C on a single domain-wide graph", {
+  skip_if_not_installed("sfnetworks")
+  inp <- make_inputs(); nw <- make_network()
+  res <- rank_calculate(inp$patches, occ = inp$occ, suitability = inp$suit,
+                        network = nw$network, origin = nw$origin, agg = 1,
+                        area_col = "acres", prob_col = "prob_mean")
+  expect_true(all(c("A", "C") %in% names(res)))
+  expect_equal(nrow(res), 4)
+  expect_setequal(res$rank, 1:4)
+})
+
+test_that("rank_calculate routes A and C per spatial cluster when cluster_eps_km is set", {
+  skip_if_not_installed("sfnetworks")
+  inp <- make_inputs(); nw <- make_network()
+  # a large eps folds all patches into one cluster, exercising the roads/trails split,
+  # bbox-buffer trail selection and the per-cluster run loop
+  res <- rank_calculate(inp$patches, occ = inp$occ, suitability = inp$suit,
+                        network = nw$network, origin = nw$origin, agg = 1,
+                        cluster_eps_km = 100, cluster_buffer_m = 1500)
+  expect_true(all(c("A", "C") %in% names(res)))
+  expect_equal(nrow(res), 4)
+})
+
+test_that("rank_calculate resamples a supplied resistance and coarsens with agg > 1", {
+  inp <- make_inputs()
+  resist <- terra::setValues(terra::rast(inp$suit), 1)   # uniform precomputed friction
+  res <- rank_calculate(inp$patches, occ = inp$occ, suitability = inp$suit,
+                        resistance = resist, agg = 2, prob_col = "prob_mean")
+  expect_true(all(c("Dg", "Dr", "P") %in% names(res)))   # Dr came via the resample branch
+  expect_equal(nrow(res), 4)
+})
+
+test_that("rank_calculate reads suitability from a path and omits P when prob_col is absent", {
+  inp <- make_inputs()
+  tf <- withr::local_tempfile(fileext = ".tif")
+  terra::writeRaster(inp$suit, tf, overwrite = TRUE)
+  res <- rank_calculate(inp$patches, occ = inp$occ, suitability = tf,  # path, not SpatRaster
+                        agg = 1, prob_col = NULL)
+  expect_s3_class(res, "sf")
+  expect_false("P" %in% names(res))                      # prob_col = NULL drops P
+  expect_true(all(c("Dg", "Dr", "index", "rank") %in% names(res)))
+})

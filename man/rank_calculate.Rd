@@ -32,7 +32,7 @@ rank_calculate(
 \item{patches}{\pkg{sf} units to score (polygons or points); must carry
 \code{area_col} for \strong{C}.}
 
-\item{occ}{known-population points (\pkg{sf}/\code{SpatVector}) — the sources for
+\item{occ}{known-population points (\pkg{sf}/\code{SpatVector}) - the sources for
 \strong{Dg} and \strong{Dr}.}
 
 \item{suitability}{habitat-suitability \code{SpatRaster} (or path): the template for
@@ -68,10 +68,13 @@ the global rescale (default \code{0.95}; passed to \code{\link{complementarity}}
 \code{NULL} disables the cap. See \code{\link{complementarity}} for why the tail is
 clamped.}
 
+\item{cores}{fork workers for \strong{C}'s per-patch distance loop (default
+\code{1}); passed to \code{\link{complementarity}}.}
+
 \item{cluster_eps_km}{if set, compute \strong{A}/\strong{C} per spatial cluster
 (bbox) rather than on one domain-wide graph: patches within this distance (km)
 share a cluster (\code{\link{cluster_patches}}), and each cluster is routed on its
-own small graph — all roads (for the drive-in) plus only that cluster's trails.
+own small graph - all roads (for the drive-in) plus only that cluster's trails.
 \code{NULL} (default) uses a single graph. The per-cluster split is a big win when
 patches are scattered; raw travel times are rescaled once, globally, so clusters
 stay comparable. Cross-cluster co-visitation is negligible at this separation.}
@@ -89,7 +92,7 @@ local trails (default \code{1500}).}
 The calculation half of the patch ranking: given the data acquired by
 \code{\link{rank_download}} plus the on-disk surfaces, it computes every
 \code{RankIndex} term, samples the raster terms at the patch centroids, and combines
-them with \code{\link{rank_index}}. No network calls — it reads the files the
+them with \code{\link{rank_index}}. No network calls - it reads the files the
 download module wrote, so it is fast to re-run while tuning weights.
 }
 \details{

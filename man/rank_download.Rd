@@ -22,7 +22,7 @@ rank_download(
 \arguments{
 \item{patches}{\pkg{sf} patches (points/polygons) that scope both pulls.}
 
-\item{origin}{trip origin for accessibility — \pkg{sf} point or \code{c(lon, lat)}
+\item{origin}{trip origin for accessibility - \pkg{sf} point or \code{c(lon, lat)}
 (see \code{\link{osm_network_for}}).}
 
 \item{crs}{planar working CRS (metres); defaults to the patches' CRS.}
@@ -40,7 +40,7 @@ rank_download(
 }
 \value{
 a list: \code{records} (GBIF \pkg{sf}), \code{network} (OSM \pkg{sf}),
-  \code{origin} (\pkg{sf} point), \code{clusters}, and \code{doi} — everything the
+  \code{origin} (\pkg{sf} point), \code{clusters}, and \code{doi} - everything the
   calculation step needs.
 }
 \description{
@@ -49,7 +49,7 @@ so the slow, network-bound, API-dependent work runs once and its outputs can be
 re-used. It overlaps the two big pulls: GBIF's bulk download is \strong{requested}
 first (and prepared server-side while we wait), the OSM road/trail network is
 fetched in that window, and only then do we come \strong{back} to collect the
-finished GBIF archive — so the GBIF prep time is spent fetching OSM, not idling.
+finished GBIF archive - so the GBIF prep time is spent fetching OSM, not idling.
 }
 \details{
 \preformatted{

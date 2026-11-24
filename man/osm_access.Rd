@@ -43,7 +43,7 @@ pull.}
 
 \item{overwrite}{refetch and overwrite cached tiles (default \code{FALSE}).}
 
-\item{endpoint}{Overpass API URL (default the public instance — override for your
+\item{endpoint}{Overpass API URL (default the public instance - override for your
 own).}
 
 \item{contact}{optional contact string appended to the User-Agent (opt-in; e.g. a
@@ -53,8 +53,8 @@ project URL or email you choose to share). \code{NULL} sends none.}
 (default \code{1}).}
 
 \item{exclude}{optional geometry (\pkg{sf}/\pkg{sfc}, any CRS) of ground already
-covered elsewhere; any tile falling \emph{entirely} within it is skipped — never
-fetched — so overlapping pulls don't re-query the API. Its benefit grows as tiles
+covered elsewhere; any tile falling \emph{entirely} within it is skipped - never
+fetched - so overlapping pulls don't re-query the API. Its benefit grows as tiles
 shrink toward the excluded regions' size.}
 
 \item{pause}{minimum seconds between requests (default \code{1}); also the base of
@@ -85,17 +85,17 @@ tries to behave:
   \item \strong{Batches} a large domain into \code{tiles}^2 smaller queries rather
     than one giant one.
   \item \strong{Checkpoints} every tile to \code{cache_dir} the moment it returns,
-    and on a re-run \strong{skips} any tile already cached — so an interrupted or
+    and on a re-run \strong{skips} any tile already cached - so an interrupted or
     retried pull resumes instead of re-hammering the API.
   \item \strong{Breathes} between calls (\code{req_throttle}) and \strong{backs off}
     exponentially on transient failures / rate limits (429/502/503/504, honouring
     any \code{Retry-After}).
   \item Sends a plain \strong{User-Agent} and never your identity. If you have a
     contact address you are willing to share per OSM etiquette, pass it in
-    \code{contact} — it is \emph{opt-in}, never read from your session.
+    \code{contact} - it is \emph{opt-in}, never read from your session.
 }
 For anything heavy, run your \strong{own Overpass instance} (or a provider you have
-an account with) and point \code{endpoint} at it — do not hammer the public API.
+an account with) and point \code{endpoint} at it - do not hammer the public API.
 
 Data is \eqn{\copyright} OpenStreetMap contributors, \strong{ODbL}: attribute it,
 and snapshot the result (the \code{timestamp} attribute records the OSM base time)
