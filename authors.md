@@ -8,16 +8,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/sagesteppe/lsed/blob/main/DESCRIPTION)
+[`inst/CITATION`](https://github.com/sagesteppe/lsed/blob/main/inst/CITATION)
 
 Benkendorf R (2026). *lsed: Prevalence-Corrected Evaluation of
 Species-Distribution Predictions*. R package version 0.0.1,
-<https://sagesteppe.github.io/lsed/>.
+<https://github.com/sagesteppe/lsed>.
 
     @Manual{,
-      title = {lsed: Prevalence-Corrected Evaluation of Species-Distribution Predictions},
+      title = {{lsed}: Prevalence-Corrected Evaluation of Species-Distribution Predictions},
       author = {Reed Benkendorf},
       year = {2026},
       note = {R package version 0.0.1},
-      url = {https://sagesteppe.github.io/lsed/},
+      url = {https://github.com/sagesteppe/lsed},
     }

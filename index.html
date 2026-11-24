@@ -5,7 +5,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Prevalence-Corrected Evaluation of Species-Distribution Predictions • lsed</title>
-<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
+  window.MathJax = {
+    chtml: {
+      fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
+    }
+  };
+</script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -33,6 +39,12 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="articles/lsed.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/prioritisation.html">Prioritising sites for survey (RankIndex)</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -55,7 +67,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>A software package (R and Python) for determining the benefit of using a statistical model in landscape decision making. Currently using minor extensions of decision curve analysis (DCA), geared towards species distribution models.</p>
+<p>A software package (<a href="https://github.com/sagesteppe/lsed" class="external-link">R</a> and <a href="https://github.com/sagesteppe/lsed-py" class="external-link">Python</a>) for determining the benefit of using a statistical model in landscape decision making. Currently using minor extensions of decision curve analysis (DCA), geared towards species distribution models.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -72,10 +84,14 @@
 <div class="section level2">
 <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
 </h2>
+<p>The package splits into two toolkits: <strong>DCA Support</strong> (the prevalence-corrected evaluation of species-distribution predictions) and <strong>Prioritisation</strong> (building a <code>RankIndex</code> to prioritise sites for survey). Each function links to its reference page.</p>
+<div class="section level3">
+<h3 id="dca-support">DCA Support<a class="anchor" aria-label="anchor" href="#dca-support"></a>
+</h3>
 <table class="table">
 <colgroup>
-<col width="46%">
-<col width="53%">
+<col width="50%">
+<col width="50%">
 </colgroup>
 <thead><tr>
 <th>Function</th>
@@ -83,58 +99,121 @@
 </tr></thead>
 <tbody>
 <tr>
-<td><code><a href="reference/reweight.html">reweight()</a></code></td>
+<td><a href="https://sagesteppe.github.io/lsed/reference/reweight.html"><code>reweight()</code></a></td>
 <td>Case weights that re-price an evaluation sample to a target prevalence</td>
 </tr>
 <tr>
-<td><code><a href="reference/roc_auc.html">roc_auc()</a></code></td>
+<td><a href="https://sagesteppe.github.io/lsed/reference/roc_auc.html"><code>roc_auc()</code></a></td>
 <td>Prevalence-invariant ROC-AUC via the rank (Mann-Whitney) identity</td>
 </tr>
 <tr>
 <td>
-<code><a href="reference/ap_pointwise.html">ap_pointwise()</a></code>, <code><a href="reference/pr_curve_exact.html">pr_curve_exact()</a></code>
+<a href="https://sagesteppe.github.io/lsed/reference/ap_pointwise.html"><code>ap_pointwise()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/pr_curve_exact.html"><code>pr_curve_exact()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/pr_auc.html"><code>pr_auc()</code></a>
 </td>
-<td>Exact average precision / PR curve at a target prevalence</td>
+<td>Exact average precision / PR curve / PR-AUC at a target prevalence</td>
 </tr>
 <tr>
 <td>
-<code><a href="reference/ap_binormal.html">ap_binormal()</a></code>, <code><a href="reference/pr_curve_binormal.html">pr_curve_binormal()</a></code>, <code><a href="reference/ap_scalar_to_prev.html">ap_scalar_to_prev()</a></code>
+<a href="https://sagesteppe.github.io/lsed/reference/ap_binormal.html"><code>ap_binormal()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/pr_curve_binormal.html"><code>pr_curve_binormal()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/ap_scalar_to_prev.html"><code>ap_scalar_to_prev()</code></a>
 </td>
 <td>Equal-variance binormal (summary-metric) route</td>
 </tr>
 <tr>
 <td>
-<code><a href="reference/nb_exact.html">nb_exact()</a></code>, <code><a href="reference/nb_binormal.html">nb_binormal()</a></code>, <code><a href="reference/nb_treat_all.html">nb_treat_all()</a></code>
+<a href="https://sagesteppe.github.io/lsed/reference/nb_exact.html"><code>nb_exact()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/nb_exact_ci.html"><code>nb_exact_ci()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/nb_binormal.html"><code>nb_binormal()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/nb_binormal_band.html"><code>nb_binormal_band()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/nb_treat_all.html"><code>nb_treat_all()</code></a>
 </td>
-<td>Decision-curve net benefit (per-point, best-achievable, treat-all)</td>
+<td>Decision-curve net benefit (per-point, CI, binormal, uncertainty band, treat-all)</td>
 </tr>
 <tr>
 <td>
-<code><a href="reference/cox_calibration.html">cox_calibration()</a></code>, <code><a href="reference/recalibrate_to_prevalence.html">recalibrate_to_prevalence()</a></code>, <code><a href="reference/clamp.html">clamp()</a></code>
+<a href="https://sagesteppe.github.io/lsed/reference/cox_calibration.html"><code>cox_calibration()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/recalibrate_to_prevalence.html"><code>recalibrate_to_prevalence()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/clamp.html"><code>clamp()</code></a>
 </td>
-<td>Calibration helpers</td>
-</tr>
-<tr>
-<td><code><a href="reference/survey_units.html">survey_units()</a></code></td>
-<td>Convert a continuous raster into survey units</td>
+<td>Calibration of held-out predictions</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level3">
+<h3 id="prioritisation">Prioritisation<a class="anchor" aria-label="anchor" href="#prioritisation"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><a href="https://sagesteppe.github.io/lsed/reference/rank_download.html"><code>rank_download()</code></a></td>
+<td>One-call acquisition of every external input (GBIF records + OSM network)</td>
+</tr>
+<tr>
+<td>
+<a href="https://sagesteppe.github.io/lsed/reference/gbif_records.html"><code>gbif_records()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/gbif_request.html"><code>gbif_request()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/gbif_retrieve.html"><code>gbif_retrieve()</code></a>
+</td>
+<td>Pull target-group occurrence records from GBIF</td>
+</tr>
+<tr>
+<td>
+<a href="https://sagesteppe.github.io/lsed/reference/osm_access.html"><code>osm_access()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/osm_network_for.html"><code>osm_network_for()</code></a>
+</td>
+<td>Fetch the OpenStreetMap road / trail network</td>
+</tr>
+<tr>
+<td><a href="https://sagesteppe.github.io/lsed/reference/survey_units.html"><code>survey_units()</code></a></td>
+<td>Delineate survey units from a continuous suitability raster</td>
+</tr>
+<tr>
+<td>
+<a href="https://sagesteppe.github.io/lsed/reference/survey_surface.html"><code>survey_surface()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/survey_weights.html"><code>survey_weights()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/guess_record_type.html"><code>guess_record_type()</code></a>
+</td>
+<td>Survey-intensity (bias) surface - the S term</td>
+</tr>
+<tr>
+<td><a href="https://sagesteppe.github.io/lsed/reference/geo_distance.html"><code>geo_distance()</code></a></td>
+<td>Geographic distance to known populations - the Dg term</td>
+</tr>
+<tr>
+<td>
+<a href="https://sagesteppe.github.io/lsed/reference/build_resistance.html"><code>build_resistance()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/cost_distance.html"><code>cost_distance()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/tobler_friction.html"><code>tobler_friction()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/cluster_region_extents.html"><code>cluster_region_extents()</code></a>
+</td>
+<td>Isotropic cost-distance engine - Dr / A terms</td>
+</tr>
+<tr>
+<td>
+<a href="https://sagesteppe.github.io/lsed/reference/build_network.html"><code>build_network()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/contract_network.html"><code>contract_network()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/accessibility.html"><code>accessibility()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/complementarity.html"><code>complementarity()</code></a>
+</td>
+<td>Network travel-time engine - A / C terms</td>
+</tr>
+<tr>
+<td><a href="https://sagesteppe.github.io/lsed/reference/osm_speeds.html"><code>osm_speeds</code></a></td>
+<td>Default per-highway travel speeds (km/h)</td>
+</tr>
+<tr>
+<td><a href="https://sagesteppe.github.io/lsed/reference/cluster_patches.html"><code>cluster_patches()</code></a></td>
+<td>Group nearby patches into spatial clusters</td>
+</tr>
+<tr>
+<td>
+<a href="https://sagesteppe.github.io/lsed/reference/rank_index.html"><code>rank_index()</code></a>, <a href="https://sagesteppe.github.io/lsed/reference/rank_calculate.html"><code>rank_calculate()</code></a>
+</td>
+<td>Combine the terms into a priority score and ranking</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>Benkendorf, R.C. 2026. lsed</p>
-<p>A bibtex entry for latex users is:</p>
-<p>@Misc{benkendorf2026lsed,<br>
-title = {lsed},<br>
-author = {Benkendorf R.C.},<br>
-year = {2026},<br>
-url = {<a href="https://github.com/sagesteppe/lsed" class="external-link uri">https://github.com/sagesteppe/lsed</a>} }</p>
+<p>A bibtex entry for LaTeX users is <a href="authors.html#citation">here</a>.</p>
 <p>Or use R to display citations:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">'lsed'</span><span class="op">)</span></span></code></pre></div>
-<p>For complete citation information, see the <a href="authors.html#citation">citation page</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
