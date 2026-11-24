@@ -6,12 +6,12 @@
 #' in memory.
 #'
 #' \itemize{
-#'   \item \strong{Dg} — geographic distance from a known population:
+#'   \item \strong{Dg} - geographic distance from a known population:
 #'     \code{\link{geo_distance}} (straight-line \code{\link[terra]{distance}} to the
 #'     nearest source).
-#'   \item \strong{Dr} — resistance distance: \code{\link{build_resistance}} friction
-#'     → \code{\link{cost_distance}} from occupied populations.
-#'   \item \strong{A} — accessibility: \code{\link{tobler_friction}} (walking cost) →
+#'   \item \strong{Dr} - resistance distance: \code{\link{build_resistance}} friction
+#'     -> \code{\link{cost_distance}} from occupied populations.
+#'   \item \strong{A} - accessibility: \code{\link{tobler_friction}} (walking cost) ->
 #'     \code{\link{cost_distance}} from the road/trail network.
 #' }
 #'
@@ -22,7 +22,7 @@
 #' \code{build_resistance()} is lifted from \pkg{safeHavens}
 #' (\code{buildResistanceSurface}); the tiling (\code{\link{cluster_region_extents}},
 #' mosaic-by-min) is lifted from the \code{Ecoloradense} cost-distance script. Both
-#' are terra/sf only — the lift adds no dependency beyond \pkg{terra}, \pkg{sf}.
+#' are terra/sf only - the lift adds no dependency beyond \pkg{terra}, \pkg{sf}.
 #'
 #' @name cost
 NULL
@@ -34,8 +34,8 @@ NULL
 #' Build an isotropic resistance (friction) surface
 #'
 #' Lifted from \pkg{safeHavens} \code{buildResistanceSurface()} (terra-only). Sums
-#' weighted, optional layers — water features, terrain ruggedness, habitat and any
-#' extras — into a per-cell cost of movement, clamped to a floor of 1 and stored as
+#' weighted, optional layers - water features, terrain ruggedness, habitat and any
+#' extras - into a per-cell cost of movement, clamped to a floor of 1 and stored as
 #' integer. Feed the result to \code{\link{cost_distance}} for \strong{Dr}.
 #'
 #' @param base_raster \code{SpatRaster} giving template geometry/resolution.
@@ -53,21 +53,38 @@ NULL
 #' @return an integer \code{SpatRaster} of movement cost (minimum 1).
 #' @export
 build_resistance <- function(
-  base_raster, resistance_surface = NULL,
-  oceans = NULL, lakes = NULL, rivers = NULL, tri = NULL, habitat = NULL,
-  w_ocean = 100, w_lakes = 50, w_rivers = 20, w_tri = 1, w_habitat = 1,
-  addtl_r = NULL, addtl_w = NULL
+  base_raster,
+  resistance_surface = NULL,
+  oceans = NULL,
+  lakes = NULL,
+  rivers = NULL,
+  tri = NULL,
+  habitat = NULL,
+  w_ocean = 100,
+  w_lakes = 50,
+  w_rivers = 20,
+  w_tri = 1,
+  w_habitat = 1,
+  addtl_r = NULL,
+  addtl_w = NULL
 ) {
   if (!is.null(resistance_surface)) {
     res <- resistance_surface
-    if (!terra::compareGeom(res, base_raster, stopOnError = FALSE))
+    if (!terra::compareGeom(res, base_raster, stopOnError = FALSE)) {
       stop("resistance_surface must match base_raster geometry")
+    }
   } else {
     res <- terra::rast(base_raster)
     terra::values(res) <- 0
-    if (!is.null(oceans)) res[oceans == 1] <- res[oceans == 1] + w_ocean
-    if (!is.null(lakes))  res[lakes  == 1] <- res[lakes  == 1] + w_lakes
-    if (!is.null(rivers)) res[rivers == 1] <- res[rivers == 1] + w_rivers
+    if (!is.null(oceans)) {
+      res[oceans == 1] <- res[oceans == 1] + w_ocean
+    }
+    if (!is.null(lakes)) {
+      res[lakes == 1] <- res[lakes == 1] + w_lakes
+    }
+    if (!is.null(rivers)) {
+      res[rivers == 1] <- res[rivers == 1] + w_rivers
+    }
     if (!is.null(tri)) {
       # NA-robust z-score (base scale() uses colMeans w/o na.rm, so a single NA
       # border cell would blank the whole layer).
@@ -75,13 +92,19 @@ build_resistance <- function(
       z <- (tv - mean(tv, na.rm = TRUE)) / stats::sd(tv, na.rm = TRUE)
       res <- res + w_tri * terra::setValues(res, z)
     }
-    if (!is.null(habitat)) res <- res + w_habitat * habitat
-    if (!is.null(addtl_r) && terra::nlyr(addtl_r) == length(addtl_w))
-      for (i in seq_along(addtl_w)) res <- res + addtl_r[[i]] * addtl_w[i]
+    if (!is.null(habitat)) {
+      res <- res + w_habitat * habitat
+    }
+    if (!is.null(addtl_r) && terra::nlyr(addtl_r) == length(addtl_w)) {
+      for (i in seq_along(addtl_w)) {
+        res <- res + addtl_r[[i]] * addtl_w[i]
+      }
+    }
   }
   vals <- terra::values(res)
-  if (!is.null(vals) && length(vals) > 0 && any(!is.na(vals)))
+  if (!is.null(vals) && length(vals) > 0 && any(!is.na(vals))) {
     res <- terra::clamp(res, lower = 1L)
+  }
   terra::as.int(res)
 }
 
@@ -89,7 +112,7 @@ build_resistance <- function(
 #'
 #' An isotropic friction from Tobler's hiking function: walking speed
 #' \eqn{W = 6\,e^{-3.5\,|S + 0.05|}} km/h on slope \eqn{S} (rise/run), so cost per
-#' unit distance is \eqn{1/W}. Symmetric (uses \eqn{|S|}) — appropriate for access,
+#' unit distance is \eqn{1/W}. Symmetric (uses \eqn{|S|}) - appropriate for access,
 #' which is a round trip. Feed to \code{\link{cost_distance}} from roads/trails.
 #'
 #' @param dem elevation \code{SpatRaster} (projected, metres).
@@ -98,7 +121,7 @@ build_resistance <- function(
 tobler_friction <- function(dem) {
   slope <- terra::terrain(dem, v = "slope", unit = "radians")
   S <- tan(slope)
-  speed <- 6 * exp(-3.5 * abs(S + 0.05))        # km/h
+  speed <- 6 * exp(-3.5 * abs(S + 0.05)) # km/h
   fric <- 1 / speed
   names(fric) <- "friction"
   fric
@@ -143,9 +166,17 @@ geo_distance <- function(sources, template, invert = FALSE) {
 #' @param invert if \code{TRUE}, return \eqn{1 - \tilde d} (near/accessible = high).
 #' @return a single-layer \code{SpatRaster} on \eqn{[0, 1]}.
 #' @export
-cost_distance <- function(friction, sources, template = friction, tile = FALSE,
-                          k = 2, buffer_m = 3000, max_cells = NULL, seed = 1,
-                          invert = FALSE) {
+cost_distance <- function(
+  friction,
+  sources,
+  template = friction,
+  tile = FALSE,
+  k = 2,
+  buffer_m = 3000,
+  max_cells = NULL,
+  seed = 1,
+  invert = FALSE
+) {
   src <- .as_vect(sources)
 
   if (!tile) {
@@ -154,17 +185,28 @@ cost_distance <- function(friction, sources, template = friction, tile = FALSE,
   }
 
   res_m <- terra::res(friction)[1]
-  exts <- cluster_region_extents(sf::st_as_sf(src), k = k, buffer_m = buffer_m,
-                                 max_cells = max_cells, res_m = res_m, seed = seed)
+  exts <- cluster_region_extents(
+    sf::st_as_sf(src),
+    k = k,
+    buffer_m = buffer_m,
+    max_cells = max_cells,
+    res_m = res_m,
+    seed = seed
+  )
   tiles <- lapply(exts, function(e) {
     fr <- terra::crop(friction, e)
     s_in <- terra::crop(src, e)
-    if (!nrow(s_in)) return(NULL)
+    if (!nrow(s_in)) {
+      return(NULL)
+    }
     .costdist_tile(fr, s_in)
   })
   tiles <- Filter(Negate(is.null), tiles)
-  merged <- if (length(tiles) > 1) terra::mosaic(terra::sprc(tiles), fun = "min")
-            else tiles[[1]]
+  merged <- if (length(tiles) > 1) {
+    terra::mosaic(terra::sprc(tiles), fun = "min")
+  } else {
+    tiles[[1]]
+  }
   .rescale01(terra::extend(merged, template), invert)
 }
 
@@ -190,7 +232,9 @@ cost_distance <- function(friction, sources, template = friction, tile = FALSE,
   mn <- terra::global(r, "min", na.rm = TRUE)[[1]]
   mx <- terra::global(r, "max", na.rm = TRUE)[[1]]
   out <- if (is.finite(mx) && mx > mn) (r - mn) / (mx - mn) else r * 0
-  if (invert) out <- 1 - out
+  if (invert) {
+    out <- 1 - out
+  }
   names(out) <- "d"
   out
 }
@@ -212,28 +256,52 @@ cost_distance <- function(friction, sources, template = friction, tile = FALSE,
 #' @return a list of \code{SpatExtent}.
 #' @keywords internal
 #' @export
-cluster_region_extents <- function(pts, k = 2, buffer_m = 3000,
-                                    max_cells = NULL, res_m = NULL, seed = 1) {
-  stopifnot("res_m is required when max_cells is set" =
-              is.null(max_cells) || !is.null(res_m))
+cluster_region_extents <- function(
+  pts,
+  k = 2,
+  buffer_m = 3000,
+  max_cells = NULL,
+  res_m = NULL,
+  seed = 1
+) {
+  stopifnot(
+    "res_m is required when max_cells is set" = is.null(max_cells) ||
+      !is.null(res_m)
+  )
   ext_of <- function(p) {
-    sf::st_bbox(p) |> sf::st_as_sfc(crs = sf::st_crs(p)) |>
-      sf::st_buffer(buffer_m) |> terra::vect() |> terra::ext()
+    sf::st_bbox(p) |>
+      sf::st_as_sfc(crs = sf::st_crs(p)) |>
+      sf::st_buffer(buffer_m) |>
+      terra::vect() |>
+      terra::ext()
   }
   ncell_of <- function(e) {
-    v <- as.vector(e); ((v[2] - v[1]) / res_m) * ((v[4] - v[3]) / res_m)
+    v <- as.vector(e)
+    ((v[2] - v[1]) / res_m) * ((v[4] - v[3]) / res_m)
   }
   kmeans_cluster <- function(p, centers) {
-    if (!is.null(seed)) set.seed(seed)
+    if (!is.null(seed)) {
+      set.seed(seed)
+    }
     stats::kmeans(sf::st_coordinates(p), centers = centers)$cluster
   }
   split_recursive <- function(p) {
     e <- ext_of(p)
-    if (is.null(max_cells) || nrow(p) < 4 || ncell_of(e) <= max_cells) return(list(e))
+    if (is.null(max_cells) || nrow(p) < 4 || ncell_of(e) <= max_cells) {
+      return(list(e))
+    }
     cl <- kmeans_cluster(p, centers = 2)
-    if (length(unique(cl)) < 2) return(list(e))
-    do.call(c, lapply(sort(unique(cl)), function(i) split_recursive(p[cl == i, ])))
+    if (length(unique(cl)) < 2) {
+      return(list(e))
+    }
+    do.call(
+      c,
+      lapply(sort(unique(cl)), function(i) split_recursive(p[cl == i, ]))
+    )
   }
   cl0 <- kmeans_cluster(pts, centers = k)
-  do.call(c, lapply(sort(unique(cl0)), function(i) split_recursive(pts[cl0 == i, ])))
+  do.call(
+    c,
+    lapply(sort(unique(cl0)), function(i) split_recursive(pts[cl0 == i, ]))
+  )
 }

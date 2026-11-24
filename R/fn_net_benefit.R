@@ -80,9 +80,17 @@ nb_exact <- function(truth, prob, pi, pt) {
 #'   8:53.
 #' @seealso \code{\link{nb_exact}}
 #' @export
-nb_exact_ci <- function(truth, prob, pi, pt, B = 999, level = 0.8,
-                        side = c("lower", "both"), stratified = TRUE,
-                        cores = NULL) {
+nb_exact_ci <- function(
+  truth,
+  prob,
+  pi,
+  pt,
+  B = 999,
+  level = 0.8,
+  side = c("lower", "both"),
+  stratified = TRUE,
+  cores = NULL
+) {
   side <- match.arg(side)
   est <- nb_exact(truth, prob, pi, pt)
   i1 <- which(truth == 1)
@@ -97,13 +105,19 @@ nb_exact_ci <- function(truth, prob, pi, pt, B = 999, level = 0.8,
     nb_exact(truth[idx], prob[idx], pi, pt)
   }
 
-  if (is.null(cores)) cores <- getOption("mc.cores", 1L)
+  if (is.null(cores)) {
+    cores <- getOption("mc.cores", 1L)
+  }
   cores <- as.integer(max(1L, min(cores, B)))
   # mclapply cannot fork on Windows; restricted environments (R CMD check,
   # vignette knitting) cap usable cores via _R_CHECK_LIMIT_CORES_.
-  if (.Platform$OS.type == "windows") cores <- 1L
+  if (.Platform$OS.type == "windows") {
+    cores <- 1L
+  }
   chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
-  if (nzchar(chk) && chk != "false") cores <- min(cores, 2L)
+  if (nzchar(chk) && chk != "false") {
+    cores <- min(cores, 2L)
+  }
 
   reps <- if (cores > 1L) {
     parallel::mclapply(seq_len(B), one_boot, mc.cores = cores)
@@ -117,12 +131,24 @@ nb_exact_ci <- function(truth, prob, pi, pt, B = 999, level = 0.8,
   out <- data.frame(
     pt = pt,
     nb = est,
-    lower = apply(boot, 2, stats::quantile, probs = lo, na.rm = TRUE,
-                  names = FALSE)
+    lower = apply(
+      boot,
+      2,
+      stats::quantile,
+      probs = lo,
+      na.rm = TRUE,
+      names = FALSE
+    )
   )
   if (side == "both") {
-    out$upper <- apply(boot, 2, stats::quantile, probs = 1 - a / 2,
-                       na.rm = TRUE, names = FALSE)
+    out$upper <- apply(
+      boot,
+      2,
+      stats::quantile,
+      probs = 1 - a / 2,
+      na.rm = TRUE,
+      names = FALSE
+    )
   }
   out
 }
@@ -201,19 +227,27 @@ nb_binormal <- function(mu, pi, pt) {
 #' @seealso \code{\link{nb_binormal}}, \code{\link{nb_exact_ci}},
 #'   \code{\link{ap_scalar_to_prev}}
 #' @export
-nb_binormal_band <- function(pr_auc, pi, pt, spread,
-                             side = c("lower", "both"),
-                             pi0 = pi, grid = 3000) {
+nb_binormal_band <- function(
+  pr_auc,
+  pi,
+  pt,
+  spread,
+  side = c("lower", "both"),
+  pi0 = pi,
+  grid = 3000
+) {
   side <- match.arg(side)
   to_mu <- function(val) {
     val <- min(max(val, 1e-4), 1 - 1e-4)
-    stats::uniroot(function(m) ap_binormal(m, pi0, grid = grid) - val,
-                   c(1e-3, 8))$root
+    stats::uniroot(
+      function(m) ap_binormal(m, pi0, grid = grid) - val,
+      c(1e-3, 8)
+    )$root
   }
   mu <- c(central = to_mu(pr_auc), lower = to_mu(pr_auc - spread))
   out <- data.frame(
-    pt    = pt,
-    nb    = nb_binormal(mu[["central"]], pi, pt),
+    pt = pt,
+    nb = nb_binormal(mu[["central"]], pi, pt),
     lower = nb_binormal(mu[["lower"]], pi, pt)
   )
   if (side == "both") {
