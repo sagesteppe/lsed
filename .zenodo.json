@@ -1,0 +1,22 @@
+{
+  "title": "lsed: Prevalence-Corrected Evaluation of Species-Distribution Predictions",
+  "description": "An R (and Python) package for landscape-ecology decisions. It provides prevalence-corrected evaluation of species-distribution model predictions (decision-curve analysis, prevalence-invariant ROC-AUC, average precision, net benefit and Cox calibration) and a site-prioritisation toolkit that combines geographic, resistance, accessibility, complementarity and survey-intensity terms into a RankIndex.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "Benkendorf, Reed",
+      "orcid": "0000-0001-9178-3087"
+    }
+  ],
+  "keywords": [
+    "R",
+    "species distribution models",
+    "decision curve analysis",
+    "landscape ecology",
+    "model evaluation",
+    "site prioritisation",
+    "prevalence"
+  ]
+}

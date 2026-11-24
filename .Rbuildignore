@@ -10,3 +10,4 @@
 ^robots\.txt$
 ^update-readme\.sh$
 ^\.lintr$
+^\.zenodo\.json$

@@ -23,7 +23,28 @@ jobs:
         with:
           extra-packages: any::covr
           needs: coverage
-      
+
+      # ── WhiteboxTools binary (patch-delineation pipeline) ─────────────────
+      # Cache the ~100 MB executable install_whitebox() fetches, so coverage
+      # exercises the whitebox-dependent tests (otherwise skipped) without
+      # re-downloading each run.
+      - name: WhiteboxTools data dir
+        id: wbt
+        run: cat(paste0("dir=", tools::R_user_dir("whitebox", "data"), "\n"), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
+        shell: Rscript {0}
+
+      - name: Cache WhiteboxTools
+        id: cache-whitebox
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.wbt.outputs.dir }}
+          key: whitebox-${{ runner.os }}-v1
+
+      - name: Install WhiteboxTools
+        if: steps.cache-whitebox.outputs.cache-hit != 'true'
+        run: whitebox::install_whitebox()
+        shell: Rscript {0}
+
       - name: Test coverage
         run: |
           covr::codecov(

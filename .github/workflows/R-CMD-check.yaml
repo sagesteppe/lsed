@@ -45,6 +45,29 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      # ── WhiteboxTools binary (patch-delineation pipeline) ─────────────────
+      # whitebox::install_whitebox() fetches a ~100 MB executable, separate from
+      # the R package and not covered by the R-library cache. Cache it so it
+      # downloads once; a hit restores it to whitebox's user data dir where
+      # wbt_exe_path() finds it, so the patch-pipeline tests run instead of
+      # skipping. The data dir differs per OS, so compute it with R.
+      - name: WhiteboxTools data dir
+        id: wbt
+        run: cat(paste0("dir=", tools::R_user_dir("whitebox", "data"), "\n"), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
+        shell: Rscript {0}
+
+      - name: Cache WhiteboxTools
+        id: cache-whitebox
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.wbt.outputs.dir }}
+          key: whitebox-${{ runner.os }}-v1
+
+      - name: Install WhiteboxTools
+        if: steps.cache-whitebox.outputs.cache-hit != 'true'
+        run: whitebox::install_whitebox()
+        shell: Rscript {0}
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
