@@ -118,16 +118,21 @@ manager can more quickly prioritise survey work.</p>
 <tr class="even">
 <td><strong>P</strong></td>
 <td>the patch’s own predicted suitability</td>
-<td>(a column you supply)</td>
+<td>from SDM outputs</td>
 </tr>
 </tbody>
 </table>
-<p>Every term is rescaled to <code>[0, 1]</code> and oriented so
-<strong>high = higher priority</strong>, then combined by
-<code><a href="../reference/rank_index.html">rank_index()</a></code>. You can compute the terms yourself, or let
-<code><a href="../reference/rank_calculate.html">rank_calculate()</a></code> assemble all of them from a handful of
-inputs.</p>
-<!-- TODO: one or two sentences of ecological motivation, and a citation to the manuscript. -->
+<p>Each term is rescaled from <code>[0, 1]</code>, and oriented, then
+combined by <code><a href="../reference/rank_index.html">rank_index()</a></code> so higher scores are the
+<em>higher priority</em> sites.<br>
+You can compute the terms yourself, or let <code><a href="../reference/rank_calculate.html">rank_calculate()</a></code>
+assemble all of them from a handful of inputs.</p>
+<p>DCA provides a framework for considering the utility of a statistical
+model in decision making. However, it does not offer full guidance on
+<em>how</em> to go about implementing a model across the landscape. Here
+we formalise a framework for prioritising site visits and ground
+truthing, based on biogeography, landscale ecology, and operational
+considerations.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sagesteppe.github.io/lsed/">lsed</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span> <span class="co">## raster surfaces</span></span>
@@ -265,7 +270,7 @@ process).</p>
 endeavoured to make it as light on their server as possible. Please
 carefully consider your landscape, and needs before download.</p>
 <p>By default we persist all OSM data to disk. Please do not delete it
-(reduce, reuse, recyle).</p>
+and re-download (reduce, reuse, recyle).</p>
 </div>
 <div class="section level2">
 <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>
@@ -274,7 +279,6 @@ carefully consider your landscape, and needs before download.</p>
 <li>
 <code><a href="../articles/lsed.html">vignette("lsed")</a></code> for the prevalence-corrected
 evaluation (DCA) side of the package.</li>
-<li>The function reference, grouped by RankIndex term, at <a href="https://sagesteppe.github.io/lsed/reference/" class="uri">https://sagesteppe.github.io/lsed/reference/</a>.</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

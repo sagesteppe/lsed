@@ -15,14 +15,21 @@ survey work.
 | **S** | survey intensity (effort already spent nearby) | [`survey_surface()`](https://sagesteppe.github.io/lsed/reference/survey_surface.md) |
 | **A** | accessibility: travel time from the field office | [`accessibility()`](https://sagesteppe.github.io/lsed/reference/accessibility.md) |
 | **C** | complementarity: can a day’s work be assembled nearby | [`complementarity()`](https://sagesteppe.github.io/lsed/reference/complementarity.md) |
-| **P** | the patch’s own predicted suitability | (a column you supply) |
+| **P** | the patch’s own predicted suitability | from SDM outputs |
 
-Every term is rescaled to `[0, 1]` and oriented so **high = higher
-priority**, then combined by
-[`rank_index()`](https://sagesteppe.github.io/lsed/reference/rank_index.md).
+Each term is rescaled from `[0, 1]`, and oriented, then combined by
+[`rank_index()`](https://sagesteppe.github.io/lsed/reference/rank_index.md)
+so higher scores are the *higher priority* sites.  
 You can compute the terms yourself, or let
 [`rank_calculate()`](https://sagesteppe.github.io/lsed/reference/rank_calculate.md)
 assemble all of them from a handful of inputs.
+
+DCA provides a framework for considering the utility of a statistical
+model in decision making. However, it does not offer full guidance on
+*how* to go about implementing a model across the landscape. Here we
+formalise a framework for prioritising site visits and ground truthing,
+based on biogeography, landscale ecology, and operational
+considerations.
 
 ``` r
 
@@ -173,12 +180,10 @@ Our OSM access function is hand rolled in this package. We endeavoured
 to make it as light on their server as possible. Please carefully
 consider your landscape, and needs before download.
 
-By default we persist all OSM data to disk. Please do not delete it
-(reduce, reuse, recyle).
+By default we persist all OSM data to disk. Please do not delete it and
+re-download (reduce, reuse, recyle).
 
 ## See also
 
 - [`vignette("lsed")`](https://sagesteppe.github.io/lsed/articles/lsed.md)
   for the prevalence-corrected evaluation (DCA) side of the package.
-- The function reference, grouped by RankIndex term, at
-  <https://sagesteppe.github.io/lsed/reference/>.
