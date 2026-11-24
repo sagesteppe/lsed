@@ -48,7 +48,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 
 <!-- badges: end -->
 
-A software package ([R](https://github.com/sagesteppe/lsed)\] and
+A software package ([R](https://github.com/sagesteppe/lsed) and
 [Python](https://github.com/sagesteppe/lsed-py)) for determining the
 benefit of using a statistical model in landscape decision making.
 Currently using minor extensions of decision curve analysis (DCA),
