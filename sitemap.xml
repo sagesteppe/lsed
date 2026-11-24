@@ -17,6 +17,7 @@
 <url><loc>https://sagesteppe.github.io/lsed/reference/cache_rast.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/cap_subpatches.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/clamp.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/cluster_patches.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/cluster_region_extents.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/comp_labels.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/complementarity.html</loc></url>
@@ -28,6 +29,9 @@
 <url><loc>https://sagesteppe.github.io/lsed/reference/delineate_patches.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/drop_slivers.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/eval_survey.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/gbif_records.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/gbif_request.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/gbif_retrieve.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/geo_distance.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/guess_record_type.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/index.html</loc></url>
@@ -41,12 +45,16 @@
 <url><loc>https://sagesteppe.github.io/lsed/reference/nb_exact_ci.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/nb_treat_all.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/network.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/osm_access.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/osm_network_for.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/osm_speeds.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/papply.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/polygonize_units.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/pr_auc.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/pr_curve_binormal.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/pr_curve_exact.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/rank_calculate.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/rank_download.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/rank_index.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/recalibrate_to_prevalence.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/reweight.html</loc></url>

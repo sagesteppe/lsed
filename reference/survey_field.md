@@ -69,7 +69,8 @@ survey_field(
 
 - basis:
 
-  optional per-record `basisOfRecord` labels (as from `gbif_records`);
+  optional per-record `basisOfRecord` labels (as from
+  [`gbif_records`](https://sagesteppe.github.io/lsed/reference/gbif_records.md));
   used to up-weight deliberate collections.
 
 - basis_weights:

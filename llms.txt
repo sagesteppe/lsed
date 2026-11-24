@@ -204,6 +204,38 @@ undocumented populations may hide.
 - [`guess_record_type()`](https://sagesteppe.github.io/lsed/reference/guess_record_type.md)
   : Guess record type from a dataset / origin column
 
+## RankIndex — pipeline modules
+
+The two halves of a run: acquire every external input once (download),
+then compute all terms and combine them (calculate). Split so the slow,
+API-bound acquisition is reused while weights are tuned.
+
+- [`rank_download()`](https://sagesteppe.github.io/lsed/reference/rank_download.md)
+  : Acquire every external input for the patch ranking (download module)
+- [`rank_calculate()`](https://sagesteppe.github.io/lsed/reference/rank_calculate.md)
+  : Score patches from the downloaded inputs (calculate module)
+
+## Data acquisition (GBIF & OSM)
+
+Fetch the external inputs — target-group occurrences from GBIF’s bulk
+download (for S) and the OSM road/trail network scoped to patch clusters
+(for A/C). Both cache to disk; be a good API citizen.
+
+- [`gbif_records()`](https://sagesteppe.github.io/lsed/reference/gbif_records.md)
+  : Fetch target-group occurrence records from GBIF for the
+  survey-intensity term
+- [`gbif_request()`](https://sagesteppe.github.io/lsed/reference/gbif_request.md)
+  : Request a GBIF download (non-blocking) — stage 1 of 2
+- [`gbif_retrieve()`](https://sagesteppe.github.io/lsed/reference/gbif_retrieve.md)
+  : Retrieve a requested GBIF download — stage 2 of 2
+- [`osm_network_for()`](https://sagesteppe.github.io/lsed/reference/osm_network_for.md)
+  : Fetch an OSM network scoped to patch clusters, connected to an
+  origin
+- [`osm_access()`](https://sagesteppe.github.io/lsed/reference/osm_access.md)
+  : Fetch the OSM access network (roads + trails) for a domain
+- [`cluster_patches()`](https://sagesteppe.github.io/lsed/reference/cluster_patches.md)
+  : Cluster patches into spatial groups
+
 # Articles
 
 ### All vignettes

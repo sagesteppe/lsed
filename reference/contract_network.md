@@ -20,7 +20,7 @@ contract_network(lines, require_equal = "highway")
 - lines:
 
   road/trail sf lines with a `highway` (and `class`) column, e.g. from
-  `osm_access`.
+  [`osm_access`](https://sagesteppe.github.io/lsed/reference/osm_access.md).
 
 - require_equal:
 

@@ -20,7 +20,9 @@ build_network(
 - lines:
 
   sf LINESTRINGs in a projected CRS (metres), with a `class` column
-  ("road"/"trail"); `osm_access` output fits directly.
+  ("road"/"trail");
+  [`osm_access`](https://sagesteppe.github.io/lsed/reference/osm_access.md)
+  output fits directly.
 
 - road_speed, trail_speed:
 

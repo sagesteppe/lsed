@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">lsed</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -342,6 +342,80 @@
 
         </dt>
         <dd>Guess record type from a dataset / origin column</dd>
+      </dl></div><div class="section level2">
+      <h2 id="rankindex-pipeline-modules">RankIndex — pipeline modules<a class="anchor" aria-label="anchor" href="#rankindex-pipeline-modules"></a></h2>
+
+      <div class="section-desc"><p>The two halves of a run: acquire every external input once (download), then compute all terms and combine them (calculate). Split so the slow, API-bound acquisition is reused while weights are tuned.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="rank_download.html">rank_download()</a></code>
+
+        </dt>
+        <dd>Acquire every external input for the patch ranking (download module)</dd>
+
+        <dt>
+
+          <code><a href="rank_calculate.html">rank_calculate()</a></code>
+
+        </dt>
+        <dd>Score patches from the downloaded inputs (calculate module)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-acquisition-gbif-osm-">Data acquisition (GBIF &amp; OSM)<a class="anchor" aria-label="anchor" href="#data-acquisition-gbif-osm-"></a></h2>
+
+      <div class="section-desc"><p>Fetch the external inputs — target-group occurrences from GBIF’s bulk download (for S) and the OSM road/trail network scoped to patch clusters (for A/C). Both cache to disk; be a good API citizen.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="gbif_records.html">gbif_records()</a></code>
+
+        </dt>
+        <dd>Fetch target-group occurrence records from GBIF for the survey-intensity term</dd>
+
+        <dt>
+
+          <code><a href="gbif_request.html">gbif_request()</a></code>
+
+        </dt>
+        <dd>Request a GBIF download (non-blocking) — stage 1 of 2</dd>
+
+        <dt>
+
+          <code><a href="gbif_retrieve.html">gbif_retrieve()</a></code>
+
+        </dt>
+        <dd>Retrieve a requested GBIF download — stage 2 of 2</dd>
+
+        <dt>
+
+          <code><a href="osm_network_for.html">osm_network_for()</a></code>
+
+        </dt>
+        <dd>Fetch an OSM network scoped to patch clusters, connected to an origin</dd>
+
+        <dt>
+
+          <code><a href="osm_access.html">osm_access()</a></code>
+
+        </dt>
+        <dd>Fetch the OSM access network (roads + trails) for a domain</dd>
+
+        <dt>
+
+          <code><a href="cluster_patches.html">cluster_patches()</a></code>
+
+        </dt>
+        <dd>Cluster patches into spatial groups</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

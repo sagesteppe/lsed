@@ -60,8 +60,10 @@ complementarity(
   `assemble_hr` itself, so it also carries through when the raw hours
   are rescaled downstream (e.g. by
   [`rank_index`](https://sagesteppe.github.io/lsed/reference/rank_index.md)
-  in `rank_calculate`). `NULL` disables the cap (then `Inf` falls back
-  to the worst finite cost, as before).
+  in
+  [`rank_calculate`](https://sagesteppe.github.io/lsed/reference/rank_calculate.md)).
+  `NULL` disables the cap (then `Inf` falls back to the worst finite
+  cost, as before).
 
 - cores:
 

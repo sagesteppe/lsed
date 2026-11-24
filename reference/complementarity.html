@@ -21,7 +21,7 @@ assumption, just the area target."><meta property="og:image" content="https://sa
 
     <a class="navbar-brand me-2" href="../index.html">lsed</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,7 +102,7 @@ among the patches that actually differ. Costs above the <code>cap_q</code> quant
 <em>finite</em> costs (and every <code>Inf</code>) are set to that quantile: all such patches
 count as equally, maximally isolated. The cap is applied to <code>assemble_hr</code>
 itself, so it also carries through when the raw hours are rescaled downstream (e.g.
-by <code><a href="rank_index.html">rank_index</a></code> in <code>rank_calculate</code>). <code>NULL</code> disables
+by <code><a href="rank_index.html">rank_index</a></code> in <code><a href="rank_calculate.html">rank_calculate</a></code>). <code>NULL</code> disables
 the cap (then <code>Inf</code> falls back to the worst finite cost, as before).</p></dd>
 
 
