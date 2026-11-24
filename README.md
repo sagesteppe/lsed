@@ -44,6 +44,7 @@ status](https://github.com/sagesteppe/lsed/workflows/R-CMD-check/badge.svg)](htt
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![](https://img.shields.io/badge/doi-10.5281/zenodo.24487760-orange.svg)](https://doi.org/10.5281/zenodo.24487760)
 [![](https://codecov.io/gh/sagesteppe/lsed/branch/main/graph/badge.svg)](https://app.codecov.io/gh/sagesteppe/lsed)
 
 <!-- badges: end -->
@@ -86,6 +87,10 @@ survey). Each function links to its reference page.
 | [`nb_exact()`](https://sagesteppe.github.io/lsed/reference/nb_exact.html), [`nb_exact_ci()`](https://sagesteppe.github.io/lsed/reference/nb_exact_ci.html), [`nb_binormal()`](https://sagesteppe.github.io/lsed/reference/nb_binormal.html), [`nb_binormal_band()`](https://sagesteppe.github.io/lsed/reference/nb_binormal_band.html), [`nb_treat_all()`](https://sagesteppe.github.io/lsed/reference/nb_treat_all.html) | Decision-curve net benefit (per-point, CI, binormal, uncertainty band, treat-all) |
 | [`cox_calibration()`](https://sagesteppe.github.io/lsed/reference/cox_calibration.html), [`recalibrate_to_prevalence()`](https://sagesteppe.github.io/lsed/reference/recalibrate_to_prevalence.html), [`clamp()`](https://sagesteppe.github.io/lsed/reference/clamp.html) | Calibration of held-out predictions |
 
+A vignette for these functions is located at [Prevalence-corrected
+evaluation in two
+routes](https://sagesteppe.github.io/lsed/articles/lsed.html).
+
 ### Prioritisation
 
 | Function | Purpose |
@@ -102,11 +107,17 @@ survey). Each function links to its reference page.
 | [`cluster_patches()`](https://sagesteppe.github.io/lsed/reference/cluster_patches.html) | Group nearby patches into spatial clusters |
 | [`rank_index()`](https://sagesteppe.github.io/lsed/reference/rank_index.html), [`rank_calculate()`](https://sagesteppe.github.io/lsed/reference/rank_calculate.html) | Combine the terms into a priority score and ranking |
 
+A vignette for these functions is located at [Prioritising sites for
+survey
+(RankIndex)](https://sagesteppe.github.io/lsed/articles/prioritisation.html).
+Where you will, hopefully, happily see you only *need* to run two of
+them.
+
 ## Citation
 
 Benkendorf, R.C. 2026. lsed
 
-A bibtex entry for LaTeX users is [here](authors.html#citation).
+A BibTeX entry for LaTeX users is [here](authors.html#citation).
 
 Or use R to display citations:
 
