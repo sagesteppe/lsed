@@ -40,3 +40,41 @@ test_that("survey_surface renders a [0,1] sparsity view end to end", {
   expect_gte(terra::global(srf, "min", na.rm = TRUE)[[1]], 0)
   expect_lte(terra::global(srf, "max", na.rm = TRUE)[[1]], 1)
 })
+
+test_that("survey_raster: raw view is the field, rescale/invert give the sparsity surface", {
+  set.seed(1)
+  coords <- cbind(rnorm(6, 500, 10), rnorm(6, 500, 10))   # records clustered at (500, 500)
+  fld <- survey_field(coords, rep("A", 6), sigma = 50, min_records = 5)
+  tmpl <- terra::rast(terra::ext(0, 1000, 0, 1000), resolution = 50, crs = "EPSG:3857")
+
+  # rescale = "none": the raw intensity field, non-negative, peaking at the records
+  raw <- survey_raster(fld, template = tmpl, rescale = "none")
+  expect_s4_class(raw, "SpatRaster")
+  expect_equal(names(raw), "S")
+  expect_gte(terra::global(raw, "min", na.rm = TRUE)[[1]], 0)
+  expect_gt(terra::extract(raw, matrix(c(500, 500), ncol = 2))[[1]],   # hotspot
+            terra::extract(raw, matrix(c(50, 50),  ncol = 2))[[1]])    # empty corner
+
+  # quantile-rescaled + inverted: the [0,1] sparsity surface the index consumes,
+  # LOW where the ground is well surveyed
+  spars <- survey_raster(fld, template = tmpl, rescale = "quantile", invert = TRUE)
+  expect_gte(terra::global(spars, "min", na.rm = TRUE)[[1]], 0)
+  expect_lte(terra::global(spars, "max", na.rm = TRUE)[[1]], 1)
+  expect_lt(terra::extract(spars, matrix(c(500, 500), ncol = 2))[[1]], # surveyed -> low
+            terra::extract(spars, matrix(c(50, 50),  ncol = 2))[[1]])  # unsurveyed -> high
+})
+
+test_that("survey_raster builds from an extent and guards its arguments", {
+  set.seed(1)
+  coords <- cbind(rnorm(6, 500, 10), rnorm(6, 500, 10))
+  fld <- survey_field(coords, rep("A", 6), sigma = 50, min_records = 5)
+  ext <- terra::ext(0, 1000, 0, 1000)
+
+  # an extent + res is an alternative to a template raster; two res = two views of one model
+  expect_equal(terra::res(survey_raster(fld, template = ext, res = 100, rescale = "none"))[1], 100)
+  expect_equal(terra::res(survey_raster(fld, template = ext, res = 50,  rescale = "none"))[1], 50)
+
+  expect_error(survey_raster(fld, template = ext), "res")             # extent needs res
+  expect_error(survey_raster(fld, template = ext, res = 50,           # no complement of an
+                             rescale = "none", invert = TRUE), "invert")  #   unbounded field
+})

@@ -1,6 +1,6 @@
 Package: lsed
 Title: Prevalence-Corrected Evaluation of Species-Distribution Predictions
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R:
     person("Reed", "Benkendorf",
            email = "reedbenkendorf2021@u.northwestern.edu",
@@ -18,27 +18,33 @@ BugReports: https://github.com/sagesteppe/lsed/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = FALSE)
+Depends:
+    R (>= 4.1.0)
 Imports:
+    httr2,
+    igraph,
+    jsonlite,
+    nabor,
     parallel,
+    rgbif,
+    sf,
+    sfnetworks,
     stats,
-    utils
+    terra,
+    tidygraph,
+    tools,
+    utils,
+    whitebox
 Suggests:
     ambient,
     caret,
     CAST,
     dplyr,
     ggplot2,
-    igraph,
     knitr,
-    nabor,
     rmarkdown,
     scales,
-    sf,
-    sfnetworks,
-    terra,
     testthat (>= 3.0.0),
-    tidygraph,
-    whitebox,
     withr
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0

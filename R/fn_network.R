@@ -54,8 +54,6 @@ osm_speeds <- c(motorway = 90, trunk = 80, primary = 70, secondary = 55,
 #'   \code{\link{accessibility}}.
 #' @export
 contract_network <- function(lines, require_equal = "highway") {
-  stopifnot(requireNamespace("sfnetworks", quietly = TRUE),
-            requireNamespace("tidygraph", quietly = TRUE))
   net <- sfnetworks::as_sfnetwork(lines, directed = FALSE)
   net <- tidygraph::convert(net, sfnetworks::to_spatial_subdivision, .clean = TRUE)
   net <- suppressWarnings(
@@ -89,8 +87,6 @@ contract_network <- function(lines, require_equal = "highway") {
 #' @export
 build_network <- function(lines, road_speed = 30, trail_speed = 4, snap = 1,
                           connect = 50, speeds = osm_speeds) {
-  stopifnot(requireNamespace("igraph", quietly = TRUE),
-            requireNamespace("sfnetworks", quietly = TRUE))
   lines <- sf::st_as_sf(lines)
 
   # Node via sfnetworks so junction topology is exact (shared endpoints, no
@@ -195,8 +191,6 @@ accessibility <- function(lines, patches, dem = NULL, origins = NULL, k = 3,
                           road_speed = 30, trail_speed = 4, snap = 1, connect = 50,
                           speeds = osm_speeds,
                           offtrail_speed = 5, offtrail_penalty = 0.5, invert = TRUE) {
-  stopifnot(requireNamespace("igraph", quietly = TRUE),
-            requireNamespace("nabor", quietly = TRUE))
   net <- build_network(lines, road_speed, trail_speed, snap, connect, speeds)
   g <- net$graph
   nodes <- net$nodes
@@ -329,8 +323,7 @@ accessibility <- function(lines, patches, dem = NULL, origins = NULL, k = 3,
 #' @export
 complementarity <- function(net, patch_nodes, areas, target_area = 50,
                             cap_q = 0.95, cores = 1, invert = TRUE) {
-  stopifnot(requireNamespace("igraph", quietly = TRUE),
-            length(areas) == length(patch_nodes),
+  stopifnot(length(areas) == length(patch_nodes),
             is.null(cap_q) || (length(cap_q) == 1L && cap_q > 0 && cap_q <= 1))
   g <- net$graph
   w <- igraph::E(g)$weight
@@ -379,13 +372,4 @@ complementarity <- function(net, patch_nodes, areas, target_area = 50,
   spd <- 6 * exp(-3.5 * abs(S + 0.05))           # Tobler km/h
   spd[!is.finite(spd) | spd <= 0] <- offtrail_speed
   spd * penalty
-}
-
-# Min-max rescale a numeric vector to [0, 1], NA-safe, optionally complemented.
-.rescale01_vec <- function(x, invert = FALSE) {
-  rng <- range(x, na.rm = TRUE)
-  out <- if (is.finite(rng[2]) && rng[2] > rng[1]) (x - rng[1]) / (rng[2] - rng[1])
-         else x * 0
-  if (invert) out <- 1 - out
-  out
 }

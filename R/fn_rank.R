@@ -45,7 +45,7 @@ rank_index <- function(..., weights = NULL, rescale = TRUE) {
 
   M <- vapply(terms, as.numeric, numeric(length(terms[[1]])))
   if (!is.matrix(M)) M <- matrix(M, ncol = length(terms), dimnames = list(NULL, nm))
-  if (rescale) M <- apply(M, 2, .rsc01)
+  if (rescale) M <- apply(M, 2, .rescale01_vec)
 
   w <- stats::setNames(rep(1, ncol(M)), nm)
   if (!is.null(weights)) {
@@ -67,10 +67,14 @@ rank_index <- function(..., weights = NULL, rescale = TRUE) {
   out
 }
 
-# Min-max rescale to [0, 1], NA-safe; a constant (or all-NA) column -> 0 (neutral,
-# contributes nothing to the ranking).
-.rsc01 <- function(x) {
-  r <- range(x, na.rm = TRUE)
-  if (!is.finite(r[1]) || !is.finite(r[2]) || r[2] <= r[1]) return(x * 0)
-  (x - r[1]) / (r[2] - r[1])
+# Min-max rescale a numeric vector to [0, 1], NA-safe, optionally complemented. A
+# constant (or all-NA) vector -> 0: as a ranking term that is neutral (contributes
+# nothing); as an inverted surface it is likewise flat. Shared by rank_index() and the
+# network accessibility/complementarity terms.
+.rescale01_vec <- function(x, invert = FALSE) {
+  rng <- range(x, na.rm = TRUE)
+  out <- if (is.finite(rng[2]) && rng[2] > rng[1]) (x - rng[1]) / (rng[2] - rng[1])
+         else x * 0
+  if (invert) out <- 1 - out
+  out
 }

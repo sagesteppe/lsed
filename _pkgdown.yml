@@ -89,3 +89,25 @@ reference:
   - survey_surface
   - survey_weights
   - guess_record_type
+
+- title: RankIndex — pipeline modules
+  desc: >
+    The two halves of a run: acquire every external input once (download), then
+    compute all terms and combine them (calculate). Split so the slow, API-bound
+    acquisition is reused while weights are tuned.
+  contents:
+  - rank_download
+  - rank_calculate
+
+- title: Data acquisition (GBIF & OSM)
+  desc: >
+    Fetch the external inputs — target-group occurrences from GBIF's bulk download
+    (for S) and the OSM road/trail network scoped to patch clusters (for A/C). Both
+    cache to disk; be a good API citizen.
+  contents:
+  - gbif_records
+  - gbif_request
+  - gbif_retrieve
+  - osm_network_for
+  - osm_access
+  - cluster_patches
