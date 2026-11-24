@@ -49,12 +49,12 @@ in memory.</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<ul><li><p><strong>Dg</strong> — geographic distance from a known population:
+<ul><li><p><strong>Dg</strong> - geographic distance from a known population:
     <code><a href="geo_distance.html">geo_distance</a></code> (straight-line <code><a href="https://rspatial.github.io/terra/reference/distance.html" class="external-link">distance</a></code> to the
     nearest source).</p></li>
-<li><p><strong>Dr</strong> — resistance distance: <code><a href="build_resistance.html">build_resistance</a></code> friction
-    → <code><a href="cost_distance.html">cost_distance</a></code> from occupied populations.</p></li>
-<li><p><strong>A</strong> — accessibility: <code><a href="tobler_friction.html">tobler_friction</a></code> (walking cost) →
+<li><p><strong>Dr</strong> - resistance distance: <code><a href="build_resistance.html">build_resistance</a></code> friction
+    -&gt; <code><a href="cost_distance.html">cost_distance</a></code> from occupied populations.</p></li>
+<li><p><strong>A</strong> - accessibility: <code><a href="tobler_friction.html">tobler_friction</a></code> (walking cost) -&gt;
     <code><a href="cost_distance.html">cost_distance</a></code> from the road/trail network.</p></li>
 </ul><p>All three return a surface rescaled to \([0, 1]\); because the index rewards
 <em>short</em> distance / <em>easy</em> access, pass <code>invert = TRUE</code> for the
@@ -62,7 +62,7 @@ in memory.</p>
 <p><code><a href="build_resistance.html">build_resistance()</a></code> is lifted from <span class="pkg">safeHavens</span>
 (<code>buildResistanceSurface</code>); the tiling (<code><a href="cluster_region_extents.html">cluster_region_extents</a></code>,
 mosaic-by-min) is lifted from the <code>Ecoloradense</code> cost-distance script. Both
-are terra/sf only — the lift adds no dependency beyond <span class="pkg">terra</span>, <span class="pkg">sf</span>.</p>
+are terra/sf only - the lift adds no dependency beyond <span class="pkg">terra</span>, <span class="pkg">sf</span>.</p>
     </div>
 
   </main></div>

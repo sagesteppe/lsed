@@ -5,7 +5,7 @@ The calculation half of the patch ranking: given the data acquired by
 plus the on-disk surfaces, it computes every `RankIndex` term, samples
 the raster terms at the patch centroids, and combines them with
 [`rank_index`](https://sagesteppe.github.io/lsed/reference/rank_index.md).
-No network calls — it reads the files the download module wrote, so it
+No network calls - it reads the files the download module wrote, so it
 is fast to re-run while tuning weights.
 
 ## Usage
@@ -45,7 +45,7 @@ rank_calculate(
 
 - occ:
 
-  known-population points (sf/`SpatVector`) — the sources for **Dg** and
+  known-population points (sf/`SpatVector`) - the sources for **Dg** and
   **Dr**.
 
 - suitability:
@@ -109,13 +109,19 @@ rank_calculate(
   [`complementarity`](https://sagesteppe.github.io/lsed/reference/complementarity.md)
   for why the tail is clamped.
 
+- cores:
+
+  fork workers for **C**'s per-patch distance loop (default `1`); passed
+  to
+  [`complementarity`](https://sagesteppe.github.io/lsed/reference/complementarity.md).
+
 - cluster_eps_km:
 
   if set, compute **A**/**C** per spatial cluster (bbox) rather than on
   one domain-wide graph: patches within this distance (km) share a
   cluster
   ([`cluster_patches`](https://sagesteppe.github.io/lsed/reference/cluster_patches.md)),
-  and each cluster is routed on its own small graph — all roads (for the
+  and each cluster is routed on its own small graph - all roads (for the
   drive-in) plus only that cluster's trails. `NULL` (default) uses a
   single graph. The per-cluster split is a big win when patches are
   scattered; raw travel times are rescaled once, globally, so clusters

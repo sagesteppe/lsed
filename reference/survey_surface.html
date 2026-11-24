@@ -136,7 +136,7 @@ specimens 1.5x over observations).</p></dd>
 
 
 <dt id="arg-invert">invert<a class="anchor" aria-label="anchor" href="#arg-invert"></a></dt>
-<dd><p>if <code>TRUE</code>, return survey <em>sparsity</em> \(1 - \tilde S\) — the
+<dd><p>if <code>TRUE</code>, return survey <em>sparsity</em> \(1 - \tilde S\) - the
 form the <code>RankIndex</code> consumes (well-surveyed ground scores low). Default
 <code>FALSE</code> returns the intensity surface \(S\) itself.</p></dd>
 
@@ -149,6 +149,11 @@ form the <code>RankIndex</code> consumes (well-surveyed ground scores low). Defa
 <dt id="arg-filename">filename<a class="anchor" aria-label="anchor" href="#arg-filename"></a></dt>
 <dd><p>optional output path; <code>...</code> passes to
 <code><a href="https://rspatial.github.io/terra/reference/writeRaster.html" class="external-link">terra::writeRaster</a></code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>further arguments passed to <code><a href="https://rspatial.github.io/terra/reference/writeRaster.html" class="external-link">terra::writeRaster</a></code> (via
+<code><a href="survey_raster.html">survey_raster</a></code>), e.g. <code>overwrite</code> or <code>gdal</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

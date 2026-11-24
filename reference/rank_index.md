@@ -26,7 +26,7 @@ rank_index(..., weights = NULL, rescale = TRUE)
 
 - rescale:
 
-  min–max each term to \\\[0,1\]\\ first (default `TRUE`).
+  min-max each term to \\\[0,1\]\\ first (default `TRUE`).
 
 ## Value
 
@@ -36,7 +36,7 @@ highest priority); the weights used are on attribute `weights`.
 
 ## Details
 
-- **Rescaled.** Every input is min–max rescaled to \\\[0,1\]\\ so terms
+- **Rescaled.** Every input is min-max rescaled to \\\[0,1\]\\ so terms
   on different native scales are comparable before combining. (The term
   functions already emit \\\[0,1\]\\ and are oriented high = higher
   priority; this only guarantees it.) Set `rescale = FALSE` to trust the
@@ -47,7 +47,7 @@ highest priority); the weights used are on attribute `weights`.
   the terms present for a patch, so it stays in \\\[0,1\]\\ and is
   comparable however many terms are included.
 
-- **Skippable.** Only the terms you pass are used — drop `S` (or any
+- **Skippable.** Only the terms you pass are used - drop `S` (or any
   other) simply by not supplying it.
 
 - **NA-safe.** A patch missing one term is scored on its remaining terms

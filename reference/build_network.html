@@ -64,12 +64,12 @@ column ("road"/"trail"); <code><a href="osm_access.html">osm_access</a></code> o
 
 <dt id="arg-snap">snap<a class="anchor" aria-label="anchor" href="#arg-snap"></a></dt>
 <dd><p>tight grid (metres) that segment endpoints snap to when forming nodes
-(default 1) — within-class noding, so parallel switchbacks/lanes are not fused.</p></dd>
+(default 1) - within-class noding, so parallel switchbacks/lanes are not fused.</p></dd>
 
 
 <dt id="arg-connect">connect<a class="anchor" aria-label="anchor" href="#arg-connect"></a></dt>
 <dd><p>liberal tolerance (metres, default 50) for bridging a <strong>stub
-end</strong> of one class to the nearest node of the <em>other</em> class — i.e. closing
+end</strong> of one class to the nearest node of the <em>other</em> class - i.e. closing
 trailhead gaps where a trail dead-ends near a road (or a road near a trail)
 without a shared OSM node. Set <code>0</code> to disable. Only degree-1 ends are
 bridged, so it never fuses same-class features.</p></dd>
@@ -78,14 +78,14 @@ bridged, so it never fuses same-class features.</p></dd>
 <dt id="arg-speeds">speeds<a class="anchor" aria-label="anchor" href="#arg-speeds"></a></dt>
 <dd><p>named per-<code>highway</code> speed lookup in km/h (default
 <code><a href="osm_speeds.html">osm_speeds</a></code>); each contracted edge is single-<code>highway</code>, so one
-speed applies. Edge weight is <code>length / speed</code> — change <code>speeds</code> and
+speed applies. Edge weight is <code>length / speed</code> - change <code>speeds</code> and
 rebuild (cheap) to re-time without re-pulling or re-contracting.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>a list: <code>graph</code> (an undirected <span class="pkg">igraph</span> with edge <code>weight</code> in
-  hours and <code>class</code> — road/trail/connect, vertex coords <code>x</code>/<code>y</code>) and
+  hours and <code>class</code> - road/trail/connect, vertex coords <code>x</code>/<code>y</code>) and
   <code>nodes</code> (data.frame of node <code>name</code>, <code>x</code>, <code>y</code>).</p>
     </div>
 

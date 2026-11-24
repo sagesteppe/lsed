@@ -166,9 +166,9 @@ download (for S) and the OSM road/trail network scoped to patch clusters
   : Fetch target-group occurrence records from GBIF for the
   survey-intensity term
 - [`gbif_request()`](https://sagesteppe.github.io/lsed/reference/gbif_request.md)
-  : Request a GBIF download (non-blocking) — stage 1 of 2
+  : Request a GBIF download (non-blocking) - stage 1 of 2
 - [`gbif_retrieve()`](https://sagesteppe.github.io/lsed/reference/gbif_retrieve.md)
-  : Retrieve a requested GBIF download — stage 2 of 2
+  : Retrieve a requested GBIF download - stage 2 of 2
 - [`osm_network_for()`](https://sagesteppe.github.io/lsed/reference/osm_network_for.md)
   : Fetch an OSM network scoped to patch clusters, connected to an
   origin

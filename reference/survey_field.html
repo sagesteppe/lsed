@@ -82,7 +82,7 @@ which one record counts ground as surveyed (default <code>100</code>).</p></dd>
 <dt id="arg-record-type">record_type<a class="anchor" aria-label="anchor" href="#arg-record-type"></a></dt>
 <dd><p>optional per-record label splitting the two detection
 processes. Records whose label is in <code>plot_types</code> are treated as
-<strong>vegetation plots</strong> — a complete floristic inventory at one spot (FIA, AIM,
+<strong>vegetation plots</strong> - a complete floristic inventory at one spot (FIA, AIM,
 VegBank, ...), so absence there is strong evidence. Plot records are
 <em>deduplicated by coordinate</em> (the many species-rows of one plot are a single
 survey event, not many) and each surviving plot point carries <code>plot_weight</code>;
@@ -98,7 +98,7 @@ from a dataset/origin column.</p></dd>
 
 <dt id="arg-plot-weight">plot_weight<a class="anchor" aria-label="anchor" href="#arg-plot-weight"></a></dt>
 <dd><p>per-record weight for a deduplicated plot point (default
-<code>1</code> — the ceiling of the opportunistic weights, which sit in \((0, 1]\);
+<code>1</code> - the ceiling of the opportunistic weights, which sit in \((0, 1]\);
 raise it to let plots dominate further).</p></dd>
 
 
@@ -109,7 +109,7 @@ raise it to let plots dominate further).</p></dd>
 
 <dt id="arg-basis-weights">basis_weights<a class="anchor" aria-label="anchor" href="#arg-basis-weights"></a></dt>
 <dd><p>named multipliers applied per opportunistic record by its
-<code>basis</code> (default <code>c(PRESERVED_SPECIMEN = 1.5)</code> — a herbarium specimen
+<code>basis</code> (default <code>c(PRESERVED_SPECIMEN = 1.5)</code> - a herbarium specimen
 marks survey effort ~50% more strongly than an iNaturalist photo). Any basis not
 named here is neutral (1); the \(n_j \ge 5\) floor keeps even a boosted
 opportunistic weight below the plot ceiling.</p></dd>
@@ -125,7 +125,7 @@ Applied to the opportunistic records only.</p></dd>
 <dt id="arg-domain-min-records-p-damp">domain, min_records, p, damp<a class="anchor" aria-label="anchor" href="#arg-domain-min-records-p-damp"></a></dt>
 <dd><p>passed to <code><a href="survey_weights.html">survey_weights</a></code> when
 <code>weights</code> is <code>NULL</code>. Records of any species absent from the weight set
-— below the floor, or omitted by the caller — are dropped from the field.</p></dd>
+- below the floor, or omitted by the caller - are dropped from the field.</p></dd>
 
 
 <dt id="arg-trunc">trunc<a class="anchor" aria-label="anchor" href="#arg-trunc"></a></dt>

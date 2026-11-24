@@ -7,7 +7,7 @@ over the network (cheapest travel first) accumulating neighbouring patch
 that bundle required is the isolation measure. A dense cluster assembles
 the target cheaply; a lone fragment must range far (or cannot gather it
 at all). The score is flipped so well-connected patches are high and
-isolated ones are penalised — no day-length assumption, just the area
+isolated ones are penalised - no day-length assumption, just the area
 target.
 
 ## Usage
@@ -44,16 +44,16 @@ complementarity(
 
 - target_area:
 
-  a day's worth of patch area to assemble, in acres (default `50`; loose
-  — the saturation scale, not a hard quota).
+  a day's worth of patch area to assemble, in acres (default `50`;
+  loose - the saturation scale, not a hard quota).
 
 - cap_q:
 
   upper quantile (on \\(0, 1\]\\) at which the raw assembly cost is
   clamped before rescaling (default `0.95`). The isolation cost has a
-  long right tail — a lone fragment can range far, and unreachable
-  patches are `Inf` — so a single outlier otherwise stretches the
-  min–max rescale and flattens the gradient among the patches that
+  long right tail - a lone fragment can range far, and unreachable
+  patches are `Inf` - so a single outlier otherwise stretches the
+  min-max rescale and flattens the gradient among the patches that
   actually differ. Costs above the `cap_q` quantile of the *finite*
   costs (and every `Inf`) are set to that quantile: all such patches
   count as equally, maximally isolated. The cap is applied to

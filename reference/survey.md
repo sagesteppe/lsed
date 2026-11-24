@@ -1,7 +1,7 @@
 # Survey-intensity surface (the `S` term) as a continuous Gaussian field
 
-Builds the manuscript's **survey intensity** term `S` — the “bias
-surface” — from target-group occurrence records (a GBIF pull of
+Builds the manuscript's **survey intensity** term `S` - the “bias
+surface” - from target-group occurrence records (a GBIF pull of
 co-occurring taxa), as a continuous field of the landscape rather than a
 grid. The estimator is a weighted sum of isotropic Gaussian kernels, one
 per record:
@@ -52,5 +52,5 @@ where nobody has looked.
 terra for the raster view and sf for the p95-box/domain overlap. The
 kernel is truncated at `trunc`\\\\\sigma\\ (tails below \\e^{-8}\\ at
 `trunc = 4`) and evaluated with a tiled bounding-box prefilter, so no
-kd-tree dependency and no \\k\\-neighbour cap — the sum is exact to the
+kd-tree dependency and no \\k\\-neighbour cap - the sum is exact to the
 tail.

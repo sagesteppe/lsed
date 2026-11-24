@@ -1,4 +1,4 @@
-# Retrieve a requested GBIF download — stage 2 of 2
+# Retrieve a requested GBIF download - stage 2 of 2
 
 Waits for the
 [`gbif_request`](https://sagesteppe.github.io/lsed/reference/gbif_request.md)

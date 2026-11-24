@@ -50,7 +50,7 @@ accessibility(
 
 - origins:
 
-  trip start as sf point(s) — typically the **field office**, snapped
+  trip start as sf point(s) - typically the **field office**, snapped
   free to the nearest road, after which road driving accrues time (often
   the dominant cost). `NULL` (default) treats every road node as a
   zero-cost origin ("distance from the road network", ignoring the

@@ -5,7 +5,7 @@ calculation so the slow, network-bound, API-dependent work runs once and
 its outputs can be re-used. It overlaps the two big pulls: GBIF's bulk
 download is **requested** first (and prepared server-side while we
 wait), the OSM road/trail network is fetched in that window, and only
-then do we come **back** to collect the finished GBIF archive — so the
+then do we come **back** to collect the finished GBIF archive - so the
 GBIF prep time is spent fetching OSM, not idling.
 
 ## Usage
@@ -35,7 +35,7 @@ rank_download(
 
 - origin:
 
-  trip origin for accessibility — sf point or `c(lon, lat)` (see
+  trip origin for accessibility - sf point or `c(lon, lat)` (see
   [`osm_network_for`](https://sagesteppe.github.io/lsed/reference/osm_network_for.md)).
 
 - crs:
@@ -65,7 +65,7 @@ rank_download(
 ## Value
 
 a list: `records` (GBIF sf), `network` (OSM sf), `origin` (sf point),
-`clusters`, and `doi` — everything the calculation step needs.
+`clusters`, and `doi` - everything the calculation step needs.
 
 ## Details
 

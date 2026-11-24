@@ -63,7 +63,7 @@ osm_network_for(
 - connect_roads:
 
   the (major) road classes for the *connective* envelope layer that
-  links the origin to the clusters — default the through-routes
+  links the origin to the clusters - default the through-routes
   `motorway/trunk/primary/secondary/tertiary`. Residential/service/track
   are left out here: they are local bloat and already come from the
   cluster pulls.
@@ -91,8 +91,8 @@ osm_network_for(
 
   simplify the merged network to junction-to-junction edges before
   writing (default `TRUE`;
-  [`contract_network`](https://sagesteppe.github.io/lsed/reference/contract_network.md))
-  — the on-disk file is then the contracted version, ~30x fewer graph
+  [`contract_network`](https://sagesteppe.github.io/lsed/reference/contract_network.md)) -
+  the on-disk file is then the contracted version, ~30x fewer graph
   nodes.
 
 - ...:

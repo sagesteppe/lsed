@@ -66,7 +66,7 @@ supplied terms, partial is fine (unlisted terms get <code>1</code>).</p></dd>
 
 
 <dt id="arg-rescale">rescale<a class="anchor" aria-label="anchor" href="#arg-rescale"></a></dt>
-<dd><p>min–max each term to \([0,1]\) first (default <code>TRUE</code>).</p></dd>
+<dd><p>min-max each term to \([0,1]\) first (default <code>TRUE</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -78,7 +78,7 @@ supplied terms, partial is fine (unlisted terms get <code>1</code>).</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<ul><li><p><strong>Rescaled.</strong> Every input is min–max rescaled to \([0,1]\) so terms
+<ul><li><p><strong>Rescaled.</strong> Every input is min-max rescaled to \([0,1]\) so terms
     on different native scales are comparable before combining. (The term functions
     already emit \([0,1]\) and are oriented high = higher priority; this only
     guarantees it.) Set <code>rescale = FALSE</code> to trust the inputs as-is.</p></li>
@@ -86,7 +86,7 @@ supplied terms, partial is fine (unlisted terms get <code>1</code>).</p></dd>
     default to <code>1</code> (all equal). The index is the <strong>weighted mean</strong> over
     the terms present for a patch, so it stays in \([0,1]\) and is comparable
     however many terms are included.</p></li>
-<li><p><strong>Skippable.</strong> Only the terms you pass are used — drop <code>S</code> (or any
+<li><p><strong>Skippable.</strong> Only the terms you pass are used - drop <code>S</code> (or any
     other) simply by not supplying it.</p></li>
 <li><p><strong>NA-safe.</strong> A patch missing one term is scored on its remaining terms
     (the weighted mean renormalises per row); a patch missing <em>every</em> term is

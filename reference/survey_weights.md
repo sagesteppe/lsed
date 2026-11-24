@@ -35,8 +35,8 @@ survey_weights(
 - min_records:
 
   minimum records a species needs to be included (default `5`). Taxa
-  below the floor are dropped entirely — too few collections to carry a
-  reliable range box or effort signal — not merely down-weighted.
+  below the floor are dropped entirely - too few collections to carry a
+  reliable range box or effort signal - not merely down-weighted.
 
 - p:
 

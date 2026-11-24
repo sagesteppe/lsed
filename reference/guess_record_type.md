@@ -1,8 +1,8 @@
 # Guess record type from a dataset / origin column
 
-Flags records that come from structured **vegetation-plot** programmes —
+Flags records that come from structured **vegetation-plot** programmes -
 where every species present is catalogued, so the record stands for a
-complete local survey — by pattern-matching a free-text dataset,
+complete local survey - by pattern-matching a free-text dataset,
 institution or origin field. A convenience for when the user has not
 labelled `record_type` by hand; always eyeball the result, since origin
 strings are inconsistent.
@@ -30,7 +30,7 @@ guess_record_type(
 
   case-insensitive regular expressions marking plot programmes. The
   defaults cover FIA, AIM, VegBank, NEON, the Carolina Vegetation
-  Survey, NPS I&M, and generic plot/relevé/quadrat/inventory wording;
+  Survey, NPS I&M, and generic plot/releve/quadrat/inventory wording;
   override or extend as needed.
 
 - plot_label, other_label:

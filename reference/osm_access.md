@@ -67,7 +67,7 @@ osm_access(
 
 - endpoint:
 
-  Overpass API URL (default the public instance — override for your
+  Overpass API URL (default the public instance - override for your
   own).
 
 - contact:
@@ -83,8 +83,8 @@ osm_access(
 - exclude:
 
   optional geometry (sf/sfc, any CRS) of ground already covered
-  elsewhere; any tile falling *entirely* within it is skipped — never
-  fetched — so overlapping pulls don't re-query the API. Its benefit
+  elsewhere; any tile falling *entirely* within it is skipped - never
+  fetched - so overlapping pulls don't re-query the API. Its benefit
   grows as tiles shrink toward the excluded regions' size.
 
 - pause:
@@ -118,7 +118,7 @@ modest promises and tries to behave:
   one giant one.
 
 - **Checkpoints** every tile to `cache_dir` the moment it returns, and
-  on a re-run **skips** any tile already cached — so an interrupted or
+  on a re-run **skips** any tile already cached - so an interrupted or
   retried pull resumes instead of re-hammering the API.
 
 - **Breathes** between calls (`req_throttle`) and **backs off**
@@ -127,10 +127,10 @@ modest promises and tries to behave:
 
 - Sends a plain **User-Agent** and never your identity. If you have a
   contact address you are willing to share per OSM etiquette, pass it in
-  `contact` — it is *opt-in*, never read from your session.
+  `contact` - it is *opt-in*, never read from your session.
 
 For anything heavy, run your **own Overpass instance** (or a provider
-you have an account with) and point `endpoint` at it — do not hammer the
+you have an account with) and point `endpoint` at it - do not hammer the
 public API.
 
 Data is \\\copyright\\ OpenStreetMap contributors, **ODbL**: attribute

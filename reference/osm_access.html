@@ -106,7 +106,7 @@ pull.</p></dd>
 
 
 <dt id="arg-endpoint">endpoint<a class="anchor" aria-label="anchor" href="#arg-endpoint"></a></dt>
-<dd><p>Overpass API URL (default the public instance — override for your
+<dd><p>Overpass API URL (default the public instance - override for your
 own).</p></dd>
 
 
@@ -122,8 +122,8 @@ project URL or email you choose to share). <code>NULL</code> sends none.</p></dd
 
 <dt id="arg-exclude">exclude<a class="anchor" aria-label="anchor" href="#arg-exclude"></a></dt>
 <dd><p>optional geometry (<span class="pkg">sf</span>/<span class="pkg">sfc</span>, any CRS) of ground already
-covered elsewhere; any tile falling <em>entirely</em> within it is skipped — never
-fetched — so overlapping pulls don't re-query the API. Its benefit grows as tiles
+covered elsewhere; any tile falling <em>entirely</em> within it is skipped - never
+fetched - so overlapping pulls don't re-query the API. Its benefit grows as tiles
 shrink toward the excluded regions' size.</p></dd>
 
 
@@ -154,16 +154,16 @@ resource with a tight usage policy. This helper makes only modest promises and
 tries to behave:</p><ul><li><p><strong>Batches</strong> a large domain into <code>tiles</code>^2 smaller queries rather
     than one giant one.</p></li>
 <li><p><strong>Checkpoints</strong> every tile to <code>cache_dir</code> the moment it returns,
-    and on a re-run <strong>skips</strong> any tile already cached — so an interrupted or
+    and on a re-run <strong>skips</strong> any tile already cached - so an interrupted or
     retried pull resumes instead of re-hammering the API.</p></li>
 <li><p><strong>Breathes</strong> between calls (<code>req_throttle</code>) and <strong>backs off</strong>
     exponentially on transient failures / rate limits (429/502/503/504, honouring
     any <code>Retry-After</code>).</p></li>
 <li><p>Sends a plain <strong>User-Agent</strong> and never your identity. If you have a
     contact address you are willing to share per OSM etiquette, pass it in
-    <code>contact</code> — it is <em>opt-in</em>, never read from your session.</p></li>
+    <code>contact</code> - it is <em>opt-in</em>, never read from your session.</p></li>
 </ul><p>For anything heavy, run your <strong>own Overpass instance</strong> (or a provider you have
-an account with) and point <code>endpoint</code> at it — do not hammer the public API.</p>
+an account with) and point <code>endpoint</code> at it - do not hammer the public API.</p>
 <p>Data is \(\copyright\) OpenStreetMap contributors, <strong>ODbL</strong>: attribute it,
 and snapshot the result (the <code>timestamp</code> attribute records the OSM base time)
 so analyses stay reproducible as OSM changes.</p>

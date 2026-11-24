@@ -5,8 +5,8 @@ feed
 [`survey_surface`](https://sagesteppe.github.io/lsed/reference/survey_surface.md)
 as the target-group records for **S**. The pull uses GBIF's server-side
 **bulk download**
-([`rgbif::occ_download`](https://docs.ropensci.org/rgbif/reference/occ_download.html))
-— one prepared job rather than thousands of fragile paged requests, and
+([`rgbif::occ_download`](https://docs.ropensci.org/rgbif/reference/occ_download.html)) -
+one prepared job rather than thousands of fragile paged requests, and
 the route GBIF asks heavy users to take. `count_only = TRUE` first (no
 account needed) to see the filtered total before committing.
 
@@ -63,7 +63,7 @@ gbif_records(
 
 - count_only:
 
-  if `TRUE`, return just the filtered record count — a cheap request, no
+  if `TRUE`, return just the filtered record count - a cheap request, no
   account, no download.
 
 - path:
@@ -105,7 +105,7 @@ download is minted under your account and citable by its DOI.
 imprecise iNaturalist observations. `year_from` and
 `coord_uncertainty_max` trim to records fit to mark *where a careful
 collection happened*. The uncertainty filter also drops records with
-*no* uncertainty recorded, which is most of them — so it defaults to
+*no* uncertainty recorded, which is most of them - so it defaults to
 `NA` (off); set e.g. `100` only if you want to keep solely well-located
 records.
 

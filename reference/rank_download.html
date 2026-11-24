@@ -4,12 +4,12 @@ so the slow, network-bound, API-dependent work runs once and its outputs can be
 re-used. It overlaps the two big pulls: GBIF's bulk download is requested
 first (and prepared server-side while we wait), the OSM road/trail network is
 fetched in that window, and only then do we come back to collect the
-finished GBIF archive — so the GBIF prep time is spent fetching OSM, not idling."><meta property="og:description" content="The data-acquisition half of the patch ranking, kept separate from the calculation
+finished GBIF archive - so the GBIF prep time is spent fetching OSM, not idling."><meta property="og:description" content="The data-acquisition half of the patch ranking, kept separate from the calculation
 so the slow, network-bound, API-dependent work runs once and its outputs can be
 re-used. It overlaps the two big pulls: GBIF's bulk download is requested
 first (and prepared server-side while we wait), the OSM road/trail network is
 fetched in that window, and only then do we come back to collect the
-finished GBIF archive — so the GBIF prep time is spent fetching OSM, not idling."><meta property="og:image" content="https://sagesteppe.github.io/lsed/logo.png"></head><body>
+finished GBIF archive - so the GBIF prep time is spent fetching OSM, not idling."><meta property="og:image" content="https://sagesteppe.github.io/lsed/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -48,7 +48,7 @@ so the slow, network-bound, API-dependent work runs once and its outputs can be
 re-used. It overlaps the two big pulls: GBIF's bulk download is <strong>requested</strong>
 first (and prepared server-side while we wait), the OSM road/trail network is
 fetched in that window, and only then do we come <strong>back</strong> to collect the
-finished GBIF archive — so the GBIF prep time is spent fetching OSM, not idling.</p>
+finished GBIF archive - so the GBIF prep time is spent fetching OSM, not idling.</p>
     </div>
 
     <div class="section level2">
@@ -78,7 +78,7 @@ finished GBIF archive — so the GBIF prep time is spent fetching OSM, not idlin
 
 
 <dt id="arg-origin">origin<a class="anchor" aria-label="anchor" href="#arg-origin"></a></dt>
-<dd><p>trip origin for accessibility — <span class="pkg">sf</span> point or <code>c(lon, lat)</code>
+<dd><p>trip origin for accessibility - <span class="pkg">sf</span> point or <code>c(lon, lat)</code>
 (see <code><a href="osm_network_for.html">osm_network_for</a></code>).</p></dd>
 
 
@@ -108,7 +108,7 @@ finished GBIF archive — so the GBIF prep time is spent fetching OSM, not idlin
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>a list: <code>records</code> (GBIF <span class="pkg">sf</span>), <code>network</code> (OSM <span class="pkg">sf</span>),
-  <code>origin</code> (<span class="pkg">sf</span> point), <code>clusters</code>, and <code>doi</code> — everything the
+  <code>origin</code> (<span class="pkg">sf</span> point), <code>clusters</code>, and <code>doi</code> - everything the
   calculation step needs.</p>
     </div>
     <div class="section level2">

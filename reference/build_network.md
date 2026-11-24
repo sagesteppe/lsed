@@ -32,13 +32,13 @@ build_network(
 - snap:
 
   tight grid (metres) that segment endpoints snap to when forming nodes
-  (default 1) — within-class noding, so parallel switchbacks/lanes are
+  (default 1) - within-class noding, so parallel switchbacks/lanes are
   not fused.
 
 - connect:
 
   liberal tolerance (metres, default 50) for bridging a **stub end** of
-  one class to the nearest node of the *other* class — i.e. closing
+  one class to the nearest node of the *other* class - i.e. closing
   trailhead gaps where a trail dead-ends near a road (or a road near a
   trail) without a shared OSM node. Set `0` to disable. Only degree-1
   ends are bridged, so it never fuses same-class features.
@@ -48,11 +48,11 @@ build_network(
   named per-`highway` speed lookup in km/h (default
   [`osm_speeds`](https://sagesteppe.github.io/lsed/reference/osm_speeds.md));
   each contracted edge is single-`highway`, so one speed applies. Edge
-  weight is `length / speed` — change `speeds` and rebuild (cheap) to
+  weight is `length / speed` - change `speeds` and rebuild (cheap) to
   re-time without re-pulling or re-contracting.
 
 ## Value
 
 a list: `graph` (an undirected igraph with edge `weight` in hours and
-`class` — road/trail/connect, vertex coords `x`/`y`) and `nodes`
+`class` - road/trail/connect, vertex coords `x`/`y`) and `nodes`
 (data.frame of node `name`, `x`, `y`).

@@ -1,4 +1,4 @@
-# Request a GBIF download (non-blocking) — stage 1 of 2
+# Request a GBIF download (non-blocking) - stage 1 of 2
 
 Submits the download predicate to GBIF and returns immediately with the
 job key, **without** waiting for the server to prepare the archive. Do

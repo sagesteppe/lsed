@@ -1,8 +1,8 @@
 # Build an isotropic resistance (friction) surface
 
 Lifted from safeHavens `buildResistanceSurface()` (terra-only). Sums
-weighted, optional layers — water features, terrain ruggedness, habitat
-and any extras — into a per-cell cost of movement, clamped to a floor of
+weighted, optional layers - water features, terrain ruggedness, habitat
+and any extras - into a per-cell cost of movement, clamped to a floor of
 1 and stored as integer. Feed the result to
 [`cost_distance`](https://sagesteppe.github.io/lsed/reference/cost_distance.md)
 for **Dr**.

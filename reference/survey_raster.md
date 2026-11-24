@@ -2,7 +2,7 @@
 
 Evaluates \\S(x)\\ at the cell centres of a template, tile by tile. This
 is a *view* of the continuous model at a chosen resolution, not the
-model itself — call it again at a different resolution for a different
+model itself - call it again at a different resolution for a different
 view.
 
 ## Usage
@@ -39,7 +39,7 @@ survey_raster(
 - rescale:
 
   one of `"quantile"` (divide by the `q` quantile, clamped to 1; the
-  default — `"max"` is hostage to a single survey hotspot, which
+  default - `"max"` is hostage to a single survey hotspot, which
   flattens all other structure), `"max"` (divide by the max) or
   `"none"`, to bring the view onto \\\[0, 1\]\\.
 

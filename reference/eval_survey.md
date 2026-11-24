@@ -1,11 +1,11 @@
 # Evaluate the field at arbitrary locations
 
-Computes \\S(x)\\ at any set of query points — the whole point of
+Computes \\S(x)\\ at any set of query points - the whole point of
 keeping the model gridless. Records are indexed into a `trunc`\\\sigma\\
 bucket grid, and each query is summed only against records in its own
 and the eight neighbouring buckets, so cost is local (\\\propto\\
 records within support) regardless of how widely the queries are
-scattered — not the query count times the record count.
+scattered - not the query count times the record count.
 
 ## Usage
 

@@ -47,7 +47,7 @@ survey_field(
 
   optional per-record label splitting the two detection processes.
   Records whose label is in `plot_types` are treated as **vegetation
-  plots** — a complete floristic inventory at one spot (FIA, AIM,
+  plots** - a complete floristic inventory at one spot (FIA, AIM,
   VegBank, ...), so absence there is strong evidence. Plot records are
   *deduplicated by coordinate* (the many species-rows of one plot are a
   single survey event, not many) and each surviving plot point carries
@@ -63,7 +63,7 @@ survey_field(
 
 - plot_weight:
 
-  per-record weight for a deduplicated plot point (default `1` — the
+  per-record weight for a deduplicated plot point (default `1` - the
   ceiling of the opportunistic weights, which sit in \\(0, 1\]\\; raise
   it to let plots dominate further).
 
@@ -76,7 +76,7 @@ survey_field(
 - basis_weights:
 
   named multipliers applied per opportunistic record by its `basis`
-  (default `c(PRESERVED_SPECIMEN = 1.5)` — a herbarium specimen marks
+  (default `c(PRESERVED_SPECIMEN = 1.5)` - a herbarium specimen marks
   survey effort ~50% more strongly than an iNaturalist photo). Any basis
   not named here is neutral (1); the \\n_j \ge 5\\ floor keeps even a
   boosted opportunistic weight below the plot ceiling.
@@ -94,7 +94,7 @@ survey_field(
   passed to
   [`survey_weights`](https://sagesteppe.github.io/lsed/reference/survey_weights.md)
   when `weights` is `NULL`. Records of any species absent from the
-  weight set — below the floor, or omitted by the caller — are dropped
+  weight set - below the floor, or omitted by the caller - are dropped
   from the field.
 
 - trunc:

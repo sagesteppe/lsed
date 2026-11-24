@@ -100,7 +100,7 @@ survey_surface(
 
 - invert:
 
-  if `TRUE`, return survey *sparsity* \\1 - \tilde S\\ — the form the
+  if `TRUE`, return survey *sparsity* \\1 - \tilde S\\ - the form the
   `RankIndex` consumes (well-surveyed ground scores low). Default
   `FALSE` returns the intensity surface \\S\\ itself.
 
@@ -115,6 +115,14 @@ survey_surface(
 
   optional output path; `...` passes to
   [`terra::writeRaster`](https://rspatial.github.io/terra/reference/writeRaster.html).
+
+- ...:
+
+  further arguments passed to
+  [`terra::writeRaster`](https://rspatial.github.io/terra/reference/writeRaster.html)
+  (via
+  [`survey_raster`](https://sagesteppe.github.io/lsed/reference/survey_raster.md)),
+  e.g. `overwrite` or `gdal`.
 
 ## Value
 
