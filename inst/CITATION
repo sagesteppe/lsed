@@ -1,0 +1,11 @@
+citHeader("To cite lsed in publications use:")
+
+bibentry(
+  bibtype = "Manual",
+  title   = "{lsed}: Prevalence-Corrected Evaluation of Species-Distribution Predictions",
+  author  = person("Reed", "Benkendorf",
+                   comment = c(ORCID = "0000-0001-9178-3087")),
+  year    = "2026",
+  note    = sprintf("R package version %s", meta$Version),
+  url     = "https://github.com/sagesteppe/lsed"
+)

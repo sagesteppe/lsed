@@ -141,6 +141,8 @@ rank_calculate <- function(
     n <- nrow(patches)
     acc_hr <- rep(NA_real_, n)
     asm_hr <- rep(NA_real_, n)
+    # Each block returns its indices and the two hour vectors; the caller writes
+    # them back (no superassignment into the enclosing scope).
     run_block <- function(idx, net_b) {
       ab <- accessibility(
         net_b,
@@ -150,8 +152,7 @@ rank_calculate <- function(
         k = k,
         speeds = speeds
       )
-      acc_hr[idx] <<- ab$patches$access_hr
-      asm_hr[idx] <<- complementarity(
+      asm <- complementarity(
         ab$net,
         ab$patch_nodes,
         areas = patches[[area_col]][idx],
@@ -159,14 +160,15 @@ rank_calculate <- function(
         cap_q = cap_q,
         cores = cores
       )$assemble_hr
+      list(idx = idx, acc = ab$patches$access_hr, asm = asm)
     }
-    if (is.null(cluster_eps_km)) {
-      run_block(seq_len(n), network)
+    blocks <- if (is.null(cluster_eps_km)) {
+      list(run_block(seq_len(n), network))
     } else {
       cl <- cluster_patches(patches, eps_km = cluster_eps_km)$cluster
       roads <- network[!is.na(network$class) & network$class == "road", ]
       trails <- network[!is.na(network$class) & network$class == "trail", ]
-      for (gid in unique(cl)) {
+      lapply(unique(cl), function(gid) {
         idx <- which(cl == gid)
         bb <- sf::st_buffer(
           sf::st_as_sfc(sf::st_bbox(patches[idx, ])),
@@ -174,7 +176,11 @@ rank_calculate <- function(
         )
         tl <- trails[lengths(sf::st_intersects(trails, bb)) > 0, ]
         run_block(idx, rbind(roads, tl)) # all roads (drive-in) + local trails
-      }
+      })
+    }
+    for (b in blocks) {
+      acc_hr[b$idx] <- b$acc
+      asm_hr[b$idx] <- b$asm
     }
     terms$A <- -acc_hr # rank_index rescales: low hr -> high
     terms$C <- -asm_hr

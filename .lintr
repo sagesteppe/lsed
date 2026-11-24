@@ -1,0 +1,12 @@
+linters: linters_with_defaults(
+    # `:::` is flagged by default, but the test suite legitimately reaches the
+    # package's own internal helpers (e.g. lsed:::.lonlat_bbox) to unit-test them.
+    # Keep every other undesirable operator flagged (including `<<-`, so stray
+    # global superassignment in package code is still caught).
+    undesirable_operator_linter(
+      op = default_undesirable_operators[
+        names(default_undesirable_operators) != ":::"
+      ]
+    )
+  )
+encoding: "UTF-8"

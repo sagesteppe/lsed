@@ -503,7 +503,7 @@ test_that("cache_rast computes then reuses a cached raster by signature", {
   sigp <- file.path(dir, "r.sig")
   calls <- 0L
   make <- function() {
-    calls <<- calls + 1L
+    calls <<- calls + 1L # nolint: undesirable_operator_linter. lexical-scope counter
     r <- terra::rast(
       nrows = 2,
       ncols = 2,

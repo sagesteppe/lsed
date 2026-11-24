@@ -227,13 +227,16 @@ snap_pieces <- function(piece, ei, ej, area, band, minac, npass = 3L) {
     as.integer
   )
 
-  parent <- seq_len(np)
+  # union-find state in a local environment so find() can path-compress with `<-`
+  # (lexical-scope mutation) rather than global superassignment.
+  uf <- new.env(parent = emptyenv())
+  uf$parent <- seq_len(np)
   arr <- area
   brr <- band
   find <- function(x) {
-    while (parent[x] != x) {
-      parent[x] <<- parent[parent[x]]
-      x <- parent[x]
+    while (uf$parent[x] != x) {
+      uf$parent[x] <- uf$parent[uf$parent[x]]
+      x <- uf$parent[x]
     }
     x
   }
@@ -254,7 +257,7 @@ snap_pieces <- function(piece, ei, ej, area, band, minac, npass = 3L) {
         next
       }
       tgt <- rr[order(-brr[rr], -arr[rr])][1]
-      parent[rp] <- tgt
+      uf$parent[rp] <- tgt
       arr[tgt] <- arr[tgt] + arr[rp]
       did <- did + 1L
     }
