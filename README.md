@@ -71,10 +71,10 @@ remotes::install_github('sagesteppe/lsed')
 
 ## Functions
 
-The package splits into two toolkits: **DCA Support** (the
+The package has two main sections: **DCA Support** (the
 prevalence-corrected evaluation of species-distribution predictions) and
 **Prioritisation** (building a `RankIndex` to prioritise sites for
-survey). Each function links to its reference page.
+survey).
 
 ### DCA Support
 
@@ -118,7 +118,8 @@ them.
 
 Benkendorf, R.C. 2026. lsed
 
-A BibTeX entry for LaTeX users is [here](authors.html#citation).
+A BibTeX entry for LaTeX users is
+[here](https://sagesteppe.github.io/lsed/authors.html#citation).
 
 Or use R to display citations:
 
