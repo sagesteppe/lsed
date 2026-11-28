@@ -11,8 +11,9 @@ Source:
 [`inst/CITATION`](https://github.com/sagesteppe/lsed/blob/main/inst/CITATION)
 
 Benkendorf R (2026). *lsed: Prevalence-Corrected Evaluation of
-Species-Distribution Predictions*. R package version 0.0.1,
-<https://github.com/sagesteppe/lsed>.
+Species-Distribution Predictions*.
+[doi:10.5281/zenodo.24487760](https://doi.org/10.5281/zenodo.24487760).
+R package version 0.0.1, <https://github.com/sagesteppe/lsed>.
 
     @Manual{,
       title = {{lsed}: Prevalence-Corrected Evaluation of Species-Distribution Predictions},
@@ -20,4 +21,5 @@ Species-Distribution Predictions*. R package version 0.0.1,
       year = {2026},
       note = {R package version 0.0.1},
       url = {https://github.com/sagesteppe/lsed},
+      doi = {10.5281/zenodo.24487760},
     }

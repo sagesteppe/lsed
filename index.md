@@ -47,10 +47,6 @@ A vignette for these functions is located at [Prevalence-corrected
 evaluation in two
 routes](https://sagesteppe.github.io/lsed/articles/lsed.html).
 
-A vignette for these functions is located at [Prevalence-corrected
-evaluation in two
-routes](https://sagesteppe.github.io/lsed/articles/lsed.html).
-
 ### Prioritisation
 
 | Function | Purpose |
@@ -66,12 +62,6 @@ routes](https://sagesteppe.github.io/lsed/articles/lsed.html).
 | [`osm_speeds`](https://sagesteppe.github.io/lsed/reference/osm_speeds.html) | Default per-highway travel speeds (km/h) |
 | [`cluster_patches()`](https://sagesteppe.github.io/lsed/reference/cluster_patches.html) | Group nearby patches into spatial clusters |
 | [`rank_index()`](https://sagesteppe.github.io/lsed/reference/rank_index.html), [`rank_calculate()`](https://sagesteppe.github.io/lsed/reference/rank_calculate.html) | Combine the terms into a priority score and ranking |
-
-A vignette for these functions is located at [Prioritising sites for
-survey
-(RankIndex)](https://sagesteppe.github.io/lsed/articles/prioritisation.html).
-Where you will, hopefully, happily see you only *need* to run two of
-them.
 
 A vignette for these functions is located at [Prioritising sites for
 survey
