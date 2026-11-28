@@ -12,7 +12,9 @@
 <url><loc>https://sagesteppe.github.io/lsed/reference/ap_binormal.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/ap_pointwise.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/ap_scalar_to_prev.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/apply_residual_correction.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/band_subpatches.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/bootstrap_correction.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/build_network.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/build_resistance.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/cache_rast.html</loc></url>
@@ -50,6 +52,7 @@
 <url><loc>https://sagesteppe.github.io/lsed/reference/osm_network_for.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/osm_speeds.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/papply.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/point_residuals.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/polygonize_units.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/pr_auc.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/pr_curve_binormal.html</loc></url>
@@ -58,6 +61,10 @@
 <url><loc>https://sagesteppe.github.io/lsed/reference/rank_download.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/rank_index.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/recalibrate_to_prevalence.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/reduce_spatial_bias.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/residual_krige.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/residual_variogram.html</loc></url>
+<url><loc>https://sagesteppe.github.io/lsed/reference/restrict_to_aoa.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/reweight.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/roc_auc.html</loc></url>
 <url><loc>https://sagesteppe.github.io/lsed/reference/rollup_patches.html</loc></url>

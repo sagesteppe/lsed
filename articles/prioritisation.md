@@ -171,7 +171,7 @@ ranked <- rank_calculate(
   records = inputs$records, network = inputs$network, origin = inputs$origin)
 ```
 
-Calculating the survey intensity term requires a gbif account, and is
+Calculating the survey intensity term requires a GBIF account, and is
 accessed via rgbif. See
 [here](https://docs.ropensci.org/rgbif/articles/rgbif.html) for details
 on setting up a gbif account (it’s about a five minute process).

@@ -176,3 +176,17 @@ download (for S) and the OSM road/trail network scoped to patch clusters
   : Fetch the OSM access network (roads + trails) for a domain
 - [`cluster_patches()`](https://sagesteppe.github.io/lsed/reference/cluster_patches.md)
   : Cluster patches into spatial groups
+
+## Spatial bias reduction
+
+Diagnose whether an SDM’s errors are spatially structured and, if so,
+turn that structure into a residual-kriging bias-correction surface.
+Point residuals feed a variogram; ordinary kriging inside the area of
+applicability gives the correction (with a bootstrap ensemble for
+uncertainty) to add back onto a prediction raster.
+
+- [`point_residuals()`](https://sagesteppe.github.io/lsed/reference/point_residuals.md)
+  : Signed residuals between observed occurrence and predicted
+  suitability
+- [`reduce_spatial_bias()`](https://sagesteppe.github.io/lsed/reference/reduce_spatial_bias.md)
+  : Residual-kriging bias correction of a prediction raster, end to end

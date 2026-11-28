@@ -41,6 +41,15 @@ survey). Each function links to its reference page.
 | [`ap_binormal()`](https://sagesteppe.github.io/lsed/reference/ap_binormal.html), [`pr_curve_binormal()`](https://sagesteppe.github.io/lsed/reference/pr_curve_binormal.html), [`ap_scalar_to_prev()`](https://sagesteppe.github.io/lsed/reference/ap_scalar_to_prev.html) | Equal-variance binormal (summary-metric) route |
 | [`nb_exact()`](https://sagesteppe.github.io/lsed/reference/nb_exact.html), [`nb_exact_ci()`](https://sagesteppe.github.io/lsed/reference/nb_exact_ci.html), [`nb_binormal()`](https://sagesteppe.github.io/lsed/reference/nb_binormal.html), [`nb_binormal_band()`](https://sagesteppe.github.io/lsed/reference/nb_binormal_band.html), [`nb_treat_all()`](https://sagesteppe.github.io/lsed/reference/nb_treat_all.html) | Decision-curve net benefit (per-point, CI, binormal, uncertainty band, treat-all) |
 | [`cox_calibration()`](https://sagesteppe.github.io/lsed/reference/cox_calibration.html), [`recalibrate_to_prevalence()`](https://sagesteppe.github.io/lsed/reference/recalibrate_to_prevalence.html), [`clamp()`](https://sagesteppe.github.io/lsed/reference/clamp.html) | Calibration of held-out predictions |
+| [`point_residuals()`](https://sagesteppe.github.io/lsed/reference/point_residuals.html), [`reduce_spatial_bias()`](https://sagesteppe.github.io/lsed/reference/reduce_spatial_bias.html) | Residual-kriging correction of spatially-structured prediction bias within the area of applicability |
+
+A vignette for these functions is located at [Prevalence-corrected
+evaluation in two
+routes](https://sagesteppe.github.io/lsed/articles/lsed.html).
+
+A vignette for these functions is located at [Prevalence-corrected
+evaluation in two
+routes](https://sagesteppe.github.io/lsed/articles/lsed.html).
 
 ### Prioritisation
 
@@ -58,11 +67,23 @@ survey). Each function links to its reference page.
 | [`cluster_patches()`](https://sagesteppe.github.io/lsed/reference/cluster_patches.html) | Group nearby patches into spatial clusters |
 | [`rank_index()`](https://sagesteppe.github.io/lsed/reference/rank_index.html), [`rank_calculate()`](https://sagesteppe.github.io/lsed/reference/rank_calculate.html) | Combine the terms into a priority score and ranking |
 
+A vignette for these functions is located at [Prioritising sites for
+survey
+(RankIndex)](https://sagesteppe.github.io/lsed/articles/prioritisation.html).
+Where you will, hopefully, happily see you only *need* to run two of
+them.
+
+A vignette for these functions is located at [Prioritising sites for
+survey
+(RankIndex)](https://sagesteppe.github.io/lsed/articles/prioritisation.html).
+Where you will, hopefully, happily see you only *need* to run two of
+them.
+
 ## Citation
 
 Benkendorf, R.C. 2026. lsed
 
-A bibtex entry for LaTeX users is
+A BibTeX entry for LaTeX users is
 [here](https://sagesteppe.github.io/lsed/authors.html#citation).
 
 Or use R to display citations:
