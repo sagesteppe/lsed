@@ -105,19 +105,7 @@ nb_exact_ci <- function(
     nb_exact(truth[idx], prob[idx], pi, pt)
   }
 
-  if (is.null(cores)) {
-    cores <- getOption("mc.cores", 1L)
-  }
-  cores <- as.integer(max(1L, min(cores, B)))
-  # mclapply cannot fork on Windows; restricted environments (R CMD check,
-  # vignette knitting) cap usable cores via _R_CHECK_LIMIT_CORES_.
-  if (.Platform$OS.type == "windows") {
-    cores <- 1L
-  }
-  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
-  if (nzchar(chk) && chk != "false") {
-    cores <- min(cores, 2L)
-  }
+  cores <- resolve_cores(cores, B)
 
   reps <- if (cores > 1L) {
     parallel::mclapply(seq_len(B), one_boot, mc.cores = cores)

@@ -7,5 +7,6 @@ bibentry(
                    comment = c(ORCID = "0000-0001-9178-3087")),
   year    = "2026",
   note    = sprintf("R package version %s", meta$Version),
-  url     = "https://github.com/sagesteppe/lsed"
+  url     = "https://github.com/sagesteppe/lsed",
+  doi     = '10.5281/zenodo.24487760'
 )

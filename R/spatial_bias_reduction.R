@@ -218,19 +218,7 @@ bootstrap_correction <- function(points, newdata, resid = "resid", model, n = 19
     sf::st_as_sf(as.data.frame(xy), coords = c("x", "y"), crs = sf::st_crs(points))
   } else newdata
 
-  if (is.null(cores)) {
-    cores <- getOption("mc.cores", 1L)
-  }
-  cores <- as.integer(max(1L, min(cores, n)))
-  # mclapply cannot fork on Windows; restricted environments (R CMD check,
-  # vignette knitting) cap usable cores via _R_CHECK_LIMIT_CORES_.
-  if (.Platform$OS.type == "windows") {
-    cores <- 1L
-  }
-  chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
-  if (nzchar(chk) && chk != "false") {
-    cores <- min(cores, 2L)
-  }
+  cores <- resolve_cores(cores, n)
   if (!is.null(seed)) {
     if (cores > 1L) {
       old_kind <- RNGkind("L'Ecuyer-CMRG")

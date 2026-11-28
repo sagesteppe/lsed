@@ -41,6 +41,15 @@ make_di <- function(res = 150, thresh_in = 0.5, thresh_out = 2) {
   r
 }
 
+# An AOA polygon covering the left half (x < 450).
+make_poly <- function() {
+  sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(rbind(c(0, 0), c(450, 0), c(450, 900),
+                             c(0, 900), c(0, 0)))),
+    crs = crs
+  ))
+}
+
 test_that("point_residuals attaches y - p and drops non-finite rows", {
   pts <- make_points()
   pts$obs <- c(1, rep(0, nrow(pts) - 1))
@@ -152,4 +161,104 @@ test_that("reduce_spatial_bias short-circuits a pure-nugget field", {
   expect_warning(res <- reduce_spatial_bias(make_noise(), tmpl), "pure nugget")
   expect_null(res$correction)
   expect_equal(terra::values(res$corrected), terra::values(tmpl))  # pred unchanged
+})
+
+# ---- edge cases and the non-raster / polygon paths ------------------------
+
+test_that("point_residuals validates inputs", {
+  pts <- make_points()
+  pts$obs <- rbinom(nrow(pts), 1, 0.5)
+  expect_error(point_residuals(pts, observed = "nope", predicted = "obs"),
+               "not found")
+  # numeric-vector `predicted`
+  out <- point_residuals(pts, observed = "obs", predicted = rep(0.3, nrow(pts)))
+  expect_equal(out$pred, rep(0.3, nrow(out)))
+  # length mismatch
+  expect_error(point_residuals(pts, observed = "obs", predicted = c(0.1, 0.2)),
+               "lengths differ")
+})
+
+test_that("residual_variogram honours cutoff and width", {
+  pts <- make_points()
+  vg <- residual_variogram(pts, cutoff = 600, width = 60)
+  expect_true(max(vg$empirical$dist) <= 600)
+})
+
+test_that("restrict_to_aoa supports polygon and SpatVector AOAs", {
+  pts <- make_points()
+  poly <- make_poly()
+  kept <- restrict_to_aoa(pts, poly)
+  expect_true(all(sf::st_coordinates(kept)[, 1] < 450))
+  # SpatVector polygon, points
+  keptv <- restrict_to_aoa(pts, terra::vect(poly))
+  expect_equal(nrow(keptv), nrow(kept))
+  # polygon masking of a raster
+  masked <- restrict_to_aoa(make_template(), poly)
+  expect_true(all(terra::crds(masked, na.rm = TRUE)[, 1] < 450))
+})
+
+test_that("restrict_to_aoa resamples a DI surface of mismatched geometry", {
+  masked <- restrict_to_aoa(make_template(res = 150), make_di(res = 100),
+                            aoa_thresh = 1)
+  expect_true(all(terra::crds(masked, na.rm = TRUE)[, 1] < 450))
+})
+
+test_that("residual_krige predicts onto sf points (non-raster newdata)", {
+  pts <- make_points()
+  vg  <- residual_variogram(pts)
+  nd  <- make_points(step = 300, seed = 9)[, 0]      # bare point locations
+  k <- residual_krige(pts, nd, model = vg$model)
+  expect_s3_class(k, "sf")
+  expect_true(all(c("var1.pred", "var1.var") %in% names(k)))
+})
+
+test_that("bootstrap_correction errors on a NULL model", {
+  expect_error(
+    bootstrap_correction(make_points(), make_template(), model = NULL, n = 5),
+    "nothing to interpolate"
+  )
+})
+
+test_that("bootstrap_correction returns point columns for sf newdata", {
+  pts <- make_points()
+  vg  <- residual_variogram(pts)
+  nd  <- make_points(step = 300, seed = 9)[, 0]
+  b <- bootstrap_correction(pts, nd, model = vg$model, n = 10, seed = 1, cores = 1)
+  expect_s3_class(b, "sf")
+  expect_true(all(c("corr_mean", "corr_sd") %in% names(b)))
+})
+
+test_that("bootstrap_correction runs on multiple cores", {
+  skip_on_os("windows")
+  pts <- make_points()
+  vg  <- residual_variogram(pts)
+  b <- bootstrap_correction(pts, make_template(), model = vg$model, n = 8,
+                            seed = 5, cores = 2)
+  expect_equal(names(b), c("corr_mean", "corr_sd"))
+})
+
+test_that("bootstrap_correction yields NA where every kriging draw fails", {
+  # jitter = 0 leaves duplicate resampled locations, so each kriging system is
+  # singular and fails; the draw falls back to all-NA.
+  pts <- make_points()
+  vg  <- residual_variogram(pts)
+  b <- bootstrap_correction(pts, make_template(), model = vg$model, n = 5,
+                            jitter = 0, seed = 1, cores = 1)
+  expect_true(all(is.na(terra::values(b[["corr_mean"]]))))
+})
+
+test_that("apply_residual_correction resamples a mismatched correction grid", {
+  pred <- make_template(res = 150)
+  corr <- make_template(res = 100); terra::values(corr) <- 0.1
+  out <- apply_residual_correction(pred, corr)
+  expect_true(terra::compareGeom(out, pred, stopOnError = FALSE))
+  expect_equal(names(out), "suitability_corrected")
+})
+
+test_that("reduce_spatial_bias runs the bootstrap branch", {
+  pts <- make_points()
+  res <- reduce_spatial_bias(pts, make_template(), bootstrap = TRUE, n = 8,
+                             seed = 1, cores = 1)
+  expect_equal(names(res$correction), c("corr_mean", "corr_sd"))
+  expect_s4_class(res$corrected, "SpatRaster")
 })
