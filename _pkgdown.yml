@@ -112,3 +112,14 @@ reference:
   - osm_network_for
   - osm_access
   - cluster_patches
+
+- title: Spatial bias reduction
+  desc: >
+    Diagnose whether an SDM's errors are spatially structured and, if so, turn that
+    structure into a residual-kriging bias-correction surface. Point residuals feed
+    a variogram; ordinary kriging inside the area of applicability gives the
+    correction (with a bootstrap ensemble for uncertainty) to add back onto a
+    prediction raster.
+  contents:
+  - point_residuals
+  - reduce_spatial_bias
